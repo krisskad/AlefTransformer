@@ -136,4 +136,9 @@ INPUT_DIR = os.path.join(BASE_DIR, 'INPUT')
 OUTPUT_DIR = os.path.join(BASE_DIR, 'OUTPUT')
 INPUT_APP_DIR = os.path.join(INPUT_DIR, 'course', 'app')
 INPUT_STRUCTURE_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
+INPUT_AUDIO_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
+INPUT_EN_TEXT_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
+INPUT_IMAGES_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
+INPUT_VIDEO_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
+
 

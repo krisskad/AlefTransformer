@@ -45,3 +45,8 @@ def read_json(file_path):
     else:
         print(f"Json file does not exist: {file_path}")
         return {}
+
+
+def write_json(file_path, data):
+    with open(file_path, 'w') as json_file:
+        json.dump(data, json_file, indent=4)  # 'indent=4' adds indentation for readability, optional

@@ -21,6 +21,19 @@ def process_data():
     INPUT_STRUCTURE_JSON_DATA = read_json(
         file_path=settings.INPUT_STRUCTURE_JSON
     )
+    INPUT_STRUCTURE_JSON_DATA = read_json(
+        file_path=settings.INPUT_STRUCTURE_JSON
+    )
+    INPUT_STRUCTURE_JSON_DATA = read_json(
+        file_path=settings.INPUT_STRUCTURE_JSON
+    )
+    INPUT_STRUCTURE_JSON_DATA = read_json(
+        file_path=settings.INPUT_STRUCTURE_JSON
+    )
+    INPUT_STRUCTURE_JSON_DATA = read_json(
+        file_path=settings.INPUT_STRUCTURE_JSON
+    )
+
     input_pages = INPUT_STRUCTURE_JSON_DATA.get('pages', [])
 
     MLO_TEMPLATES_OUTPUT_LIST = []
