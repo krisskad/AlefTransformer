@@ -1,4 +1,5 @@
 import importlib
+from django.conf import settings
 
 
 def call_package(page_data):
