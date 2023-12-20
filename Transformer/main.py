@@ -3,13 +3,11 @@ from django.conf import settings
 from Transformer.helpers import read_json
 
 
-def call_package(page_data):
-    template_id = page_data['pageData']['templateID']
-
+def call_package(template_id, page_data):
     try:
-        package_name = f"templates.{template_id}.processor"
+        package_name = f"Transformer.templates.{template_id}.processor"
         module = importlib.import_module(package_name)
-        print(f"Package found for templateID: {template_id}")
+        print(f"Package Imported : {template_id}")
         return module.process_page_data(page_data)
     except ModuleNotFoundError:
         print(f"No package found for templateID: {template_id}")
@@ -27,6 +25,12 @@ def process_data():
 
     MLO_TEMPLATES_OUTPUT_LIST = []
     for item in input_pages:
-        section = call_package(item)
+        template_id = item['pageData']['templateID']
+        section = call_package(template_id, item['pageData'])
+        # print(f"Template: {template_id}")
         if section:
             MLO_TEMPLATES_OUTPUT_LIST.append(section)
+
+# process_data()
+# package_name = f"templates.ClicktoRevealwithSubmit_001.processor"
+# module = importlib.import_module(package_name)
