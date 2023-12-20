@@ -1,5 +1,6 @@
 import importlib
 from django.conf import settings
+from Transformer.helpers import read_json
 
 
 def call_package(page_data):
@@ -8,6 +9,7 @@ def call_package(page_data):
     try:
         package_name = f"templates.{template_id}.processor"
         module = importlib.import_module(package_name)
+        print(f"Package found for templateID: {template_id}")
         return module.process_page_data(page_data)
     except ModuleNotFoundError:
         print(f"No package found for templateID: {template_id}")
@@ -17,69 +19,14 @@ def call_package(page_data):
         return None
 
 
-def process_data(data):
-    for item in data:
+def process_data():
+    INPUT_STRUCTURE_JSON_DATA = read_json(
+        file_path=settings.INPUT_STRUCTURE_JSON
+    )
+    input_pages = INPUT_STRUCTURE_JSON_DATA.get('pages', [])
+
+    MLO_TEMPLATES_OUTPUT_LIST = []
+    for item in input_pages:
         section = call_package(item)
-
-
-# Example list of dictionaries
-data_list = [
-    {
-        "pageType": "Misc",
-        "pageData": {
-            "viewRef": "page_002",
-            "templateID": "ClicktoRevealwithSubmit_001",
-            "args": {
-                "ques": "text_007",
-                "src": "aud_001",
-                "background": {
-                    "type": "class",
-                    "src": "bg_backgroundColor_2"
-                },
-                "submitCount": 2,
-                "multiAnswer": True,
-                "thumbs": [
-                    {
-                        "image": "img_002",
-                        "title": "text_008",
-                        "ans": 1
-                    },
-                    {
-                        "image": "img_015",
-                        "title": "text_009",
-                        "ans": 0
-                    },
-                    {
-                        "image": "img_020",
-                        "title": "text_010",
-                        "ans": 0
-                    },
-                    {
-                        "image": "img_007",
-                        "title": "text_011",
-                        "ans": 0
-                    }
-                ],
-                "submit": "text_012",
-                "showAnswer": "text_013",
-                "feedback": {
-                    "correct": "text_014",
-                    "incorrect_1": "text_015",
-                    "incorrect_2": "text_016"
-                },
-                "feedBackAudio": {
-                    "correct": "aud_001",
-                    "incorrect_1": "aud_002",
-                    "incorrect_2": "aud_003",
-                    "hint": "aud_004"
-                },
-
-                "hint": {
-                    "text": "text_017"
-                }
-            }
-        }
-    }
-]
-
-process_data(data_list)
+        if section:
+            MLO_TEMPLATES_OUTPUT_LIST.append(section)

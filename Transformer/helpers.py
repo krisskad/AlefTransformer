@@ -33,7 +33,7 @@ def get_existing_folders(dest_folder):
     return existing_folders
 
 
-def read_generic_json(file_path):
+def read_json(file_path):
     if os.path.exists(file_path):
         with open(file_path, 'r') as file:
             try:
