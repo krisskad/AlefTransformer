@@ -6,7 +6,7 @@ import os
 import json
 
 
-def generate_unique_folder_name(existing_folders, prefix="L", k=27):
+def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
     """
     Generate a unique folder name starting with 'L' default and length of 27 characters.
     """
@@ -19,7 +19,7 @@ def generate_unique_folder_name(existing_folders, prefix="L", k=27):
         unique_folder_name = prefix + random_string
 
         # Check if the folder name is unique
-        if unique_folder_name not in existing_folders:
+        if unique_folder_name not in existing_hashcode:
             return unique_folder_name
 
 

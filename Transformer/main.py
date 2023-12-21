@@ -3,12 +3,12 @@ from django.conf import settings
 from Transformer.helpers import read_json
 
 
-def call_package(template_id, page_data, other_json_data):
+def call_package(template_id, page_data, other_json_data, exiting_hashcode):
     try:
         package_name = f"Transformer.templates.{template_id}.processor"
         module = importlib.import_module(package_name)
         print(f"Package Imported : {template_id}")
-        return module.process_page_data(page_data, other_json_data)
+        return module.process_page_data(page_data, other_json_data, exiting_hashcode)
     except ModuleNotFoundError:
         print(f"No package found for templateID: {template_id}")
         return None
@@ -60,15 +60,22 @@ def process_data():
         "INPUT_COMMON_TEXT_JSON_DATA":INPUT_COMMON_TEXT_JSON_DATA
     }
 
+    # storing all hash strings
+    GENERATED_HASH_CODES = set()
+
     input_pages = INPUT_STRUCTURE_JSON_DATA.get('pages', [])
 
     MLO_TEMPLATES_OUTPUT_LIST = []
     for item in input_pages:
         template_id = item['pageData']['templateID']
-        section = call_package(
+        response = call_package(
             template_id=template_id,
             page_data=item,
-            other_json_data=OTHER_JSON_DATA
+            other_json_data=OTHER_JSON_DATA,
+            exiting_hashcode=GENERATED_HASH_CODES
         )
+        section = response['XML_STRING']
+        hash_codes = response['GENERATED_HASH_CODES']
         if section:
             MLO_TEMPLATES_OUTPUT_LIST.append(section)
+            GENERATED_HASH_CODES.update(hash_codes)

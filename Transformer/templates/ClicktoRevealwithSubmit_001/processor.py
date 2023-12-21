@@ -1,3 +1,6 @@
+from Transformer.helpers import generate_unique_folder_name
+
+
 def write_html(text, destination_file_path):
     template = f"""
     <html>
@@ -14,7 +17,8 @@ def write_html(text, destination_file_path):
         file.write(template.strip())
 
 
-def create_mlo(input_structure_json, input_other_jsons):
+def create_mlo(input_structure_json, input_other_jsons, exiting_hashcode):
+    hashcode_1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     all_tags = [f"""
         <alef_section xlink:label="LAP7NYP2JN6KE5KGPUQIKOYLTA4" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
         <alef_column xlink:label="LJWIBTGLBLI4EPEFWZLGS3A6FSQ" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
@@ -31,11 +35,19 @@ def create_mlo(input_structure_json, input_other_jsons):
     return all_tags
 
 
-def process_page_data(page_data, other_json_data):
+def process_page_data(page_data, other_json_data, exiting_hashcode):
     # Custom processing for ClicktoRevealwithSubmit_001
     # Use page_data as needed
 
     args = page_data['args']
-    xml_output = create_mlo(args)
+    xml_output = create_mlo(
+        input_structure_json=args,
+        input_other_jsons=other_json_data,
+        exiting_hashcode=exiting_hashcode
+    )
 
-    return xml_output
+    RESPONSE = {
+        "XML_OUTPUT":xml_output,
+        "GENERATED_HASH_CODES":exiting_hashcode
+    }
+    return RESPONSE
