@@ -134,11 +134,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 INPUT_DIR = os.path.join(BASE_DIR, 'INPUT')
 OUTPUT_DIR = os.path.join(BASE_DIR, 'OUTPUT')
+# app
 INPUT_APP_DIR = os.path.join(INPUT_DIR, 'course', 'app')
 INPUT_STRUCTURE_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
-INPUT_AUDIO_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
-INPUT_EN_TEXT_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
-INPUT_IMAGES_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
-INPUT_VIDEO_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
+INPUT_AUDIO_JSON = os.path.join(INPUT_APP_DIR, "json", "audio.json")
+INPUT_EN_TEXT_JSON = os.path.join(INPUT_APP_DIR, "json", "en_text.json")
+INPUT_IMAGES_JSON = os.path.join(INPUT_APP_DIR, "json", "images.json")
+INPUT_VIDEO_JSON = os.path.join(INPUT_APP_DIR, "json", "video.json")
+# common
+INPUT_COMMON_GLOSSARY_JSON = os.path.join(INPUT_DIR, "common", "templates", "config", "glossary.json")
+INPUT_COMMON_GLOSSARY_IMAGES_JSON = os.path.join(INPUT_DIR, "common", "templates", "config", "glossaryImages.json")
+INPUT_COMMON_TEMPLATE_IMAGES_JSON = os.path.join(INPUT_DIR, "common", "templates", "config", "templateImages.json")
+INPUT_COMMON_TEXT_JSON = os.path.join(INPUT_DIR, "common", "templates", "config", "text.json")
 
 

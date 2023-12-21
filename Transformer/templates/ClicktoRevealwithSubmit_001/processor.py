@@ -31,7 +31,7 @@ def create_mlo(input_structure_json, input_other_jsons):
     return all_tags
 
 
-def process_page_data(page_data):
+def process_page_data(page_data, other_json_data):
     # Custom processing for ClicktoRevealwithSubmit_001
     # Use page_data as needed
 
