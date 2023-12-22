@@ -1,8 +1,48 @@
 import htmlentities
 import os
-from Transformer.helpers import generate_unique_folder_name, write_xml
+from Transformer.helpers import generate_unique_folder_name, write_xml, write_html
 import shutil
 from django.conf import settings
+
+
+MLO_HTML_TEMPLATE = """
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script>
+      function changePage(obj) {
+        page_url = obj.value;
+        console.log("page_url", page_url);
+        iframePage = document.getElementById("alef_page_viewer");
+        iframePage.src = page_url;
+      }
+      function errorpage() {
+        iframePage = document.getElementById("alef_page_viewer");
+        iframePage.src = "./mloerror.html";
+      }
+    </script>
+  </head>
+  <body>
+    <p>
+      This MLO contains the following pages.
+      <select onchange="changePage(this);">
+        <option value="">-- Select a page ---</option>
+        <option value="page_3LHLS7DTRTJUNCWSZX3M3LWYTA.html">Matter</option>
+        <option value="customization_default_DQRSTW5TXC3UZGLTLGSB2TV24A_LY5EORGU3LTXEBHTBMMECJBF76E.html">Custom_R&amp;I</option>
+        <option value="./manuscript.html">Manuscript</option>
+        <option value="./mloerror.html">Error Log</option>
+        <option value="./localization.html">Localization</option>
+        <option value="./images.html">Images</option>
+        <option value="./audios.html">Audios</option>
+        <option value="./videos.html">Videos</option>
+        <option value="./assetsquantities.html">Assets quantities</option>
+        <option value="./page_accessibility.html">Accessibility Attributes</option>
+      </select>
+    </p>
+    <iframe src="./mloerror.html" width="100%" height="90%" name="alef_page_viewer" id="alef_page_viewer"></iframe>
+  </body>
+</html>
+"""
 
 
 def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
@@ -15,7 +55,7 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
     head = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['head']]
     title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['title']]
     subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
-    goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText']]
+    # goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText']]
 
     image_thumb_hashcode = ""
     relative_file = ""
@@ -77,9 +117,11 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
     os.makedirs(path_to_hashcode, exist_ok=True)
 
     path_to_xml = os.path.join(path_to_hashcode, 'mlo.xml')
+    path_to_html = os.path.join(path_to_hashcode, 'mlo.html')
     lo_xml_filepath = os.path.join(settings.OUTPUT_DIR, '1', f'lo_{hashcode}.xpl.xml')
 
     all_files.add(os.path.join(hashcode, 'mlo.xml'))
+    all_files.add(os.path.join(hashcode, 'mlo.html'))
     all_files.add(os.path.join("1", f'lo_{hashcode}.xpl.xml'))
 
     write_xml(
@@ -90,6 +132,11 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
     write_xml(
         file_path=lo_xml_filepath,
         xml_content=xml_content
+    )
+
+    write_html(
+        file_path=path_to_html,
+        html_content=MLO_HTML_TEMPLATE
     )
 
     response = {

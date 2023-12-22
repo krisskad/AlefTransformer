@@ -53,6 +53,14 @@ def write_json(file_path, data):
 
 
 def write_xml(file_path, xml_content):
+    print("writing: ", file_path)
     xml_content = xml_content.replace("\n\n", "\n")
     with open(file_path, "w") as file:
         file.write(xml_content.strip())
+
+
+def write_html(file_path, html_content):
+    print("writing: ", file_path)
+    html_content = html_content.replace("\n\n", "\n")
+    with open(file_path, "w") as file:
+        file.write(html_content.strip())

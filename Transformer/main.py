@@ -2,6 +2,7 @@ import importlib
 from django.conf import settings
 from Transformer.helpers import read_json
 from Transformer.utils.write_main_xml_frame import write_mlo
+from Transformer.utils.write_manifest_xml import write_imsmanifest_xml
 
 
 def call_package(template_id, page_data, other_json_data, exiting_hashcode):
@@ -96,5 +97,9 @@ def process_data():
 
     GENERATED_HASH_CODES.update(mlo_response['GENERATED_HASH_CODES'])
     ALL_MANIFEST_FILES.update(mlo_response['MANIFEST_FILES'])
+
+    write_imsmanifest_xml(
+        all_manifest_files=ALL_MANIFEST_FILES
+    )
 
     return True

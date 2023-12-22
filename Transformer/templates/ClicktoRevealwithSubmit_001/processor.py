@@ -255,7 +255,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             audio_thumb_src_file_path = str(os.path.join(settings.INPUT_APP_DIR, audio_thumb_relative_path))
 
             # Create the unique folder if it doesn't exist
-            relative_file = os.path.join(audio_thumb_hashcode, audio_thumb_hashcode)
+            relative_file = os.path.join(audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path))
             all_files.add(relative_file)
 
             # create folder
