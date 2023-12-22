@@ -50,3 +50,9 @@ def read_json(file_path):
 def write_json(file_path, data):
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)  # 'indent=4' adds indentation for readability, optional
+
+
+def write_xml(file_path, xml_content):
+    xml_content = xml_content.replace("\n\n", "\n")
+    with open(file_path, "w") as file:
+        file.write(xml_content.strip())

@@ -20,6 +20,9 @@ def write_html(text, destination_file_path):
 
 
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
+    # store all file paths like hashcode/filename
+    all_files = set()
+
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
 
@@ -34,7 +37,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     html_file_path = str(os.path.join(hashcode, "emptyHtmlModel.html"))
 
     # Create the unique folder if it doesn't exist
-    os.makedirs(os.path.join(settings.OUTPUT_DIR, hashcode), exist_ok=True)
+    relative_file = os.path.join(hashcode, "emptyHtmlModel.html")
+    all_files.add(relative_file)
+
+    # create folder
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
 
     write_html(text=text_en_data, destination_file_path=destination_file_path)
     all_tags = [f"""
@@ -62,8 +70,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         image_relative_path = str(os.path.join(image_thumb_hashcode, os.path.basename(image_thumb_relative_path)))
         image_thumb_src_file_path = str(os.path.join(settings.INPUT_APP_DIR, image_thumb_relative_path))
+
         # Create the unique folder if it doesn't exist
-        os.makedirs(os.path.join(settings.OUTPUT_DIR, image_thumb_hashcode), exist_ok=True)
+        relative_file = os.path.join(image_thumb_hashcode, os.path.basename(image_thumb_relative_path))
+        all_files.add(relative_file)
+
+        # create folder
+        path_to_hashcode = os.path.join(settings.OUTPUT_DIR, image_thumb_hashcode)
+        os.makedirs(path_to_hashcode, exist_ok=True)
 
         shutil.copy2(image_thumb_src_file_path, image_thumb_destination_file_path)
 
@@ -111,7 +125,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
 
             # Create the unique folder if it doesn't exist
-            os.makedirs(os.path.join(settings.OUTPUT_DIR, temp[0]), exist_ok=True)
+            relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
+            all_files.add(relative_file)
+
+            # create folder
+            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
+            os.makedirs(path_to_hashcode, exist_ok=True)
 
             write_html(text=text_en_data, destination_file_path=destination_file_path)
             all_tags.append(f"""
@@ -128,8 +147,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
             destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
             html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
+
             # Create the unique folder if it doesn't exist
-            os.makedirs(os.path.join(settings.OUTPUT_DIR, temp[0]), exist_ok=True)
+            relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
+            all_files.add(relative_file)
+
+            # create folder
+            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
+            os.makedirs(path_to_hashcode, exist_ok=True)
 
             write_html(text=text_en_data, destination_file_path=destination_file_path)
             all_tags.append(f"""
@@ -146,8 +171,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
             destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
             html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
+
             # Create the unique folder if it doesn't exist
-            os.makedirs(os.path.join(settings.OUTPUT_DIR, temp[0]), exist_ok=True)
+            relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
+            all_files.add(relative_file)
+
+            # create folder
+            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
+            os.makedirs(path_to_hashcode, exist_ok=True)
 
             write_html(text=text_en_data, destination_file_path=destination_file_path)
             all_tags.append(f"""
@@ -178,8 +209,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
             destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
             html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
+
             # Create the unique folder if it doesn't exist
-            os.makedirs(os.path.join(settings.OUTPUT_DIR, temp[0]), exist_ok=True)
+            relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
+            all_files.add(relative_file)
+
+            # create folder
+            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
+            os.makedirs(path_to_hashcode, exist_ok=True)
 
             write_html(text=text_en_data, destination_file_path=destination_file_path)
             all_tags.append(f"""
@@ -216,8 +253,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 os.path.join(settings.OUTPUT_DIR, audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path)))
             audio_relative_path = str(os.path.join(audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path)))
             audio_thumb_src_file_path = str(os.path.join(settings.INPUT_APP_DIR, audio_thumb_relative_path))
+
             # Create the unique folder if it doesn't exist
-            os.makedirs(os.path.join(settings.OUTPUT_DIR, audio_thumb_hashcode), exist_ok=True)
+            relative_file = os.path.join(audio_thumb_hashcode, audio_thumb_hashcode)
+            all_files.add(relative_file)
+
+            # create folder
+            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, audio_thumb_hashcode)
+            os.makedirs(path_to_hashcode, exist_ok=True)
 
             shutil.copy2(audio_thumb_src_file_path, audio_thumb_destination_file_path)
 
@@ -234,18 +277,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
         </alef_column>
         </alef_section>
-        </alef_presentation>
-        </alef_column>
-        </alef_section>
-        </alef_page>
-        </alef_mlo>
         """,
 
     )
 
     response = {
         "XML_STRING": "".join(all_tags),
-        "GENERATED_HASH_CODES":exiting_hashcode
+        "GENERATED_HASH_CODES":exiting_hashcode,
+        "MANIFEST_FILES":all_files
     }
 
     return response

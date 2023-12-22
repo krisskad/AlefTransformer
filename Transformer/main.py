@@ -1,6 +1,7 @@
 import importlib
 from django.conf import settings
 from Transformer.helpers import read_json
+from Transformer.utils.write_main_xml_frame import write_mlo
 
 
 def call_package(template_id, page_data, other_json_data, exiting_hashcode):
@@ -50,6 +51,7 @@ def process_data():
     )
 
     OTHER_JSON_DATA = {
+        "INPUT_STRUCTURE_JSON_DATA": INPUT_STRUCTURE_JSON_DATA,
         "INPUT_AUDIO_JSON_DATA":INPUT_AUDIO_JSON_DATA,
         "INPUT_VIDEO_JSON_DATA":INPUT_VIDEO_JSON_DATA,
         "INPUT_IMAGES_JSON_DATA":INPUT_IMAGES_JSON_DATA,
@@ -62,6 +64,9 @@ def process_data():
 
     # storing all hash strings
     GENERATED_HASH_CODES = set()
+
+    # storing all relative hashcode file path like hashcode/filename
+    ALL_MANIFEST_FILES = set()
 
     input_pages = INPUT_STRUCTURE_JSON_DATA.get('pages', [])
 
@@ -77,8 +82,19 @@ def process_data():
         if response:
             section = response['XML_STRING']
             hash_codes = response['GENERATED_HASH_CODES']
+            manifest_files = response['MANIFEST_FILES']
             if section:
                 MLO_TEMPLATES_OUTPUT_LIST.append(section)
                 GENERATED_HASH_CODES.update(hash_codes)
+                ALL_MANIFEST_FILES.update(manifest_files)
+
+    mlo_response = write_mlo(
+        sections=MLO_TEMPLATES_OUTPUT_LIST,
+        input_other_jsons_data=OTHER_JSON_DATA,
+        exiting_hashcode=GENERATED_HASH_CODES
+    )
+
+    GENERATED_HASH_CODES.update(mlo_response['GENERATED_HASH_CODES'])
+    ALL_MANIFEST_FILES.update(mlo_response['MANIFEST_FILES'])
 
     return True
