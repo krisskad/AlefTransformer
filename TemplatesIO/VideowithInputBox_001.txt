@@ -16,7 +16,7 @@ input = {
     }
 
 
- output =                     <alef_section xlink:label="LSGD7QMA6HX7UXNS6SDM6O63WMI" xp:name="alef_section" xp:description=""
+ output =           <alef_section xlink:label="LSGD7QMA6HX7UXNS6SDM6O63WMI" xp:name="alef_section" xp:description=""
                                   xp:fieldtype="folder" customclass="Normal">
 						<alef_column xlink:label="LJRCSAKECTQ3ERKSZGJE2YIQNPQ" xp:name="alef_column" xp:description=""
                                      xp:fieldtype="folder" width="auto" cellspan="1">
@@ -301,4 +301,5 @@ input = {
 							</alef_advancedvideo>
 						</alef_column>
 					</alef_section>
+
 
