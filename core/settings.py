@@ -134,6 +134,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 INPUT_DIR = os.path.join(BASE_DIR, 'INPUT')
 OUTPUT_DIR = os.path.join(BASE_DIR, 'OUTPUT')
+
+os.makedirs(INPUT_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
 # app
 INPUT_APP_DIR = os.path.join(INPUT_DIR, 'course', 'app')
 INPUT_STRUCTURE_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
