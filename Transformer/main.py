@@ -74,8 +74,11 @@ def process_data():
             other_json_data=OTHER_JSON_DATA,
             exiting_hashcode=GENERATED_HASH_CODES
         )
-        section = response['XML_STRING']
-        hash_codes = response['GENERATED_HASH_CODES']
-        if section:
-            MLO_TEMPLATES_OUTPUT_LIST.append(section)
-            GENERATED_HASH_CODES.update(hash_codes)
+        if response:
+            section = response['XML_STRING']
+            hash_codes = response['GENERATED_HASH_CODES']
+            if section:
+                MLO_TEMPLATES_OUTPUT_LIST.append(section)
+                GENERATED_HASH_CODES.update(hash_codes)
+
+    return True
