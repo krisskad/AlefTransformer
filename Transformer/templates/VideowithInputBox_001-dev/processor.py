@@ -1,6 +1,7 @@
 from Transformer.helpers import generate_unique_folder_name
 from django.conf import settings
 import os, shutil
+from bs4 import BeautifulSoup
 
 
 def write_html(text, destination_file_path):
@@ -58,6 +59,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     qtext_id = input_json_data['pageData']['args']['textFieldData']['qText']
     placeHolderText_id = input_json_data['pageData']['args']['textFieldData']['placeHolderText']
     btnText_id = input_json_data['pageData']['args']['textFieldData']['btnText']
+
+    qText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qtext_id]
+
+    soup = BeautifulSoup(qText, 'html.parser')
+    span_tags = soup.find_all('span')
+    tag_list = []
+    for tag in span_tags:
+        if 'id' in tag.attrs:  # Check if the tag has an 'id' attribute
+            tag_id = tag['id']  # Extract the value of the 'id' attribute
 
     response = {
         "XML_STRING": "".join(all_tags),

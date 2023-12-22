@@ -1,0 +1,121 @@
+input = {
+      "pageType": "Misc",
+      "pageData": {
+        "viewRef": "page_007",
+        "templateID": "TextwithImage_001",
+        "args": {
+          "src": "aud_005",
+          "ques": "text_020",
+          "background": {
+            "type": "class",
+            "src": "bg_backgroundColor_3"
+          },
+          "textFieldData": {
+            "type": "v",
+            "textContent": {
+              "type": "left",
+              "text": "text_024"
+            },
+            "imageContent": [
+              {
+                "image": "img_024",
+                "label": "text_025"
+              },
+              {
+                "image": "img_025",
+
+                "label": "text_026"
+              },
+              {
+                "image": "img_026",
+
+                "label": "text_027"
+              },
+              {
+                "image": "img_027",
+
+                "label": "text_028"
+              },
+              {
+                "image": "img_028",
+
+                "label": "text_029"
+              },
+              {
+                "image": "img_029",
+
+                "label": "text_030"
+              }
+            ]
+          }
+        }
+      }
+    }
+
+output =              <alef_section xlink:label="L4L6DE7DWZG4EVNZKI5UL6TQ5EA" xp:name="alef_section"
+                                  xp:description="Observing Photosynthesis" xp:fieldtype="folder"
+                                  customclass="Text with Images">
+						<alef_column xlink:label="L3CN72MEF57OUHIZ5H3DFL3C4LY" xp:name="alef_column" xp:description=""
+                                     xp:fieldtype="folder" width="auto" cellspan="1">
+							<alef_html xlink:label="LHDY5O2SJIWPUZEUAOWGXRH4I2M" xp:name="alef_html" xp:description=""
+                                       xp:fieldtype="html"
+                                       src="../../../LHDY5O2SJIWPUZEUAOWGXRH4I2M/emptyHtmlModel.html"/>
+                            <alef_section xlink:label="LYVKWKQWPISTERJM2FTIP7IMVJM" xp:name="alef_section"
+                                          xp:description="" xp:fieldtype="folder" customclass="Normal">
+								<alef_column xlink:label="LK5RSMIJLTZRE7CR5XQIISCX57U" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+									<alef_image xlink:label="LLP2DA6AQDM7UDONOGSQVKLX2BM" xp:name="alef_image"
+                                                xp:description="" xp:fieldtype="image" alt="3 Tubes">
+										<xp:img href="../../../LLP2DA6AQDM7UDONOGSQVKLX2BM/img_1.png" width="688"
+                                                height="890"/>
+									</alef_image>
+								</alef_column>
+                                <alef_column xlink:label="L5LWD6MMJUDNUFM6NEW3NGWRGCY" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+									<alef_image xlink:label="LFXK3SMVU65FUNH7OWYCMPHGQRI" xp:name="alef_image"
+                                                xp:description="" xp:fieldtype="image" alt="3 Elodea plants">
+										<xp:img href="../../../LFXK3SMVU65FUNH7OWYCMPHGQRI/img_2.png" width="688"
+                                                height="890"/>
+									</alef_image>
+								</alef_column>
+                                <alef_column xlink:label="LPAGDFLEL2AWULIIHOOHH675XTQ" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+									<alef_image xlink:label="LO5ECLKVOF3FUFHDXLGM3OWZVGI" xp:name="alef_image"
+                                                xp:description="" xp:fieldtype="image" alt="Aluminium foil">
+										<xp:img href="../../../LO5ECLKVOF3FUFHDXLGM3OWZVGI/img_3.png" width="688"
+                                                height="890"/>
+									</alef_image>
+								</alef_column>
+                                <alef_column xlink:label="L4IWAYEKTNLTEVLMGM2B2SGWODY" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+									<alef_image xlink:label="LMXQVJEBY5ONEPFLI6SGJTM5FIU" xp:name="alef_image"
+                                                xp:description="" xp:fieldtype="image" alt="Bromothymol blue">
+										<xp:img href="../../../LMXQVJEBY5ONEPFLI6SGJTM5FIU/img_4.png" width="688"
+                                                height="890"/>
+									</alef_image>
+								</alef_column>
+                                <alef_column xlink:label="LVXA26M36N6PEZAZGO7ZTTSIIQA" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+									<alef_image xlink:label="LK4JOPIIX5WLUNISZMAFVKUFQGM" xp:name="alef_image"
+                                                xp:description="" xp:fieldtype="image" alt="Plastic dropper">
+										<xp:img href="../../../LK4JOPIIX5WLUNISZMAFVKUFQGM/img_5.png" width="688"
+                                                height="890"/>
+									</alef_image>
+								</alef_column>
+                                <alef_column xlink:label="LVETH342NQGUUZGLCMVQZRR4SGQ" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+									<alef_image xlink:label="L4MP23TYINJKUVORETPQL2DMV5Q" xp:name="alef_image"
+                                                xp:description="" xp:fieldtype="image" alt="Water">
+										<xp:img href="../../../L4MP23TYINJKUVORETPQL2DMV5Q/img_6.png" width="688"
+                                                height="890"/>
+									</alef_image>
+								</alef_column>
+							</alef_section>
+                            <alef_audionew xlink:label="L7HSKIV72XC5EFB7H6OWFCF24NE" xp:name="alef_audionew"
+                                           xp:description="" xp:fieldtype="folder">
+								<alef_audiofile xlink:label="LUZ4V6ZTUBRNU5KAQK7GDS34W34" xp:name="alef_audiofile"
+                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                                src="../../../LUZ4V6ZTUBRNU5KAQK7GDS34W34/CS_ELA9_L017_ANL_S04_AUD_001.mp3"/>
+							</alef_audionew>
+						</alef_column>
+					</alef_section>
