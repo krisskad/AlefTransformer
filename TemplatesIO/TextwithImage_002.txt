@@ -1,0 +1,53 @@
+input =     {
+      "pageType": "Misc",
+      "pageData": {
+        "viewRef": "page_008",
+        "templateID": "TextwithImage_002",
+        "args": {
+          "src": "aud_006",
+          "ques": "text_031",
+          "title": "text_032",
+          "background": {
+            "type": "class",
+            "src": "bg_backgroundColor_3"
+          },
+          "textFieldData": {
+            "textContent": [],
+            "imageContent": [
+              {
+                "image": "img_022"
+              }
+            ]
+          }
+        }
+      }
+    }
+
+
+output = <alef_section xlink:label="L3K4XYFNVTJTUBO4TEQK2KXHRSQ" xp:name="alef_section"
+                                  xp:description="Conduct the Experiment" xp:fieldtype="folder" customclass="Normal">
+						<alef_column xlink:label="LCZLORRV75HOUTHTWT37A5I6JUQ" xp:name="alef_column" xp:description=""
+                                     xp:fieldtype="folder" width="auto" cellspan="1">
+							<alef_section xlink:label="LDT2SP3TM33IUPNCF7WAOHOPUI4" xp:name="alef_section"
+                                          xp:description="" xp:fieldtype="folder" customclass="Normal">
+								<alef_column xlink:label="LRL766D37GBFUDKE4GWXV7D6PKI" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="12" cellspan="1">
+									<alef_html xlink:label="LSJBCRWNJMHYUDA7XYJZIXZP3IE" xp:name="alef_html"
+                                               xp:description="" xp:fieldtype="html"
+                                               src="../../../LSJBCRWNJMHYUDA7XYJZIXZP3IE/emptyHtmlModel.html"/>
+                                    <alef_image xlink:label="LBS3IE4D4VCLEZM7L4OKC6S7QRE" xp:name="alef_image"
+                                                xp:description="" xp:fieldtype="image" alt="" customAlign="Center">
+										<xp:img href="../../../LBS3IE4D4VCLEZM7L4OKC6S7QRE/imageText.png" width="1644"
+                                                height="487"/>
+									</alef_image>
+                                    <alef_audionew xlink:label="LYFPVNQZMPTKEPOB2OVPZ5YZSSU" xp:name="alef_audionew"
+                                                   xp:description="" xp:fieldtype="folder">
+										<alef_audiofile xlink:label="LI5XAU7PFPF6EDDDPXKPCFBUDAI"
+                                                        xp:name="alef_audiofile" xp:description="" audiocontrols="Yes"
+                                                        xp:fieldtype="file"
+                                                        src="../../../LI5XAU7PFPF6EDDDPXKPCFBUDAI/CS_ELA9_L017_ANL_S01_AUD_001.mp3"/>
+									</alef_audionew>
+								</alef_column>
+							</alef_section>
+						</alef_column>
+					</alef_section>
