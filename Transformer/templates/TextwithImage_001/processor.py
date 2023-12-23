@@ -28,30 +28,114 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
 
-    aud_id = input_json_data['pageData']['args']['src']
-    text_id = input_json_data['pageData']['args']['ques']
-    textContent = input_json_data['pageData']['args']['ques']['textFieldData']['textContent']['text']
+    # Assigning values to variables
+    aud_id = input_json_data["pageData"]["args"]["src"]
+    ques_id = input_json_data["pageData"]["args"]["ques"]
+    text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"]["text"]
+    imageContent_list = input_json_data["pageData"]["args"]["textFieldData"]["imageContent"]
 
     aud_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+    ques_src = input_other_jsons_data['INPUT_TEXT_EN_JSON_DATA'][ques_id]
     text_src = input_other_jsons_data['INPUT_TEXT_EN_JSON_DATA'][text_id]
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+    write_html(destination_file_path=path_to_html, text=text_src)
+
+    relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
+    all_files.add(relative_path)
 
     all_tags.append(
         f"""
         <alef_section xlink:label="L4L6DE7DWZG4EVNZKI5UL6TQ5EA" xp:name="alef_section"
-                                  xp:description="{htmlentities.encode(text_src)}" xp:fieldtype="folder"
+                                  xp:description="{htmlentities.encode(ques_src)}" xp:fieldtype="folder"
                                   customclass="Text with Images">
-						<alef_column xlink:label="L3CN72MEF57OUHIZ5H3DFL3C4LY" xp:name="alef_column" xp:description=""
+            <alef_column xlink:label="L3CN72MEF57OUHIZ5H3DFL3C4LY" xp:name="alef_column" xp:description=""
                                      xp:fieldtype="folder" width="auto" cellspan="1">
-							<alef_html xlink:label="LHDY5O2SJIWPUZEUAOWGXRH4I2M" xp:name="alef_html" xp:description=""
+                <alef_html xlink:label="{hashcode}" xp:name="alef_html" xp:description=""
                                        xp:fieldtype="html"
-                                       src="../../../LHDY5O2SJIWPUZEUAOWGXRH4I2M/emptyHtmlModel.html"/>
+                                       src="../../../{relative_path}"/>
+        """
+    )
+
+    all_tags.append(
+        """
+        <alef_section xlink:label="LYVKWKQWPISTERJM2FTIP7IMVJM" xp:name="alef_section"
+                                          xp:description="" xp:fieldtype="folder" customclass="Normal">
+        """
+    )
+
+    # image columns
+    for each_img in imageContent_list:
+        hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode)
+
+        src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
+        src_en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_img['label']]
+
+        path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+        os.makedirs(path_to_hashcode, exist_ok=True)
+
+        src_image_abs_path = os.path.join(settings.INPUT_APP_DIR, src_image_path)
+        destination_image_path = os.path.join(str(path_to_hashcode), str(os.path.basename(src_image_path)))
+        shutil.copy2(str(src_image_abs_path), str(destination_image_path))
+
+        relative_path = os.path.join(hashcode, str(os.path.basename(src_image_path)))
+        all_files.add(relative_path)
+
+        all_tags.append(
+            f"""
+            <alef_column xlink:label="LK5RSMIJLTZRE7CR5XQIISCX57U" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+			    <alef_image xlink:label="{hashcode}" xp:name="alef_image"
+                                                xp:description="" xp:fieldtype="image" alt="{htmlentities.encode(src_en_text)}">
+				    <xp:img href="../../../{relative_path}" width="688"
+                                                height="890"/>
+				</alef_image>
+			</alef_column>
+            """
+        )
+
+    all_tags.append(
+        """
+        </alef_section>
+        """
+    )
+
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+
+    src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    src_audio_abs_path = os.path.join(settings.INPUT_APP_DIR, src_audio_path)
+    destination_audio_path = os.path.join(str(path_to_hashcode), str(os.path.basename(src_audio_path)))
+    shutil.copy2(str(src_audio_abs_path), str(destination_audio_path))
+
+    relative_path = os.path.join(hashcode, str(os.path.basename(src_audio_path)))
+    all_files.add(relative_path)
+
+    all_tags.append(
+        f"""
+                                    <alef_audionew xlink:label="L7HSKIV72XC5EFB7H6OWFCF24NE" xp:name="alef_audionew"
+                                           xp:description="" xp:fieldtype="folder">
+								<alef_audiofile xlink:label="{hashcode}" xp:name="alef_audiofile"
+                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                                src="../../../{relative_path}"/>
+							</alef_audionew>
+						</alef_column>
+					</alef_section>
         """
     )
 
     response = {
         "XML_STRING": "".join(all_tags),
-        "GENERATED_HASH_CODES":exiting_hashcode,
-        "MANIFEST_FILES":all_files
+        "GENERATED_HASH_CODES": exiting_hashcode,
+        "MANIFEST_FILES": all_files
     }
 
     return response
