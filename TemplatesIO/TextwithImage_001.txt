@@ -52,6 +52,7 @@ input = {
       }
     }
 
+
 output =              <alef_section xlink:label="L4L6DE7DWZG4EVNZKI5UL6TQ5EA" xp:name="alef_section"
                                   xp:description="Observing Photosynthesis" xp:fieldtype="folder"
                                   customclass="Text with Images">
@@ -117,5 +118,140 @@ output =              <alef_section xlink:label="L4L6DE7DWZG4EVNZKI5UL6TQ5EA" xp
                                                 xp:description="" audiocontrols="Yes" xp:fieldtype="file"
                                                 src="../../../LUZ4V6ZTUBRNU5KAQK7GDS34W34/CS_ELA9_L017_ANL_S04_AUD_001.mp3"/>
 							</alef_audionew>
+						</alef_column>
+					</alef_section>
+
+
+
+input_2 =     {
+      "pageType": "Misc",
+      "pageData": {
+        "viewRef": "page_006",
+        "templateID": "TextwithImage_001",
+        "args": {
+          "src": "aud_004",
+          "background": {
+            "type": "class",
+            "src": "bg_backgroundColor_3"
+          },
+          "ques": "text_020",
+          "textFieldData": {
+            "type": "h",
+            "textContent": {
+              "type": "center",
+              "title": "text_021",
+              "text": "text_022"
+            },
+            "imageContent": [
+              {
+                "image": "img_032"
+              }
+            ]
+          }
+        }
+      }
+    }
+
+otput_2 =                     <alef_section xlink:label="LBX4OBBRA2FPUVG6LQNF2MGFNFI" xp:name="alef_section"
+                                  xp:description="Observing Photosynthesis" xp:fieldtype="folder"
+                                  customclass="Text- Left">
+						<alef_column xlink:label="LGKCEP2Q2J3OENOZ36DL6AEOV3E" xp:name="alef_column" xp:description=""
+                                     xp:fieldtype="folder" width="auto" cellspan="1">
+							<alef_tooltip xlink:label="LUP3FRLZ7TSVE3HZRK7C7276REE" xp:name="alef_tooltip"
+                                          xp:description="" xp:fieldtype="folder">
+								<alef_questionstatement xlink:label="L222HXYZ7HLLUFCMXQDBNNOLMEE"
+                                                        xp:name="alef_questionstatement" xp:description=""
+                                                        xp:fieldtype="folder">
+									<alef_section_general xlink:label="L3GOK7XO375SUZLNSNMGJYN64EE"
+                                                          xp:name="alef_section_general" xp:description=""
+                                                          xp:fieldtype="folder">
+										<alef_column xlink:label="LEVILBZY4UNGUVE6HFU7N4BS6R4" xp:name="alef_column"
+                                                     xp:description="" xp:fieldtype="folder" width="auto"/>
+									</alef_section_general>
+								</alef_questionstatement>
+                                <alef_html xlink:label="LRV6JKITVWD2EVOQA5FC75GOLUM" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../LRV6JKITVWD2EVOQA5FC75GOLUM/emptyHtmlModel.html"/>
+                                <alef_popupvalue xlink:label="LK34H7VSR2LZE3IFDU26WKNDMCI" xp:name="alef_popupvalue"
+                                                 xp:description="" xp:fieldtype="folder">
+									<alef_section_general xlink:label="LTSLOYPXMEDJEPDDOHRMRN4VSDQ"
+                                                          xp:name="alef_section_general" xp:description=""
+                                                          xp:fieldtype="folder">
+										<alef_column xlink:label="LERCUFMWD2FPE7GNQRKTXRZFSVI" xp:name="alef_column"
+                                                     xp:description="" xp:fieldtype="folder" width="auto">
+											<alef_flipcards xlink:label="LFWQKFFF46JZE5NCCSXIP73VRRY"
+                                                            xp:name="alef_flipcards" xp:description=""
+                                                            xp:fieldtype="folder" customtype="Flipcard" height="500"
+                                                            multipleopen="false" flipdirection="Right">
+												<alef_questionstatement xlink:label="LLHJLS6MFR6LUZEVQ2YWXV65CEY"
+                                                                        xp:name="alef_questionstatement"
+                                                                        xp:description="" xp:fieldtype="folder">
+													<alef_section_general xlink:label="LVIFBJQ2IWWOEHN6FAVTMP7VBY4"
+                                                                          xp:name="alef_section_general"
+                                                                          xp:description="" xp:fieldtype="folder">
+														<alef_column xlink:label="LFBA4ZFZCS5BEPGJCEZMRCVMFHU"
+                                                                     xp:name="alef_column" xp:description=""
+                                                                     xp:fieldtype="folder" width="auto"/>
+													</alef_section_general>
+												</alef_questionstatement>
+                                                <alef_flipcard xlink:label="LQMSOY76ITYXURPVKUSH6UP4HMU"
+                                                               xp:name="alef_flipcard" xp:description=""
+                                                               xp:fieldtype="folder" centered="true">
+													<alef_section xlink:label="LHCOYOTXJ6BUEHBPSGRQGP3ILMU"
+                                                                  xp:name="alef_section" xp:description=""
+                                                                  xp:fieldtype="folder" customclass="Normal">
+														<alef_column xlink:label="LTEY55JRJNP4EZBCXSHOJOOZ6BU"
+                                                                     xp:name="alef_column" xp:description=""
+                                                                     xp:fieldtype="folder" width="auto" cellspan="1">
+															<alef_html xlink:label="L5SH7MNIOFRAUVMFSFXZZPG6RSY"
+                                                                       xp:name="alef_html" xp:description=""
+                                                                       xp:fieldtype="html"
+                                                                       src="../../../L5SH7MNIOFRAUVMFSFXZZPG6RSY/emptyHtmlModel.html"/>
+                                                            <alef_image xlink:label="LWGOC7FIG2CAUTM4CUHSPZJTBK4"
+                                                                        xp:name="alef_image" xp:description=""
+                                                                        xp:fieldtype="image" alt="">
+																<xp:img href="../../../LWGOC7FIG2CAUTM4CUHSPZJTBK4/01.png"
+                                                                        width="1136" height="890"/>
+															</alef_image>
+														</alef_column>
+													</alef_section>
+                                                    <alef_section xlink:label="L7XGZ6ZSLBQXEBBVEFTB4FKVLXA"
+                                                                  xp:name="alef_section" xp:description=""
+                                                                  xp:fieldtype="folder" customclass="Normal">
+														<alef_column xlink:label="LXU3D5Q2XBNRE3ETUBZCJRMAJEY"
+                                                                     xp:name="alef_column" xp:description=""
+                                                                     xp:fieldtype="folder" width="auto" cellspan="1">
+															<alef_html xlink:label="L4GVU4IV3OTNETA6YDNF5EBVRZU"
+                                                                       xp:name="alef_html" xp:description=""
+                                                                       xp:fieldtype="html"
+                                                                       src="../../../L4GVU4IV3OTNETA6YDNF5EBVRZU/emptyHtmlModel.html"/>
+                                                            <alef_image xlink:label="L4CFM4F2K6ELERB7ZCTBPX2YMRI"
+                                                                        xp:name="alef_image" xp:description=""
+                                                                        xp:fieldtype="image" alt="">
+																<xp:img href="../../../L4CFM4F2K6ELERB7ZCTBPX2YMRI/02.png"
+                                                                        width="1396" height="890"/>
+															</alef_image>
+														</alef_column>
+													</alef_section>
+												</alef_flipcard>
+											</alef_flipcards>
+										</alef_column>
+									</alef_section_general>
+								</alef_popupvalue>
+							</alef_tooltip>
+                            <alef_audionew xlink:label="LSABVFBD75L4E5FUHNQ3E3UQZ7I" xp:name="alef_audionew"
+                                           xp:description="" xp:fieldtype="folder">
+								<alef_audiofile xlink:label="L5UV3M2QIQA3U5BD76YVBNO5BYM" xp:name="alef_audiofile"
+                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                                src="../../../L5UV3M2QIQA3U5BD76YVBNO5BYM/p006_audio.mp3"/>
+							</alef_audionew>
+						</alef_column>
+                        <alef_column xlink:label="LISDUWJ7G2MUULMUXMEUYOSHOZM" xp:name="alef_column" xp:description=""
+                                     xp:fieldtype="folder" width="auto" cellspan="1">
+							<alef_image xlink:label="LAK7WDGQHSHTUBII42EWSRQ7M5I" xp:name="alef_image" xp:description=""
+                                        xp:fieldtype="image" alt="">
+								<xp:img href="../../../LAK7WDGQHSHTUBII42EWSRQ7M5I/safetyFirst.png" width="891"
+                                        height="890"/>
+							</alef_image>
 						</alef_column>
 					</alef_section>

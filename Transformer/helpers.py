@@ -64,3 +64,29 @@ def write_html(file_path, html_content):
     html_content = html_content.replace("\n\n", "\n")
     with open(file_path, "w") as file:
         file.write(html_content.strip())
+
+
+def generic_tag_creator(input_json_data, input_other_jsons_data, exiting_hashcode):
+    all_files = set()
+    all_tags = []
+
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    # Assigning values to variables
+    src = input_json_data["pageData"]["args"]["src"]
+
+    if src.startswith("vid"):
+        src_path = input_other_jsons_data['INPUT_VIDEO_JSON_DATA'][src]
+    elif src.startswith("img"):
+        src_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][src]
+    elif src.startswith("aud"):
+        src_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][src]
+    elif src.startswith("text"):
+        src_path = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][src]
+    else:
+        print(f"input val not valid {src}")
+        return ""

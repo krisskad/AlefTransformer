@@ -35,8 +35,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     imageContent_list = input_json_data["pageData"]["args"]["textFieldData"]["imageContent"]
 
     aud_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
-    ques_src = input_other_jsons_data['INPUT_TEXT_EN_JSON_DATA'][ques_id]
-    text_src = input_other_jsons_data['INPUT_TEXT_EN_JSON_DATA'][text_id]
+    ques_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_id]
+    text_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
 
     path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
     os.makedirs(path_to_hashcode, exist_ok=True)
@@ -69,6 +69,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # image columns
     for each_img in imageContent_list:
+        print(each_img)
         hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode)
 
