@@ -74,6 +74,9 @@ def process_data():
     MLO_TEMPLATES_OUTPUT_LIST = []
     for item in input_pages:
         template_id = item['pageData']['templateID']
+        # if template_id != "TextwithImage_002":
+        #     continue
+
         response = call_package(
             template_id=template_id,
             page_data=item,

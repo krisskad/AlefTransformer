@@ -63,7 +63,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
 
-
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
 
@@ -77,7 +76,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_image_tags_list = []
     for each_img in images:
-        img_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img]
+        img_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
         img_resp = copy_to_hashcode_dir(src_path=img_path, exiting_hashcode=exiting_hashcode)
         all_files.add(img_resp['relative_path'])
         exiting_hashcode.add(img_resp['hashcode'])
