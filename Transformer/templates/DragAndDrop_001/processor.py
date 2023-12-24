@@ -55,10 +55,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # Extracting variables
     title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
     src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
-        input_json_data["pageData"]["args"]["visibleElements"]]
-    dropItems = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["dropItems"]]
-    dragItems = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["dragItems"]]
+    # visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
+    #     input_json_data["pageData"]["args"]["visibleElements"]]
+    dropItems = input_json_data["pageData"]["args"]["dropItems"]
+    dragItems = input_json_data["pageData"]["args"]["dragItems"]
 
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
