@@ -1,0 +1,299 @@
+input =    {
+      "pageType": "Misc",
+      "pageData": {
+        "templateID": "DragAndDrop_003",
+        "args": {
+          "title": "text_039",
+          "src": "aud_011",
+          "background": {
+            "type": "class",
+            "src": "bg_backgroundColor_3"
+          },
+          "submit": "text_012",
+          "submitCount": 2,
+          "showAnswer": "text_013",
+          "visibleElements": 5,
+          "feedback": {
+            "correct": "text_014",
+            "incorrect_1": "text_015",
+            "incorrect_2": "text_016"
+          },
+          "feedBackAudio": {
+            "correct": "aud_001",
+            "incorrect_1": "aud_002",
+            "incorrect_2": "aud_003",
+            "hint": "aud_004"
+          },
+          "hint": {
+            "text": "text_017"
+          },
+          "dropItems": [
+            {
+              "dropId": 0,
+              "title": "text_040"
+            },
+            {
+              "dropId": 1,
+              "title": "text_041"
+            }
+          ],
+          "dragItems": [
+            {
+              "dropId": 1,
+              "image": "img_009",
+              "text": "text_042"
+            },
+            {
+              "dropId": 1,
+              "image": "img_010",
+              "text": "text_043"
+            },
+            {
+              "dropId": 1,
+              "image": "img_011",
+              "text": "text_044"
+            },
+            {
+              "dropId": 0,
+              "image": "img_012",
+              "text": "text_045"
+            },
+            {
+              "dropId": 0,
+              "image": "img_013",
+              "text": "text_046"
+            },
+            {
+              "dropId": 1,
+              "image": "img_014",
+              "text": "text_047"
+            },
+            {
+              "dropId": 0,
+              "image": "img_013",
+              "text": "text_046"
+            },
+            {
+              "dropId": 1,
+              "image": "img_014",
+              "text": "text_047"
+            }
+          ]
+        }
+      }
+    }
+
+
+output =                                <alef_section xlink:label="LPQFVVAPUCUFUPEUISRX35NIBHI" xp:name="alef_section"
+                                  xp:description="Look and decide if each item is a homogenous or a heterogeneous mixture."
+                                  xp:fieldtype="folder" customclass="Normal">
+						<alef_column xlink:label="LHXB3PWMAGKSUTN2SDIM74VEBA4" xp:name="alef_column" xp:description=""
+                                     xp:fieldtype="folder" width="auto" cellspan="1">
+							<alef_categorization xlink:label="LEHR5Y3UGDIOEXLUQ5GSXF76LMU" xp:name="alef_categorization"
+                                                 xp:description="" xp:fieldtype="folder"
+                                                 href="categorization_EHR5Y3UGDIOEXLUQ5GSXF76LMU.json"
+                                                 alef_categorizationtype="Normal" categorization_type="Text with Image"
+                                                 alef_shownumberofoptions="No" alef_limitanswer="No"
+                                                 alef_stickyoptions="No" alef_verticaloptions="No" invertoptions="No"
+                                                 submitattempts="2" validation="Yes" theme="Standard">
+								<alef_categorizationquestion xlink:label="LXZL4NZOBZ4UUDM5ZHR2GTYJAXY"
+                                                             xp:name="alef_categorizationquestion" xp:description=""
+                                                             xp:fieldtype="folder">
+									<alef_section_general xlink:label="LVSZ63OG3CVUULPBWQIXQSZY3NQ"
+                                                          xp:name="alef_section_general" xp:description=""
+                                                          xp:fieldtype="folder">
+										<alef_column xlink:label="LUATFLQFGF27ETOLJMY5R6T6BFE" xp:name="alef_column"
+                                                     xp:description="" xp:fieldtype="folder" width="auto">
+											<alef_html xlink:label="LIFA6KQIO23ZE7MKHGVXGH5QF7U" xp:name="alef_html"
+                                                       xp:description="" xp:fieldtype="html"
+                                                       src="../../../LIFA6KQIO23ZE7MKHGVXGH5QF7U/emptyHtmlModel.html"/>
+										</alef_column>
+									</alef_section_general>
+								</alef_categorizationquestion>
+                                <alef_categories xlink:label="L2XDPZPZO6KLEPPCMJJHUNAHVVM" xp:name="alef_categories"
+                                                 xp:description="" xp:fieldtype="folder">
+									<alef_category xlink:label="L3FPE55ACW4GEJL3WAS4Q7PYEGI" xp:name="alef_category"
+                                                   xp:description="Homogenous Mixtures" xp:fieldtype="folder">
+										<alef_option xlink:label="LFCASF2CYPSBEFAY7Q6O54677VU" xp:name="alef_option"
+                                                     xp:description="" xp:fieldtype="folder" label="vinegar">
+											<alef_optionvalue xlink:label="L5S47G7Z3EWIE3D3JOQANQ646XE"
+                                                              xp:name="alef_optionvalue" xp:description=""
+                                                              xp:fieldtype="folder">
+												<alef_section_general xlink:label="L5UQFXDUSWZ6EREULW33NXFMSDM"
+                                                                      xp:name="alef_section_general" xp:description=""
+                                                                      xp:fieldtype="folder">
+													<alef_column xlink:label="LPRLRJG5PAHSUVAGLWBNL6E5YYI"
+                                                                 xp:name="alef_column" xp:description=""
+                                                                 xp:fieldtype="folder" width="auto">
+														<alef_image xlink:label="LSIW5N2NY4O3UFLMEQX4ZAS6LKQ"
+                                                                    xp:name="alef_image" xp:description=""
+                                                                    xp:fieldtype="image" alt="">
+															<xp:img href="../../../LSIW5N2NY4O3UFLMEQX4ZAS6LKQ/drag_4.png"
+                                                                    width="301" height="155"/>
+														</alef_image>
+													</alef_column>
+												</alef_section_general>
+											</alef_optionvalue>
+										</alef_option>
+                                        <alef_option xlink:label="L3I47OXYXWO5E5DQ6NZDZCWJSLM" xp:name="alef_option"
+                                                     xp:description="" xp:fieldtype="folder" label="soap">
+											<alef_optionvalue xlink:label="L7OE2LMJGEEOERCT4RCLPRMZJUM"
+                                                              xp:name="alef_optionvalue" xp:description=""
+                                                              xp:fieldtype="folder">
+												<alef_section_general xlink:label="LWKDYG7FSXQSE7GWLFDJ3SU5SWE"
+                                                                      xp:name="alef_section_general" xp:description=""
+                                                                      xp:fieldtype="folder">
+													<alef_column xlink:label="LJM2HHQ4FWWAU3A3ZJF34OAFI4M"
+                                                                 xp:name="alef_column" xp:description=""
+                                                                 xp:fieldtype="folder" width="auto">
+														<alef_image xlink:label="LDIK77GL3LC2U3AJOXIXLP6UHDM"
+                                                                    xp:name="alef_image" xp:description=""
+                                                                    xp:fieldtype="image" alt="">
+															<xp:img href="../../../LDIK77GL3LC2U3AJOXIXLP6UHDM/drag_5.png"
+                                                                    width="301" height="155"/>
+														</alef_image>
+													</alef_column>
+												</alef_section_general>
+											</alef_optionvalue>
+										</alef_option>
+									</alef_category>
+                                    <alef_category xlink:label="LO4LBCUYLYAKE5FMFTRR2HBKHLA" xp:name="alef_category"
+                                                   xp:description="Heterogenous Mixtures" xp:fieldtype="folder">
+										<alef_option xlink:label="LK3BCMLKTP6OUJDDONSZZ2RGARM" xp:name="alef_option"
+                                                     xp:description="" xp:fieldtype="folder"
+                                                     label="water, oil and sand">
+											<alef_optionvalue xlink:label="LXBO7PXWLYXRE7JUJVIAO72W6Q4"
+                                                              xp:name="alef_optionvalue" xp:description=""
+                                                              xp:fieldtype="folder">
+												<alef_section_general xlink:label="LKIWAO4VXCAPULIZVYZB4NBTWKM"
+                                                                      xp:name="alef_section_general" xp:description=""
+                                                                      xp:fieldtype="folder">
+													<alef_column xlink:label="LU4LEND4WDV7UXFZVPPXR5YCB7A"
+                                                                 xp:name="alef_column" xp:description=""
+                                                                 xp:fieldtype="folder" width="auto">
+														<alef_image xlink:label="LPYC5PEQUGTSUXLQEFWQ4JJHE34"
+                                                                    xp:name="alef_image" xp:description=""
+                                                                    xp:fieldtype="image" alt="">
+															<xp:img href="../../../LPYC5PEQUGTSUXLQEFWQ4JJHE34/drag_1.png"
+                                                                    width="301" height="155"/>
+														</alef_image>
+													</alef_column>
+												</alef_section_general>
+											</alef_optionvalue>
+										</alef_option>
+                                        <alef_option xlink:label="LYNHFGFH72SAEJH5BCITYU2ZIQQ" xp:name="alef_option"
+                                                     xp:description="" xp:fieldtype="folder" label="Soda with ice">
+											<alef_optionvalue xlink:label="LLVDVZ2CHPN2E3KWBEORPQRALQM"
+                                                              xp:name="alef_optionvalue" xp:description=""
+                                                              xp:fieldtype="folder">
+												<alef_section_general xlink:label="LX65UDC2RN33UPJG556TEEUFSFM"
+                                                                      xp:name="alef_section_general" xp:description=""
+                                                                      xp:fieldtype="folder">
+													<alef_column xlink:label="LXVXWICMQG5NUVNA3HWJO2TLDAY"
+                                                                 xp:name="alef_column" xp:description=""
+                                                                 xp:fieldtype="folder" width="auto">
+														<alef_image xlink:label="LVVSX4JE66AHUJL7ILKW6X6DPJA"
+                                                                    xp:name="alef_image" xp:description=""
+                                                                    xp:fieldtype="image" alt="">
+															<xp:img href="../../../LVVSX4JE66AHUJL7ILKW6X6DPJA/drag_3.png"
+                                                                    width="301" height="155"/>
+														</alef_image>
+													</alef_column>
+												</alef_section_general>
+											</alef_optionvalue>
+										</alef_option>
+                                        <alef_option xlink:label="L3UZLQI525SCEVJY47YKIRZWDFE" xp:name="alef_option"
+                                                     xp:description="" xp:fieldtype="folder" label="Sand">
+											<alef_optionvalue xlink:label="LALCMLOCKIG6EVOP2XJW6XQUL6I"
+                                                              xp:name="alef_optionvalue" xp:description=""
+                                                              xp:fieldtype="folder">
+												<alef_section_general xlink:label="LDQOKK5OU3PPEZCTM5R6KI4CW5M"
+                                                                      xp:name="alef_section_general" xp:description=""
+                                                                      xp:fieldtype="folder">
+													<alef_column xlink:label="L4JRJEDOMMEJUNPXIPV32SF5JE4"
+                                                                 xp:name="alef_column" xp:description=""
+                                                                 xp:fieldtype="folder" width="auto">
+														<alef_image xlink:label="LTX62LH4KERIULOQLR2VGQFTJBE"
+                                                                    xp:name="alef_image" xp:description=""
+                                                                    xp:fieldtype="image" alt="">
+															<xp:img href="../../../LTX62LH4KERIULOQLR2VGQFTJBE/drag_6.png"
+                                                                    width="301" height="155"/>
+														</alef_image>
+													</alef_column>
+												</alef_section_general>
+											</alef_optionvalue>
+										</alef_option>
+                                        <alef_option xlink:label="LR3OV7I65GRXEVLVV2P4KBQE2MY" xp:name="alef_option"
+                                                     xp:description="" xp:fieldtype="folder"
+                                                     label="Basket of vegetables">
+											<alef_optionvalue xlink:label="LFOMWDUA22EEU5OINVBNHO2WDCQ"
+                                                              xp:name="alef_optionvalue" xp:description=""
+                                                              xp:fieldtype="folder">
+												<alef_section_general xlink:label="LUJTL3GX6OL2E5MJEP7WWIWQSRY"
+                                                                      xp:name="alef_section_general" xp:description=""
+                                                                      xp:fieldtype="folder">
+													<alef_column xlink:label="LBM64ILJYXROU5AZBNWTVTIM644"
+                                                                 xp:name="alef_column" xp:description=""
+                                                                 xp:fieldtype="folder" width="auto">
+														<alef_image xlink:label="LMZTRXWO4FL6UNP3YD4ADXFZ55A"
+                                                                    xp:name="alef_image" xp:description=""
+                                                                    xp:fieldtype="image" alt="">
+															<xp:img href="../../../LMZTRXWO4FL6UNP3YD4ADXFZ55A/drag_2.png"
+                                                                    width="301" height="155"/>
+														</alef_image>
+													</alef_column>
+												</alef_section_general>
+											</alef_optionvalue>
+										</alef_option>
+									</alef_category>
+								</alef_categories>
+                                <alef_correctfeedback xlink:label="LLFNJUQLYEPDUNJGAFPEHHJF3XE"
+                                                      xp:name="alef_correctfeedback" xp:description=""
+                                                      xp:fieldtype="folder">
+									<alef_section_general xlink:label="LSP5XORCFXW5UJCFCDBNH7NYTMA"
+                                                          xp:name="alef_section_general" xp:description=""
+                                                          xp:fieldtype="folder">
+										<alef_column xlink:label="L3NF6ET56GRVUFCMWXNP6YRMK3U" xp:name="alef_column"
+                                                     xp:description="" xp:fieldtype="folder" width="auto">
+											<alef_html xlink:label="LGUSLUROFRFSEDCGT7YZ5TLB7OI" xp:name="alef_html"
+                                                       xp:description="" xp:fieldtype="html"
+                                                       src="../../../LGUSLUROFRFSEDCGT7YZ5TLB7OI/emptyHtmlModel.html"/>
+										</alef_column>
+									</alef_section_general>
+								</alef_correctfeedback>
+                                <alef_incorrectfeedback xlink:label="LZQOOU3NIGXZEDPTYQD55HZWLOE"
+                                                        xp:name="alef_incorrectfeedback" xp:description=""
+                                                        xp:fieldtype="folder">
+									<alef_section_general xlink:label="LKW3PO6JVURYEDDDOAA4QEKRWPI"
+                                                          xp:name="alef_section_general" xp:description=""
+                                                          xp:fieldtype="folder">
+										<alef_column xlink:label="LEZSHZTX4HWKUFNHWMKCMTBMLEM" xp:name="alef_column"
+                                                     xp:description="" xp:fieldtype="folder" width="auto">
+											<alef_html xlink:label="L5PQAWAAR66ZE3O5MTQZKZKH7RI" xp:name="alef_html"
+                                                       xp:description="" xp:fieldtype="html"
+                                                       src="../../../L5PQAWAAR66ZE3O5MTQZKZKH7RI/emptyHtmlModel.html"/>
+										</alef_column>
+									</alef_section_general>
+								</alef_incorrectfeedback>
+                                <alef_hint xlink:label="LVUI4NMC5VA5EZCIED2ME6OH2II" xp:name="alef_hint"
+                                           xp:description="" xp:fieldtype="folder">
+									<alef_section_general xlink:label="LHWPYNYVVGDYEFK3QTHPZQS6KYQ"
+                                                          xp:name="alef_section_general" xp:description=""
+                                                          xp:fieldtype="folder">
+										<alef_column xlink:label="LQVYLB3XVE7SEZOMN6ODS53VSLY" xp:name="alef_column"
+                                                     xp:description="" xp:fieldtype="folder" width="auto">
+											<alef_html xlink:label="LXWZ3NZTWOZ6EDHXZPYH5T7REPU" xp:name="alef_html"
+                                                       xp:description="" xp:fieldtype="html"
+                                                       src="../../../LXWZ3NZTWOZ6EDHXZPYH5T7REPU/emptyHtmlModel.html"/>
+										</alef_column>
+									</alef_section_general>
+								</alef_hint>
+							</alef_categorization>
+                            <alef_audionew xlink:label="LBP5Z5KQVCFSEXD4ZQTVG5ZMES4" xp:name="alef_audionew"
+                                           xp:description="" xp:fieldtype="folder">
+								<alef_audiofile xlink:label="L3UBJAORIA4ZEDJWE6HZHV6NQME" xp:name="alef_audiofile"
+                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                                src="../../../L3UBJAORIA4ZEDJWE6HZHV6NQME/CS_ELA9_L017_ANL_S04_AUD_001.mp3"/>
+							</alef_audionew>
+						</alef_column>
+					</alef_section>
