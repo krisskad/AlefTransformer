@@ -112,9 +112,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     for each_cat in dropItems:
         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_cat['title']]
+
+        hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode)
         all_tags.append(
             f"""
-                                    <alef_category xlink:label="LXCVFVETT3Z3ENJRO4YM5U74WNU" xp:name="alef_category"
+                                    <alef_category xlink:label="{hashcode}" xp:name="alef_category"
                                                xp:description="{htmlentities.encode(title)}" xp:fieldtype="folder"> 
             """
         )
@@ -128,17 +131,25 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
             if each_option['dropId'] == each_cat['dropId']:
+                hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode)
+                hashcode2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode)
+                hashcode3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode)
+                hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode)
                 all_tags.append(
                     f"""
-                                                <alef_option xlink:label="L7O32R5LWYEIELE37L7CH6UDGEM" xp:name="alef_option"
+                                                <alef_option xlink:label="{hashcode1}" xp:name="alef_option"
                                                              xp:description="" xp:fieldtype="folder" label="{htmlentities.encode(text)}">
-                                                    <alef_optionvalue xlink:label="L3BAYOQVBTLAE3M5WBPKMNTXVEQ"
+                                                    <alef_optionvalue xlink:label="{hashcode2}"
                                                                       xp:name="alef_optionvalue" xp:description=""
                                                                       xp:fieldtype="folder">
-                                                        <alef_section_general xlink:label="L7KJP4TV52TBEDGFFH36BHUVDOA"
+                                                        <alef_section_general xlink:label="{hashcode3}"
                                                                               xp:name="alef_section_general" xp:description=""
                                                                               xp:fieldtype="folder">
-                                                            <alef_column xlink:label="LGK2O44722UTUFCKHKDVTPEDRL4"
+                                                            <alef_column xlink:label="{hashcode4}"
                                                                          xp:name="alef_column" xp:description=""
                                                                          xp:fieldtype="folder" width="auto">
                                                                 <alef_image xlink:label="{resp['hashcode']}"
