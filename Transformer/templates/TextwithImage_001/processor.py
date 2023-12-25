@@ -69,7 +69,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # image columns
     for each_img in imageContent_list:
-        print(each_img)
+        # print(each_img)
         hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode)
 
@@ -86,16 +86,19 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         relative_path = os.path.join(hashcode, str(os.path.basename(src_image_path)))
         all_files.add(relative_path)
 
+        hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode)
+
         all_tags.append(
             f"""
-            <alef_column xlink:label="LK5RSMIJLTZRE7CR5XQIISCX57U" xp:name="alef_column"
-                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-			    <alef_image xlink:label="{hashcode}" xp:name="alef_image"
-                                                xp:description="" xp:fieldtype="image" alt="{htmlentities.encode(src_en_text)}">
-				    <xp:img href="../../../{relative_path}" width="688"
-                                                height="890"/>
-				</alef_image>
-			</alef_column>
+                <alef_column xlink:label="{hashcode1}" xp:name="alef_column"
+                                                 xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+                    <alef_image xlink:label="{hashcode}" xp:name="alef_image"
+                                                    xp:description="" xp:fieldtype="image" alt="{htmlentities.encode(src_en_text)}">
+                        <xp:img href="../../../{relative_path}" width="688"
+                                                    height="890"/>
+                    </alef_image>
+                </alef_column>
             """
         )
 
