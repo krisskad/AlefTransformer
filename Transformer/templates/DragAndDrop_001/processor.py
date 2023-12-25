@@ -157,10 +157,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         """
-        </alef_category>
-        </alef_categorization>
+        </alef_categories>
         """
     )
+
+    all_tags.append("</alef_categorization>")
 
     resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])

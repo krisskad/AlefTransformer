@@ -55,6 +55,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # Extracting variables
     title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
     src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+
+    submit = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["submit"]]
+    submitCount = input_json_data["pageData"]["args"]["submitCount"]
+    showAnswer = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["showAnswer"]]
+    feedback = input_json_data["pageData"]["args"]["feedback"]
+    feedBackAudio = input_json_data["pageData"]["args"]["feedBackAudio"]
+    hint = input_json_data["pageData"]["args"]["hint"]
+
     # visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
     #     input_json_data["pageData"]["args"]["visibleElements"]]
     dropItems = input_json_data["pageData"]["args"]["dropItems"]
@@ -85,7 +93,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                              alef_categorizationtype="Normal" categorization_type="Text with Image"
                                              alef_shownumberofoptions="No" alef_limitanswer="No"
                                              alef_stickyoptions="No" alef_verticaloptions="No" invertoptions="No"
-                                             submitattempts="2" validation="No" theme="Standard">
+                                             submitattempts="{submitCount}" validation="No" theme="Standard">
                             <alef_categorizationquestion xlink:label="LJPET2PRM5BFE3P76ISP6USYCVQ"
                                                          xp:name="alef_categorizationquestion" xp:description=""
                                                          xp:fieldtype="folder">
@@ -157,10 +165,84 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         """
-        </alef_category>
-        </alef_categorization>
+        </alef_categories>
         """
     )
+
+    # add all hint, feedback, etc
+    for key, val in feedback.items():
+        base_key = key.split("_")[0]
+
+        text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+
+        hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode)
+
+        path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+        os.makedirs(path_to_hashcode, exist_ok=True)
+
+        path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+        write_html(text=text_val, destination_file_path=path_to_html)
+
+        relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
+        all_files.add(relative_path)
+
+        all_tags.append(
+            f"""
+                            <alef_{base_key}feedback xlink:label="LLFNJUQLYEPDUNJGAFPEHHJF3XE"
+                                                  xp:name="alef_correctfeedback" xp:description=""
+                                                  xp:fieldtype="folder">
+                                <alef_section_general xlink:label="LSP5XORCFXW5UJCFCDBNH7NYTMA"
+                                                      xp:name="alef_section_general" xp:description=""
+                                                      xp:fieldtype="folder">
+                                    <alef_column xlink:label="L3NF6ET56GRVUFCMWXNP6YRMK3U" xp:name="alef_column"
+                                                 xp:description="" xp:fieldtype="folder" width="auto">
+                                        <alef_html xlink:label="{hashcode}" xp:name="alef_html"
+                                                   xp:description="" xp:fieldtype="html"
+                                                   src="../../../{relative_path}"/>
+                                    </alef_column>
+                                </alef_section_general>
+                            </alef_correctfeedback>
+            
+            """
+        )
+
+    # add all hint, feedback, etc
+    for key, val in hint.items():
+        text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+
+        hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode)
+
+        path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+        os.makedirs(path_to_hashcode, exist_ok=True)
+
+        path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+        write_html(text=text_val, destination_file_path=path_to_html)
+
+        relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
+        all_files.add(relative_path)
+
+        all_tags.append(
+            f"""
+                            <alef_hint xlink:label="LVUI4NMC5VA5EZCIED2ME6OH2II" xp:name="alef_hint"
+                                       xp:description="" xp:fieldtype="folder">
+                                <alef_section_general xlink:label="LHWPYNYVVGDYEFK3QTHPZQS6KYQ"
+                                                      xp:name="alef_section_general" xp:description=""
+                                                      xp:fieldtype="folder">
+                                    <alef_column xlink:label="LQVYLB3XVE7SEZOMN6ODS53VSLY" xp:name="alef_column"
+                                                 xp:description="" xp:fieldtype="folder" width="auto">
+                                        <alef_html xlink:label="{hashcode}" xp:name="alef_html"
+                                                   xp:description="" xp:fieldtype="html"
+                                                   src="../../../{relative_path}"/>
+                                    </alef_column>
+                                </alef_section_general>
+                            </alef_hint>
+
+            """
+        )
+
+    all_tags.append("</alef_categorization>")
 
     resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])
