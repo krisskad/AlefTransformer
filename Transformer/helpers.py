@@ -4,6 +4,10 @@ import random
 import string
 import os
 import json
+from django.conf import settings
+
+import os
+import zipfile
 
 
 def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
@@ -90,3 +94,19 @@ def generic_tag_creator(input_json_data, input_other_jsons_data, exiting_hashcod
     else:
         print(f"input val not valid {src}")
         return ""
+
+
+def zip_folder_contents(folder_path, zip_filename='output.zip'):
+    os.chdir(folder_path)  # Change current directory to the folder to be zipped
+
+    with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, _, files in os.walk("."):
+            for file in files:
+                file_path = os.path.join(root, file)
+                rel_path = os.path.relpath(str(file_path), ".")
+                zipf.write(str(file_path), arcname=rel_path)
+
+    os.chdir(settings.BASE_DIR)  # Change back to the original directory if necessary
+
+
+

@@ -4,13 +4,17 @@ from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.
 from Transformer.main import process_data
-import zipfile
+
 import os
-import csv
-from django.http import HttpResponse
+import datetime
+import zipfile
 from rest_framework import viewsets
-from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.parsers import FileUploadParser
+from django.conf import settings
+import shutil
+from .serializers import FileUploadSerializer, DeleteSerializer  # Import your serializer
+from .helpers import zip_folder_contents  # Import your function to process the zip file
 
 
 class HomeView(ViewSet):
@@ -26,60 +30,77 @@ class HomeView(ViewSet):
         )
 
 
-class ZipHandlingViewSet(viewsets.ViewSet):
+class UploadViewSet(viewsets.ViewSet):
+    # parser_classes = [FileUploadParser]
+    serializer_class = FileUploadSerializer
 
-    @action(detail=False, methods=['post'])
-    def handle_zip(self, request):
-        if 'file' not in request.FILES:
-            return Response({'error': 'No file provided'}, status=400)
+    def list(self, request):
+        return Response({'zip_file_url': "str", 'log_file_url': "str"})
 
-        uploaded_file = request.FILES['file']
+    def post(self, request):
+        uploaded_file = request.data['file']  # Assuming the file is sent as 'file' in the request
 
-        # Ensure the 'INPUT' and 'OUTPUT' directories exist
-        input_dir = 'INPUT'
-        output_dir = 'OUTPUT'
-        os.makedirs(input_dir, exist_ok=True)
-        os.makedirs(output_dir, exist_ok=True)
+        # Create a folder for the current date and time
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_data_folder = f"media/{current_time}"
+        output_folder = str(settings.OUTPUT_DIR)
+        os.makedirs(output_data_folder, exist_ok=True)
+        os.makedirs(output_folder, exist_ok=True)
 
-        # Save the uploaded zip file to 'INPUT' directory
-        with open(os.path.join(input_dir, uploaded_file.name), 'wb+') as destination:
+        # Save the uploaded zip file to the 'INPUT' folder
+        input_folder = str(settings.INPUT_DIR)
+        os.makedirs(input_folder, exist_ok=True)
+        input_zip_path = os.path.join(input_folder, uploaded_file.name)
+
+        with open(input_zip_path, 'wb+') as destination:
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
 
-        # Extract the uploaded zip file to 'INPUT' directory
-        with zipfile.ZipFile(os.path.join(input_dir, uploaded_file.name), 'r') as zip_ref:
-            zip_ref.extractall(input_dir)
+        # Extract the zip file into the 'INPUT' folder
+        with zipfile.ZipFile(input_zip_path, 'r') as zip_ref:
+            zip_ref.extractall(input_folder)
 
-        # Create a new zip file from 'OUTPUT' directory contents
-        output_zip_path = os.path.join(output_dir, 'output.zip')
-        with zipfile.ZipFile(output_zip_path, 'w') as output_zip:
-            for root, dirs, files in os.walk(output_dir):
-                for file in files:
-                    file_path = os.path.join(root, file)
-                    rel_path = os.path.relpath(file_path, output_dir)
-                    output_zip.write(file_path, arcname=rel_path)
+        # Call the function to process the zip content
+        process_data()
 
-        # Create a CSV file for logs
-        logs_file_path = os.path.join(output_dir, 'logs.csv')
-        with open(logs_file_path, 'w', newline='') as logs_csv:
-            csv_writer = csv.writer(logs_csv)
-            csv_writer.writerow(['Log Entry 1', 'Log Entry 2', 'Log Entry 3'])  # Add your log entries here
+        # remove input data
+        shutil.rmtree(input_folder)
 
-        # Prepare the HTTP response with the zipped file and logs.csv
-        response = HttpResponse(content_type='application/zip')
-        response['Content-Disposition'] = f'attachment; filename="output.zip"'
+        # zipping output
+        print("zipping output")
 
-        # Write the output zip file to the response
-        with open(output_zip_path, 'rb') as output_zip_file:
-            response.write(output_zip_file.read())
+        zip_folder_contents(
+            folder_path=str(output_folder),
+            zip_filename=str(os.path.join(settings.BASE_DIR, output_data_folder, "output.zip"))
+        )
 
-        # Add logs.csv to the response
-        with open(logs_file_path, 'rb') as logs_csv_file:
-            response.write(logs_csv_file.read())
+        # remove output data
+        shutil.rmtree(output_folder)
 
-        # Cleanup: Remove uploaded file and generated files
-        os.remove(os.path.join(input_dir, uploaded_file.name))
-        os.remove(output_zip_path)
-        os.remove(logs_file_path)
+        # Return the URL to the created zip file and log file
+        zip_file_url = f"media/{current_time}/output.zip"
+        log_file_url = f"media/{current_time}/log.txt"  # Replace 'your_log_file.txt' with the actual log file name
 
-        return response
+        return Response({'zip_file_url': zip_file_url, 'log_file_url': log_file_url, "folder_name": current_time})
+
+
+class DeleteFolderViewSet(viewsets.ViewSet):
+    serializer_class = DeleteSerializer
+
+    def create(self, request):
+        folder_name = request.data.get('folder_name')
+
+        if folder_name:
+            folder_path = f"media/{folder_name}"  # Assuming folders are in the 'media' directory
+            if os.path.exists(folder_path):
+                try:
+                    shutil.rmtree(folder_path) # if you want to delete folders recursively
+                    # os.rmdir(folder_path)  # This deletes only empty directories
+                    return Response({'message': f"Folder '{folder_name}' deleted successfully"})
+                except Exception as e:
+                    return Response({'error': f"Failed to delete folder: {str(e)}"}, status=500)
+            else:
+                return Response({'error': f"Folder '{folder_name}' does not exist"}, status=404)
+        else:
+            return Response({'error': 'Please provide a folder_name'}, status=400)
+
