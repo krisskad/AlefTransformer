@@ -53,15 +53,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_tags = []
 
     # Extracting variables
-    ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
+    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]['text']]
     src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    # submit = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["submit"]]
-    # showAnswer = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"].get("showAnswer", None)]
-    submitCount = input_json_data["pageData"]["args"]["submitCount"]
-    # rightContainer = input_json_data["pageData"]["args"].get("rightContainer", None)
-    feedback = input_json_data["pageData"]["args"].get("feedback", None)
-    # hint = input_json_data["pageData"]["args"].get("hint", None)
-    options = input_json_data["pageData"]["args"].get("options", None)
+    submitCount = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["submitCount"]]
+    shuffle = input_json_data["pageData"]["args"]["shuffle"]
+    feedback = input_json_data["pageData"]["args"]["feedback"]
+    hint = input_json_data["pageData"]["args"]["hint"]
+    options = input_json_data["pageData"]["args"]["options"]
 
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
