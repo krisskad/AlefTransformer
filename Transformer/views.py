@@ -39,6 +39,7 @@ class UploadViewSet(viewsets.ViewSet):
 
     def post(self, request):
         uploaded_file = request.data['file']  # Assuming the file is sent as 'file' in the request
+        template_ids = request.data.get("template_ids", None)  # Assuming the file is sent as 'file' in the request
 
         # Create a folder for the current date and time
         current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -61,7 +62,7 @@ class UploadViewSet(viewsets.ViewSet):
             zip_ref.extractall(input_folder)
 
         # Call the function to process the zip content
-        process_data()
+        process_data(template_ids=template_ids)
 
         # remove input data
         shutil.rmtree(input_folder)

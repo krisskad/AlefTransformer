@@ -19,7 +19,7 @@ def call_package(template_id, page_data, other_json_data, exiting_hashcode):
         return None
 
 
-def process_data():
+def process_data(template_ids=None):
     # App
     INPUT_STRUCTURE_JSON_DATA = read_json(
         file_path=settings.INPUT_STRUCTURE_JSON
@@ -76,6 +76,11 @@ def process_data():
         template_id = item['pageData']['templateID']
         # if template_id != "Video_001":
         #     continue
+
+        if template_ids:
+            if isinstance(template_ids, list):
+                if not template_id in template_ids:
+                    continue
 
         response = call_package(
             template_id=template_id,
