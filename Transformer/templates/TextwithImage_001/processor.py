@@ -47,12 +47,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
     all_files.add(relative_path)
 
+    hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode1)
+    hashcode2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode2)
+
     all_tags.append(
         f"""
-        <alef_section xlink:label="L4L6DE7DWZG4EVNZKI5UL6TQ5EA" xp:name="alef_section"
+        <alef_section xlink:label="{hashcode1}" xp:name="alef_section"
                                   xp:description="{htmlentities.encode(ques_src)}" xp:fieldtype="folder"
                                   customclass="Text with Images">
-            <alef_column xlink:label="L3CN72MEF57OUHIZ5H3DFL3C4LY" xp:name="alef_column" xp:description=""
+            <alef_column xlink:label="{hashcode2}" xp:name="alef_column" xp:description=""
                                      xp:fieldtype="folder" width="auto" cellspan="1">
                 <alef_html xlink:label="{hashcode}" xp:name="alef_html" xp:description=""
                                        xp:fieldtype="html"
@@ -60,9 +65,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     )
 
+    hashcode3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode3)
+
     all_tags.append(
-        """
-        <alef_section xlink:label="LYVKWKQWPISTERJM2FTIP7IMVJM" xp:name="alef_section"
+        f"""
+        <alef_section xlink:label="{hashcode3}" xp:name="alef_section"
                                           xp:description="" xp:fieldtype="folder" customclass="Normal">
         """
     )
@@ -123,9 +131,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     relative_path = os.path.join(hashcode, str(os.path.basename(src_audio_path)))
     all_files.add(relative_path)
 
+    hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode4)
+
     all_tags.append(
         f"""
-                        <alef_audionew xlink:label="L7HSKIV72XC5EFB7H6OWFCF24NE" xp:name="alef_audionew"
+                        <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
                                        xp:description="" xp:fieldtype="folder">
                             <alef_audiofile xlink:label="{hashcode}" xp:name="alef_audiofile"
                                             xp:description="" audiocontrols="Yes" xp:fieldtype="file"

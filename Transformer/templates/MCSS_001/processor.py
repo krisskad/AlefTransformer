@@ -75,25 +75,38 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
     all_files.add(relative_path)
 
+    hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode1)
+    hashcode2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode2)
+    hashcode3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode3)
+    hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode4)
+    hashcode5 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode5)
+    hashcode6 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode6)
+
     all_tags.append(
         f"""
-                <alef_section xlink:label="LE2HXPK4DHVTEVPAEQ4N6BM6MAM" xp:name="alef_section" xp:description=""
+                <alef_section xlink:label="{hashcode1}" xp:name="alef_section" xp:description=""
                               xp:fieldtype="folder" customclass="Normal">
-                    <alef_column xlink:label="LJCXFO5IBLWCEPHMTRJLWA53YJI" xp:name="alef_column" xp:description=""
+                    <alef_column xlink:label="{hashcode2}" xp:name="alef_column" xp:description=""
                                  xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_multiplechoice xlink:label="LZPX6HE2VOPIEPOMGJLMWJFWFT4" xp:name="alef_multiplechoice"
+                        <alef_multiplechoice xlink:label="{hashcode3}" xp:name="alef_multiplechoice"
                                              xp:description="" xp:fieldtype="folder" alef_type="MC Radio Button"
                                              questionfullwidth="false" questiontitle=" " questionnumber=" "
                                              nofcolumns="2" submitattempts="{submitCount}" showtitle="false"
                                              alignstatement="center" showbackground="false" shuffleoptions="true"
                                              validation="Yes">
-                            <alef_questionstatement xlink:label="L3TNSM54DDLYEPK7E7325GOR42I"
+                            <alef_questionstatement xlink:label="{hashcode4}"
                                                     xp:name="alef_questionstatement" xp:description=""
                                                     xp:fieldtype="folder">
-                                <alef_section_general xlink:label="L626QWRJOSF7U3KXUE7OWD2ZQ24"
+                                <alef_section_general xlink:label="{hashcode5}"
                                                       xp:name="alef_section_general" xp:description=""
                                                       xp:fieldtype="folder">
-                                    <alef_column xlink:label="LTIXWZEJZI2LUBE7KIF4RYFG3CQ" xp:name="alef_column"
+                                    <alef_column xlink:label="{hashcode6}" xp:name="alef_column"
                                                  xp:description="" xp:fieldtype="folder" width="auto">
                                         <alef_html xlink:label="{hashcode}" xp:name="alef_html"
                                                    xp:description="" xp:fieldtype="html"
@@ -225,8 +238,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
 
+    hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode1)
+
     all_tags.append(f"""
-                        <alef_audionew xlink:label="LNU7AJD67V63U7IIAR7HTP7UAQM" xp:name="alef_audionew"
+                        <alef_audionew xlink:label="{hashcode1}" xp:name="alef_audionew"
                                        xp:description="" xp:fieldtype="folder">
                             <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
                                             xp:description="" audiocontrols="Yes" xp:fieldtype="file"
