@@ -123,14 +123,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         )
 
         for each_option in dragItems:
-            image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_option['image']]
 
-            resp = copy_to_hashcode_dir(src_path=image, exiting_hashcode=exiting_hashcode)
-            all_files.add(resp['relative_path'])
-            exiting_hashcode.add(resp['hashcode'])
-
-            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
             if each_option['dropId'] == each_cat['dropId']:
+
+                image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_option['image']]
+
+                resp = copy_to_hashcode_dir(src_path=image, exiting_hashcode=exiting_hashcode)
+                all_files.add(resp['relative_path'])
+                exiting_hashcode.add(resp['hashcode'])
+
+                text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
+
                 hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
                 exiting_hashcode.add(hashcode)
                 hashcode2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)

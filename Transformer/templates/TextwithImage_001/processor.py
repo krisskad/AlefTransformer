@@ -87,7 +87,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         all_files.add(relative_path)
 
         hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-        exiting_hashcode.add(hashcode)
+        exiting_hashcode.add(hashcode1)
 
         all_tags.append(
             f"""
@@ -125,14 +125,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         f"""
-                                    <alef_audionew xlink:label="L7HSKIV72XC5EFB7H6OWFCF24NE" xp:name="alef_audionew"
-                                           xp:description="" xp:fieldtype="folder">
-								<alef_audiofile xlink:label="{hashcode}" xp:name="alef_audiofile"
-                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                                src="../../../{relative_path}"/>
-							</alef_audionew>
-						</alef_column>
-					</alef_section>
+                        <alef_audionew xlink:label="L7HSKIV72XC5EFB7H6OWFCF24NE" xp:name="alef_audionew"
+                                       xp:description="" xp:fieldtype="folder">
+                            <alef_audiofile xlink:label="{hashcode}" xp:name="alef_audiofile"
+                                            xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                            src="../../../{relative_path}"/>
+                        </alef_audionew>
+                    </alef_column>
+                </alef_section>
         """
     )
 

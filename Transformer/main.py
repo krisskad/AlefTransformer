@@ -74,7 +74,7 @@ def process_data():
     MLO_TEMPLATES_OUTPUT_LIST = []
     for item in input_pages:
         template_id = item['pageData']['templateID']
-        # if template_id != "MCSS_001":
+        # if template_id != "Video_001":
         #     continue
 
         response = call_package(
