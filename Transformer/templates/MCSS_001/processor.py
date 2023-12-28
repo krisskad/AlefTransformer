@@ -151,8 +151,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                             </alef_choice>
             """
         )
-
+    count = 1
     for key, val in feedback.items():
+        if count > 2:
+            break
         main_key = key.split("_")[0]
 
         text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
@@ -194,6 +196,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                             </alef_{main_key}feedback>
             """
         )
+        count = count + 1
 
     try:
         image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["image"]]
