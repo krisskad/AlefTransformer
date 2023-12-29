@@ -31,13 +31,16 @@ class HomeView(ViewSet):
 
 
 class UploadViewSet(viewsets.ViewSet):
-    # parser_classes = [FileUploadParser]
+    parser_classes = [FileUploadParser]
     serializer_class = FileUploadSerializer
 
     def list(self, request):
         return Response({'zip_file_url': "str", 'log_file_url': "str"})
 
     def post(self, request):
+        if not 'file' in request.data:
+            return Response({'error': 'File key not found in request data'}, status=status.HTTP_400_BAD_REQUEST)
+
         uploaded_file = request.data['file']  # Assuming the file is sent as 'file' in the request
         template_ids = request.data.get("template_ids", None)  # Assuming the file is sent as 'file' in the request
 
@@ -95,7 +98,7 @@ class DeleteFolderViewSet(viewsets.ViewSet):
             folder_path = f"media/{folder_name}"  # Assuming folders are in the 'media' directory
             if os.path.exists(folder_path):
                 try:
-                    shutil.rmtree(folder_path) # if you want to delete folders recursively
+                    shutil.rmtree(folder_path)  # if you want to delete folders recursively
                     # os.rmdir(folder_path)  # This deletes only empty directories
                     return Response({'message': f"Folder '{folder_name}' deleted successfully"})
                 except Exception as e:
@@ -104,4 +107,3 @@ class DeleteFolderViewSet(viewsets.ViewSet):
                 return Response({'error': f"Folder '{folder_name}' does not exist"}, status=404)
         else:
             return Response({'error': 'Please provide a folder_name'}, status=400)
-
