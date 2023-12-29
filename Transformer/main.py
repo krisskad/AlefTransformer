@@ -74,7 +74,7 @@ def process_data(template_ids=None):
     MLO_TEMPLATES_OUTPUT_LIST = []
     for item in input_pages:
         template_id = item['pageData']['templateID']
-        # if template_id != "CustomDragAndDrop_002":
+        # if template_id != "CustomDragAndDrop_002-dev":
         #     continue
 
         if template_ids:
