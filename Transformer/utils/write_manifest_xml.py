@@ -1,6 +1,6 @@
 import os
 from django.conf import settings
-from Transformer.helpers import write_xml
+from Transformer.helpers import write_xml, generate_unique_folder_name
 
 
 IMSMANIFEST_XML = """
@@ -16,7 +16,7 @@ IMSMANIFEST_XML = """
 </manifest>
 """
 
-def write_imsmanifest_xml(all_manifest_files):
+def write_imsmanifest_xml(all_manifest_files, exiting_hashcode):
 
     file_tags = []
     mlo_html_path = ""
@@ -48,7 +48,20 @@ def write_imsmanifest_xml(all_manifest_files):
     </resource>
     """
 
-    ims_file_content = IMSMANIFEST_XML.format(resource_html)
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="_", k=27)
+
+    ims_file_content = f"""
+    <?xml version="1.0" encoding="utf-8"?>
+    <manifest
+        xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+        xmlns:xp="http://www.giuntilabs.com/exact/xp_v1d0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd  http://www.imsglobal.org/xsd/imsmd_v1p2 imsmd_v1p2p2.xsd  http://www.giuntilabs.com/exact/xp_v1d0 xp_v1d0.xsd" version="1.0" identifier="{hashcode}" xp:packtype="lo">
+        <organizations />
+        <resources>
+            {resource_html}
+        </resources>
+    </manifest>
+    """
     ims_file_content = ims_file_content.replace("\n\n", "\n")
     file_path = os.path.join(settings.OUTPUT_DIR, "imsmanifest.xml")
 

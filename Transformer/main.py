@@ -74,7 +74,7 @@ def process_data(template_ids=None):
     MLO_TEMPLATES_OUTPUT_LIST = []
     for item in input_pages:
         template_id = item['pageData']['templateID']
-        # if template_id != "CustomDragAndDrop_002-dev":
+        # if template_id != "CustomDragAndDrop_002":
         #     continue
 
         if template_ids:
@@ -107,7 +107,9 @@ def process_data(template_ids=None):
     ALL_MANIFEST_FILES.update(mlo_response['MANIFEST_FILES'])
 
     write_imsmanifest_xml(
-        all_manifest_files=ALL_MANIFEST_FILES
+        all_manifest_files=ALL_MANIFEST_FILES,
+        exiting_hashcode=GENERATED_HASH_CODES
+
     )
 
     return True
