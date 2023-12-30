@@ -155,6 +155,8 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # app
 INPUT_APP_DIR = os.path.join(INPUT_DIR, 'course', 'app')
+INPUT_COMMON_DIR = os.path.join(INPUT_DIR, 'common')
+# app json
 INPUT_STRUCTURE_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
 INPUT_AUDIO_JSON = os.path.join(INPUT_APP_DIR, "json", "audio.json")
 INPUT_EN_TEXT_JSON = os.path.join(INPUT_APP_DIR, "json", "en_text.json")

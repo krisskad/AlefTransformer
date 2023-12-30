@@ -5,6 +5,7 @@ import string
 import os
 import json
 from django.conf import settings
+from bs4 import BeautifulSoup
 
 import os
 import zipfile
@@ -107,6 +108,44 @@ def zip_folder_contents(folder_path, zip_filename='output.zip'):
                 zipf.write(str(file_path), arcname=rel_path)
 
     os.chdir(settings.BASE_DIR)  # Change back to the original directory if necessary
+
+
+def extract_span_info(text):
+    soup = BeautifulSoup(text, 'html.parser')
+    spans = soup.find_all('span')
+
+    if not spans:
+        return text
+
+    span_info = {}
+    for span in spans:
+        content = span.text.strip()
+        span_info[content] = {
+            'id': span.get('id'),
+            'data-ref': span.get('data-ref')
+        }
+
+    return span_info
+
+
+def text_en_html_to_html_text(html_string):
+    soup = BeautifulSoup(html_string, 'html.parser')
+    spans_with_id = soup.find_all('span', id=True)
+
+    for span in spans_with_id:
+        strong_tag = soup.new_tag('strong')
+        strong_tag.string = span.text
+        span.replace_with(strong_tag)
+
+    spans_with_data_ref = soup.find_all('span', {'data-ref': True})
+
+    for span in spans_with_data_ref:
+        del span['data-ref']
+        del span['data-dir']
+
+        span['class'] = 'jsx_tooltip'
+
+    return str(soup)
 
 
 
