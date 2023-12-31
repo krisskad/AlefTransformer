@@ -19,7 +19,32 @@ input =     {
     }
 
 
-output =                     <alef_section xlink:label="LKIK76TUISSIU7GLZRIBEWGNTEY" xp:name="alef_section" xp:description=""
+    {
+      "pageType": "Misc",
+      "pageData": {
+        "viewRef": "page_004",
+        "templateID": "AudiowithInputBox_001",
+        "args": {
+          "src": "aud_002",
+          "background": {
+            "type": "image",
+            "src": "img_input"
+          },
+          "textFieldData": {
+            "qText": "text_018",
+            "placeHolderText": "text_005",
+            "btnText": "text_006"
+          },
+          "mediaBoxData": {
+            "type": "image",
+            "src": "img_032"
+          }
+        }
+      }
+    }
+
+
+output =             <alef_section xlink:label="LKIK76TUISSIU7GLZRIBEWGNTEY" xp:name="alef_section" xp:description=""
                                   xp:fieldtype="folder" customclass="Text- Left">
 						<alef_column xlink:label="L3AQ7HAKNIB5EDIO2NUXM2LDP4U" xp:name="alef_column" xp:description=""
                                      xp:fieldtype="folder" width="auto" cellspan="1">

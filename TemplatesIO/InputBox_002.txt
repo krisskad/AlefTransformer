@@ -1,0 +1,19 @@
+input =     {
+      "pageType": "Misc",
+      "pageData": {
+        "templateID": "InputBox_002",
+        "args": {
+          "src": "aud_005",
+          "background": {
+            "type": "class",
+            "src": "bg_backgroundColor_3"
+          },
+          "type": "1",
+          "subBoxesCount": "3",
+          "conclusionBox": true
+        }
+      }
+    }
+
+
+output =

@@ -1,0 +1,54 @@
+input =     {
+      "pageType": "Misc",
+      "pageData": {
+        "viewRef": "page_027",
+        "templateID": "InputBox_001",
+        "args": {
+          "src": "aud_005",
+          "background": {
+            "type": "class",
+            "src": "bg_backgroundColor_3"
+          },
+          "inputBoxes": [{}, {}, {}, {}, {}, {}],
+          "extraTexts": [
+            { "text": "p028_extraTxt_1" },
+            { "text": "p028_extraTxt_2" },
+            { "text": "p028_extraTxt_3" },
+            { "text": "p028_extraTxt_4" },
+            { "text": "p028_extraTxt_5" },
+            { "text": "p028_extraTxt_6" },
+            { "text": "p028_extraTxt_7" }
+          ],
+          "extraImages": [{ "image": "p028_extraImage_1" }]
+        }
+      }
+    }
+
+output =              <alef_section xlink:label="LF2FLE6WGMPNERKHN4SZDNMAWUI" xp:name="alef_section"
+                                  xp:description="Plot Diagram" xp:fieldtype="folder" customclass="Normal">
+						<alef_column xlink:label="LHEZOCGPV3DEUDEBZYZZ4YETQWM" xp:name="alef_column" xp:description=""
+                                     xp:fieldtype="folder" width="auto" cellspan="1">
+							<alef_predefined_graphorganizer xlink:label="LK7B4YVMKPMUEDBWLO7QKEBUMJI"
+                                                            xp:name="alef_predefined_graphorganizer" xp:description=""
+                                                            xp:fieldtype="folder" type="Plot Diagram">
+								<alef_html xlink:label="LXRVS6AEQ2TPU7O2VHPBFNRBGOY" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../LXRVS6AEQ2TPU7O2VHPBFNRBGOY/emptyHtmlModel.html"/>
+                                <alef_html xlink:label="LMZH4TPD3QEAUFDSX55LA6A4VFA" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../LMZH4TPD3QEAUFDSX55LA6A4VFA/emptyHtmlModel.html"/>
+                                <alef_html xlink:label="L3LQOFR5W3IMEVLMI42STSTPWFQ" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../L3LQOFR5W3IMEVLMI42STSTPWFQ/emptyHtmlModel.html"/>
+                                <alef_html xlink:label="LQT7MYJGO7TFEBAO5HTXT7AL3HU" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../LQT7MYJGO7TFEBAO5HTXT7AL3HU/emptyHtmlModel.html"/>
+                                <alef_html xlink:label="LBCVAORRBLOCULI3QD2NSOZMF5U" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../LBCVAORRBLOCULI3QD2NSOZMF5U/emptyHtmlModel.html"/>
+                                <alef_html xlink:label="LHWGWJNGYBTQUVLNKESHBXMOII4" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../LHWGWJNGYBTQUVLNKESHBXMOII4/emptyHtmlModel.html"/>
+							</alef_predefined_graphorganizer>
+						</alef_column>
+					</alef_section>
