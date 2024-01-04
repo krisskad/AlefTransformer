@@ -74,8 +74,8 @@ def process_data(template_ids=None):
     MLO_TEMPLATES_OUTPUT_LIST = []
     for item in input_pages:
         template_id = item['pageData']['templateID']
-        if template_id != "AudiowithInputBox_001":
-            continue
+        # if template_id != "VideowithInputBox_001":
+        #     continue
 
         if template_ids:
             if isinstance(template_ids, list):

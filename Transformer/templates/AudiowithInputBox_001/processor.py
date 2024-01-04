@@ -89,36 +89,31 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
 
+    temp = []
+    for _ in range(40):
+        hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp)
+        temp.append(hashcode_temp)
+
     all_tags.append(
         f"""
-        <alef_section xlink:label="LKIK76TUISSIU7GLZRIBEWGNTEY" xp:name="alef_section" xp:description=""
+        <alef_section xlink:label="{temp[12]}" xp:name="alef_section" xp:description=""
                       xp:fieldtype="folder" customclass="Text- Left">
-            <alef_column xlink:label="L3AQ7HAKNIB5EDIO2NUXM2LDP4U" xp:name="alef_column" xp:description=""
+            <alef_column xlink:label="{temp[13]}" xp:name="alef_column" xp:description=""
                          xp:fieldtype="folder" width="auto" cellspan="1">
-                <alef_notebook xlink:label="LBBXEYRX577AUXDSDJVHOX5BPUI" xp:name="alef_notebook"
+                <alef_notebook xlink:label="{temp[14]}" xp:name="alef_notebook"
                                xp:description="" xp:fieldtype="folder">
-                    <alef_questionstatement xlink:label="LDXQ5IIHKYOLUXM7W7YPSWXCMTM"
+                    <alef_questionstatement xlink:label="{temp[15]}"
                                             xp:name="alef_questionstatement" xp:description=""
                                             xp:fieldtype="folder">
-                        <alef_section_general xlink:label="LCIZ23YEY5JBUZFWRDXF3GSKYEI"
+                        <alef_section_general xlink:label="{temp[16]}"
                                               xp:name="alef_section_general" xp:description=""
                                               xp:fieldtype="folder">
-                            <alef_column xlink:label="LDV7UDYBTPUSULO5JB463CJOVG4" xp:name="alef_column"
+                            <alef_column xlink:label="{temp[17]}" xp:name="alef_column"
                                          xp:description="" xp:fieldtype="folder" width="auto">
-                                <alef_tooltip xlink:label="LMMUFLASMZWAUZGPM5H7VTAYDAI"
+                                <alef_tooltip xlink:label="{temp[18]}"
                                               xp:name="alef_tooltip" xp:description=""
                                               xp:fieldtype="folder">
-                                    <alef_questionstatement xlink:label="LX4XOECBSPNME3NY4J5LUWP5VAM"
-                                                            xp:name="alef_questionstatement"
-                                                            xp:description="" xp:fieldtype="folder">
-                                        <alef_section_general xlink:label="LJ43BBOZQ66XETP4FBYQOMZ2MWY"
-                                                              xp:name="alef_section_general"
-                                                              xp:description="" xp:fieldtype="folder">
-                                            <alef_column xlink:label="LEW7PEK2H4ZNEHBHI5AUDL5HVO4"
-                                                         xp:name="alef_column" xp:description=""
-                                                         xp:fieldtype="folder" width="auto"/>
-                                        </alef_section_general>
-                                    </alef_questionstatement>
                                     <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
                                                xp:description="" xp:fieldtype="html"
                                                src="../../../{resp['relative_path']}"/>
@@ -159,11 +154,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         all_files.add(back_img_path_resp['relative_path'])
         exiting_hashcode.add(back_img_path_resp['hashcode'])
 
-        temp = []
-        for _ in range(20):
-            hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode_temp)
-            temp.append(hashcode_temp)
 
         all_tags.append(
             f"""
@@ -181,20 +171,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                         xp:fieldtype="folder" customtype="Flipcard"
                                         height="500" multipleopen="false"
                                         flipdirection="Right">
-                            <alef_questionstatement
-                                    xlink:label="{temp[4]}"
-                                    xp:name="alef_questionstatement"
-                                    xp:description="" xp:fieldtype="folder">
-                                <alef_section_general
-                                        xlink:label="{temp[5]}"
-                                        xp:name="alef_section_general"
-                                        xp:description="" xp:fieldtype="folder">
-                                    <alef_column
-                                            xlink:label="{temp[6]}"
-                                            xp:name="alef_column" xp:description=""
-                                            xp:fieldtype="folder" width="auto"/>
-                                </alef_section_general>
-                            </alef_questionstatement>
                             <alef_flipcard xlink:label="{temp[7]}"
                                            xp:name="alef_flipcard" xp:description=""
                                            xp:fieldtype="folder" centered="true">
@@ -273,7 +249,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         f"""
-        <alef_audionew xlink:label="LTQRYWTC77CGUVOD2YJ56YYH7PY" xp:name="alef_audionew"
+        <alef_audionew xlink:label="{temp[22]}" xp:name="alef_audionew"
                        xp:description="" xp:fieldtype="folder">
             <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
                             xp:description="" audiocontrols="Yes" xp:fieldtype="file"
@@ -290,7 +266,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_tags.append(
         f"""
             </alef_column>
-            <alef_column xlink:label="LRJ4564J2ZT6UTADHSQCB7EHFKU" xp:name="alef_column" xp:description=""
+            <alef_column xlink:label="{temp[23]}" xp:name="alef_column" xp:description=""
                          xp:fieldtype="folder" width="auto" cellspan="1">
                 <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description=""
                             xp:fieldtype="image" alt="">

@@ -136,20 +136,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                         <alef_tooltip xlink:label="LE4N4ARLWVTEU5MPG7KTPF627I4"
                                                       xp:name="alef_tooltip" xp:description=""
                                                       xp:fieldtype="folder">
-                                            <alef_questionstatement
-                                                    xlink:label="L7DHNO5J6GN2ETPI3TSNGOPVHSY"
-                                                    xp:name="alef_questionstatement"
-                                                    xp:description="" xp:fieldtype="folder">
-                                                <alef_section_general
-                                                        xlink:label="L5OMSBRRV2YHEFE6PJ4X3MQ5E4I"
-                                                        xp:name="alef_section_general"
-                                                        xp:description="" xp:fieldtype="folder">
-                                                    <alef_column
-                                                            xlink:label="LP35TVZW7GIRULIEOHG27LNP63E"
-                                                            xp:name="alef_column" xp:description=""
-                                                            xp:fieldtype="folder" width="auto"/>
-                                                </alef_section_general>
-                                            </alef_questionstatement>
                                             <alef_html xlink:label="{resp['hashcode']}"
                                                        xp:name="alef_html" xp:description=""
                                                        xp:fieldtype="html"
@@ -219,24 +205,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                     customtype="Flipcard" height="500"
                                     multipleopen="false"
                                     flipdirection="Right">
-                                <alef_questionstatement
-                                        xlink:label="{temp[4]}"
-                                        xp:name="alef_questionstatement"
-                                        xp:description=""
-                                        xp:fieldtype="folder">
-                                    <alef_section_general
-                                            xlink:label="{temp[5]}"
-                                            xp:name="alef_section_general"
-                                            xp:description=""
-                                            xp:fieldtype="folder">
-                                        <alef_column
-                                                xlink:label="{temp[6]}"
-                                                xp:name="alef_column"
-                                                xp:description=""
-                                                xp:fieldtype="folder"
-                                                width="auto"/>
-                                    </alef_section_general>
-                                </alef_questionstatement>
                                 <alef_flipcard
                                         xlink:label="{temp[7]}"
                                         xp:name="alef_flipcard"
