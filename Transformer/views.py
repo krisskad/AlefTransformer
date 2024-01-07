@@ -3,7 +3,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.
-from Transformer.main import process_data
+from Transformer.main import process_data, iterative_process_data
 
 import os
 import datetime
@@ -14,7 +14,11 @@ from rest_framework.parsers import FileUploadParser
 from django.conf import settings
 import shutil
 from .serializers import FileUploadSerializer, DeleteSerializer  # Import your serializer
-from .helpers import zip_folder_contents  # Import your function to process the zip file
+from .helpers import zip_folder_contents, validate_inputs_dirs  # Import your function to process the zip file
+
+
+def index(request):
+    return render(request, 'index.html')
 
 
 class HomeView(ViewSet):
@@ -107,3 +111,28 @@ class DeleteFolderViewSet(viewsets.ViewSet):
                 return Response({'error': f"Folder '{folder_name}' does not exist"}, status=404)
         else:
             return Response({'error': 'Please provide a folder_name'}, status=400)
+
+
+class LocalFileProcessViewSet(viewsets.ViewSet):
+    def list(self, request):
+        return Response({'zip_file_url': "str", 'log_file_url': "str"})
+
+    def post(self, request):
+        input_dir = request.data.get("courses_path", None)  # Assuming the file is sent as 'file' in the request
+        output_dir = request.data.get("output_path", None)  # Assuming the file is sent as 'file' in the request
+        common_dir = request.data.get("common_path", None)  # Assuming the file is sent as 'file' in the request
+
+        all_dir_list = validate_inputs_dirs(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            common_dir=common_dir
+        )
+
+        if isinstance(all_dir_list, dict):
+            return Response(data=all_dir_list)
+
+        # Call the function to process the zip content
+        resp = iterative_process_data(all_dir_objs=all_dir_list)
+
+        return Response(data=resp)
+

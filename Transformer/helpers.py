@@ -1,3 +1,4 @@
+import glob
 import random
 import shutil
 import random
@@ -146,6 +147,88 @@ def text_en_html_to_html_text(html_string):
         span['class'] = 'jsx_tooltip'
 
     return str(soup)
+
+
+def validate_paths(*paths):
+    for path in paths:
+        if not os.path.exists(path):
+            print(f"Path does not exist: {path}")
+            return False
+    return True
+
+
+def get_input_dir_obj(INPUT_DIR, output_dir, INPUT_COMMON_DIR):
+    all_courses_dir = glob.glob(os.path.join(INPUT_DIR, "*"))
+
+    all_input_objects = []
+    for each_course_dir in all_courses_dir:
+
+        course_dir = os.path.basename(each_course_dir)
+        if "common" in each_course_dir:
+            print(f"Ignoring common folder from course dir: {course_dir}")
+            continue
+
+        # app
+        INPUT_APP_DIR = os.path.join(INPUT_DIR, course_dir, 'app')
+        # app json
+        INPUT_STRUCTURE_JSON = os.path.join(INPUT_APP_DIR, "json", "structure.json")
+        INPUT_AUDIO_JSON = os.path.join(INPUT_APP_DIR, "json", "audio.json")
+        INPUT_EN_TEXT_JSON = os.path.join(INPUT_APP_DIR, "json", "en_text.json")
+        INPUT_IMAGES_JSON = os.path.join(INPUT_APP_DIR, "json", "images.json")
+        INPUT_VIDEO_JSON = os.path.join(INPUT_APP_DIR, "json", "video.json")
+        # common
+        INPUT_COMMON_GLOSSARY_JSON = os.path.join(INPUT_COMMON_DIR, "templates", "config", "glossary.json")
+        INPUT_COMMON_GLOSSARY_IMAGES_JSON = os.path.join(INPUT_COMMON_DIR, "templates", "config",
+                                                         "glossaryImages.json")
+        INPUT_COMMON_TEMPLATE_IMAGES_JSON = os.path.join(INPUT_COMMON_DIR, "templates", "config",
+                                                         "templateImages.json")
+        INPUT_COMMON_TEXT_JSON = os.path.join(INPUT_COMMON_DIR, "templates", "config", "text.json")
+
+        # Validate paths
+        paths_exist = validate_paths(
+            INPUT_STRUCTURE_JSON, INPUT_AUDIO_JSON, INPUT_EN_TEXT_JSON, INPUT_IMAGES_JSON, INPUT_VIDEO_JSON,
+            INPUT_COMMON_GLOSSARY_JSON, INPUT_COMMON_GLOSSARY_IMAGES_JSON, INPUT_COMMON_TEMPLATE_IMAGES_JSON,
+            INPUT_COMMON_TEXT_JSON
+        )
+
+        if paths_exist is False:
+            print("Path does not exist")
+            break
+        all_input_objects.append(
+            {
+                "INPUT_APP_DIR": INPUT_APP_DIR,
+                "INPUT_COMMON_DIR": INPUT_COMMON_DIR,
+                "INPUT_STRUCTURE_JSON": INPUT_STRUCTURE_JSON,
+                "INPUT_AUDIO_JSON": INPUT_AUDIO_JSON,
+                "INPUT_EN_TEXT_JSON": INPUT_EN_TEXT_JSON,
+                "INPUT_IMAGES_JSON": INPUT_IMAGES_JSON,
+                "INPUT_VIDEO_JSON": INPUT_VIDEO_JSON,
+                "INPUT_COMMON_GLOSSARY_JSON": INPUT_COMMON_GLOSSARY_JSON,
+                "INPUT_COMMON_GLOSSARY_IMAGES_JSON": INPUT_COMMON_GLOSSARY_IMAGES_JSON,
+                "INPUT_COMMON_TEMPLATE_IMAGES_JSON": INPUT_COMMON_TEMPLATE_IMAGES_JSON,
+                "INPUT_COMMON_TEXT_JSON": INPUT_COMMON_TEXT_JSON,
+                "COURSE_ID": course_dir,
+                "COMMON_APP_DIR": INPUT_COMMON_DIR,
+                "OUTPUT_DIR": output_dir
+            }
+        )
+
+    return all_input_objects
+
+
+def validate_inputs_dirs(input_dir, output_dir, common_dir):
+    if input_dir is None or not isinstance(input_dir, str) or not os.path.isdir(input_dir):
+        return {'error': 'Invalid or missing input directory'}
+
+    if output_dir is None or not isinstance(output_dir, str) or not os.path.isdir(output_dir):
+        return {'error': 'Invalid or missing output directory'}
+
+    if common_dir is None or not isinstance(common_dir, str) or not os.path.isdir(common_dir):
+        return {'error': 'Invalid or missing common directory'}
+
+    all_input_obj = get_input_dir_obj(input_dir, output_dir, common_dir)
+
+    return all_input_obj
 
 
 

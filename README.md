@@ -52,6 +52,24 @@ This repository contains the source code for the AlefTransformer Django project.
     Open your web browser and visit `http://127.0.0.1:8000/`
 
 
+## Input Directory Structure
+```
+templates_dir
+   app
+      structure.json
+      audio.json
+      en_text.json
+      images.json
+      video.json
+common_dir
+   templates, 
+      config, 
+         glossary.json
+         glossaryImages.json
+         templateImages.json
+         text.json
+```
+
 ### Contributors
 
 - [krishna kadam](https://github.com/krisskad/)
