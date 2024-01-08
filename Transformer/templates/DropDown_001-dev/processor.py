@@ -76,14 +76,18 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # Extracting variables
     # poster = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["poster"]]
-    textFieldData = input_json_data["pageData"]["args"]["textFieldData"]
+    title = input_json_data["pageData"]["args"]["title"]
+    src = input_json_data["pageData"]["args"]["src"]
+    showAnswer = input_json_data["pageData"]["args"]["showAnswer"]
+    iButtonAlt = input_json_data["pageData"]["args"]["iButtonAlt"]
+    dropDownText = input_json_data["pageData"]["args"]["dropDownText"]
+    submitCount = input_json_data["pageData"]["args"]["submitCount"]
+    feedback = input_json_data["pageData"]["args"]["feedback"]
+    hint = input_json_data["pageData"]["args"]["hint"]
+    dropDowns = input_json_data["pageData"]["args"]["dropDowns"]
 
-    qText = textFieldData.get("qText", None)
-    qHtmlText = ""
-    text = ""
-    if qText:
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
-        qHtmlText = text_en_html_to_html_text(html_string=text)
+    text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title]
+    qHtmlText = text_en_html_to_html_text(html_string=text)
 
     resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])
@@ -97,30 +101,32 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         f"""
-            <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description=""
-                          xp:fieldtype="folder" customclass="Normal">
-                <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
-                             xp:fieldtype="folder" width="auto" cellspan="1">
-                    <alef_presentation xlink:label="{temp[2]}" xp:name="alef_presentation"
-                                       xp:description="" xp:fieldtype="folder" type="Tabs" showtitle="false"
-                                       tab_title="{qHtmlText}" multipleopen="false" firstopen="false">
-                        <alef_section xlink:label="{temp[3]}" xp:name="alef_section"
-                                      xp:description="Tooltip with right-column image" xp:fieldtype="folder"
-                                      customclass="Normal">
-                            <alef_column xlink:label="{temp[4]}" xp:name="alef_column"
-                                         xp:description="" xp:fieldtype="folder" width="1" alignment="Center"
-                                         cellspan="1">
-                                <alef_audionew xlink:label="{temp[5]}" xp:name="alef_audionew"
-                                               xp:description="" xp:fieldtype="folder">
-                                </alef_audionew>
-                            </alef_column>
+        <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description=""
+              xp:fieldtype="folder" customclass="Normal">
+            <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
+                         xp:fieldtype="folder" width="auto" cellspan="1">
+                <alef_selectablank xlink:label="{temp[2]}" xp:name="alef_selectablank"
+                                   xp:description="" xp:fieldtype="folder" submitattempts="{submitCount}"
+                                   type="Dropdown" autowidth="false" validation="Yes">
+                    <alef_questionstatement xlink:label="{temp[3]}"
+                                            xp:name="alef_questionstatement" xp:description=""
+                                            xp:fieldtype="folder">
+                        <alef_section_general xlink:label="{temp[4]}"
+                                              xp:name="alef_section_general" xp:description=""
+                                              xp:fieldtype="folder">
+                            <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
+                                         xp:description="" xp:fieldtype="folder" width="auto">
+                                <alef_tooltip xlink:label="{temp[6]}"
+                                              xp:name="alef_tooltip" xp:description=""
+                                              xp:fieldtype="folder">
+                                    <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                                               xp:description="" xp:fieldtype="html"
+                                               src="../../../{resp['relative_path']}"/>
         """
     )
 
-    tabArray = input_json_data["pageData"]["args"]["tabArray"]
 
-    for each_obj in tabArray:
-        pass
+
 
     response = {
         "XML_STRING": "".join(all_tags),

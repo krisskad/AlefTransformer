@@ -131,14 +131,16 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         front_img = deck_oj['front']['img']
         front_content_list = deck_oj['front']['content']
-        front_text = "<hr>".join([str(front_) for front_ in front_content_list])
+        front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON'][front_])
+                                  for front_ in front_content_list])
         front_text_resp = write_html(text=front_text, exiting_hashcode=exiting_hashcode)
         all_files.add(front_text_resp['relative_path'])
         exiting_hashcode.add(front_text_resp['hashcode'])
 
         back_img = deck_oj['back']['img']
         back_content_list = deck_oj['back']['content']
-        back_text = "<hr>".join([str(back_) for back_ in back_content_list])
+        back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON'][back_])
+                                 for back_ in back_content_list])
         back_text_resp = write_html(text=back_text, exiting_hashcode=exiting_hashcode)
         all_files.add(back_text_resp['relative_path'])
         exiting_hashcode.add(back_text_resp['hashcode'])
@@ -153,7 +155,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
         all_files.add(back_img_path_resp['relative_path'])
         exiting_hashcode.add(back_img_path_resp['hashcode'])
-
 
         all_tags.append(
             f"""
