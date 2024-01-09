@@ -2,7 +2,6 @@ import os
 from django.conf import settings
 from Transformer.helpers import write_xml, generate_unique_folder_name
 
-
 IMSMANIFEST_XML = """
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
@@ -16,8 +15,8 @@ IMSMANIFEST_XML = """
 </manifest>
 """
 
-def write_imsmanifest_xml(all_manifest_files, exiting_hashcode):
 
+def write_imsmanifest_xml(all_manifest_files, exiting_hashcode):
     file_tags = []
     mlo_html_path = ""
     mlo_html_folder_hash = ""
