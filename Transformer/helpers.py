@@ -231,4 +231,199 @@ def validate_inputs_dirs(input_dir, output_dir, common_dir):
     return all_input_obj
 
 
+def write_html_mlo(text, exiting_hashcode):
+
+    template = f"""
+    <html>
+    <head>
+        <title></title>
+    </head>
+    <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+        {text}
+    </body>
+    </html>
+    """
+
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+
+    with open(path_to_html, "w") as file:
+        file.write(template.strip())
+
+    relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
+
+    response = {
+        "relative_path": relative_path,
+        "hashcode": hashcode,
+    }
+
+    return response
+
+
+def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
+    """
+    :param src_path: example images/01.png
+    :param exiting_hashcode: example
+    :return:
+    """
+
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    if "templates" in src_path:
+        asset_abs_path = os.path.join(settings.INPUT_COMMON_DIR, src_path)
+    else:
+        asset_abs_path = os.path.join(settings.INPUT_APP_DIR, src_path)
+
+    destination_src_path = os.path.join(str(path_to_hashcode), str(os.path.basename(src_path)))
+    shutil.copy2(str(asset_abs_path), str(destination_src_path))
+
+    relative_path = os.path.join(hashcode, str(os.path.basename(src_path)))
+
+    response = {
+        "relative_path": relative_path,
+        "hashcode": hashcode,
+    }
+
+    return response
+
+
+def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: set, exiting_hashcode: set):
+    if text:
+        all_tags = []
+
+        temp = []
+        for _ in range(40):
+            hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode_temp)
+            temp.append(hashcode_temp)
+
+        # get span info
+        span_info = extract_span_info(text=text)
+
+        for span_content, span_attr_obj in span_info.items():
+            data_ref = span_attr_obj["data-ref"]
+            if data_ref is None:
+                continue
+            deck_oj = input_other_jsons_data["INPUT_COMMON_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
+
+            front_img = deck_oj['front']['img']
+            front_content_list = deck_oj['front']['content']
+            front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON'][front_])
+                                      for front_ in front_content_list])
+            front_text_resp = write_html_mlo(text=front_text, exiting_hashcode=exiting_hashcode)
+            all_files.add(front_text_resp['relative_path'])
+            exiting_hashcode.add(front_text_resp['hashcode'])
+
+            back_img = deck_oj['back']['img']
+            back_content_list = deck_oj['back']['content']
+            back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON'][back_])
+                                     for back_ in back_content_list])
+            back_text_resp = write_html_mlo(text=back_text, exiting_hashcode=exiting_hashcode)
+            all_files.add(back_text_resp['relative_path'])
+            exiting_hashcode.add(back_text_resp['hashcode'])
+
+            front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
+            back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
+
+            front_img_path_resp = copy_to_hashcode_dir(src_path=front_img_path, exiting_hashcode=exiting_hashcode)
+            all_files.add(front_img_path_resp['relative_path'])
+            exiting_hashcode.add(front_img_path_resp['hashcode'])
+
+            back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
+            all_files.add(back_img_path_resp['relative_path'])
+            exiting_hashcode.add(back_img_path_resp['hashcode'])
+
+            all_tags.append(
+                f"""
+                <alef_popupvalue xlink:label="{temp[0]}"
+                                 xp:name="alef_popupvalue" xp:description=""
+                                 xp:fieldtype="folder">
+                    <alef_section_general xlink:label="{temp[1]}"
+                                          xp:name="alef_section_general"
+                                          xp:description="" xp:fieldtype="folder">
+                        <alef_column xlink:label="{temp[2]}"
+                                     xp:name="alef_column" xp:description=""
+                                     xp:fieldtype="folder" width="auto">
+                            <alef_flipcards xlink:label="{temp[3]}"
+                                            xp:name="alef_flipcards" xp:description=""
+                                            xp:fieldtype="folder" customtype="Flipcard"
+                                            height="500" multipleopen="false"
+                                            flipdirection="Right">
+                                <alef_flipcard xlink:label="{temp[7]}"
+                                               xp:name="alef_flipcard" xp:description=""
+                                               xp:fieldtype="folder" centered="true">
+                                    <alef_section
+                                            xlink:label="{temp[8]}"
+                                            xp:name="alef_section" xp:description=""
+                                            xp:fieldtype="folder" customclass="Normal">
+                                        <alef_column
+                                                xlink:label="{temp[9]}"
+                                                xp:name="alef_column" xp:description=""
+                                                xp:fieldtype="folder" width="auto"
+                                                cellspan="1">
+                                            <alef_html
+                                                    xlink:label="{front_text_resp['hashcode']}"
+                                                    xp:name="alef_html"
+                                                    xp:description=""
+                                                    xp:fieldtype="html"
+                                                    src="../../../{front_text_resp['relative_path']}"/>
+                                            <alef_image
+                                                    xlink:label="{front_img_path_resp['hashcode']}"
+                                                    xp:name="alef_image"
+                                                    xp:description=""
+                                                    xp:fieldtype="image" alt="">
+                                                <xp:img href="../../../{front_img_path_resp['relative_path']}"
+                                                        width="1136" height="890"/>
+                                            </alef_image>
+                                        </alef_column>
+                                    </alef_section>
+                                    <alef_section
+                                            xlink:label="{temp[10]}"
+                                            xp:name="alef_section" xp:description=""
+                                            xp:fieldtype="folder" customclass="Normal">
+                                        <alef_column
+                                                xlink:label="{temp[11]}"
+                                                xp:name="alef_column" xp:description=""
+                                                xp:fieldtype="folder" width="auto"
+                                                cellspan="1">
+                                            <alef_html
+                                                    xlink:label="{back_text_resp['hashcode']}"
+                                                    xp:name="alef_html"
+                                                    xp:description=""
+                                                    xp:fieldtype="html"
+                                                    src="../../../{back_text_resp['relative_path']}"/>
+                                            <alef_image
+                                                    xlink:label="{back_img_path_resp['hashcode']}"
+                                                    xp:name="alef_image"
+                                                    xp:description=""
+                                                    xp:fieldtype="image" alt="">
+                                                <xp:img href="../../../{back_img_path_resp['relative_path']}"
+                                                        width="1396" height="890"/>
+                                            </alef_image>
+                                        </alef_column>
+                                    </alef_section>
+                                </alef_flipcard>
+                            </alef_flipcards>
+                        </alef_column>
+                    </alef_section_general>
+                </alef_popupvalue>
+                """
+            )
+        return {
+            "all_tags": all_tags,
+            "exiting_hashcode":exiting_hashcode,
+            "all_files":all_files
+        }
+    return {}
+
+
 

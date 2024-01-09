@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, text_en_html_to_html_text, extract_span_info
+from Transformer.helpers import generate_unique_folder_name, text_en_html_to_html_text, get_popup_mlo_from_text
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -125,8 +125,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     )
 
+    popup_response = get_popup_mlo_from_text(
+        text=text,
+        input_other_jsons_data=input_other_jsons_data,
+        all_files=all_files,
+        exiting_hashcode=exiting_hashcode
+    )
 
-
+    if popup_response:
+        all_files=popup_response['all_files']
+        exiting_hashcode=popup_response['exiting_hashcode']
+        all_tags=all_tags+popup_response['all_tags']
 
     response = {
         "XML_STRING": "".join(all_tags),
