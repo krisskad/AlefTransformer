@@ -218,8 +218,8 @@ def iterative_process_data(all_dir_objs):
                                           course_obj_dir_dict['COURSE_ID'] + ".zip"))
         )
 
-        print("Removing temporary output")
-        shutil.rmtree(settings.OUTPUT_DIR)
+        print(f"Removing temporary output {settings.OUTPUT_DIR}")
+        # shutil.rmtree(settings.OUTPUT_DIR)
 
         resp_list.append(
             {

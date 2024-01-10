@@ -130,29 +130,29 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                                        src="../../../{resp['relative_path']}"/>
                 """
             )
+
+            popup_response = get_popup_mlo_from_text(
+                text=text,
+                input_other_jsons_data=input_other_jsons_data,
+                all_files=all_files,
+                exiting_hashcode=exiting_hashcode
+            )
+
+            if popup_response:
+                all_files = popup_response['all_files']
+                exiting_hashcode = popup_response['exiting_hashcode']
+                all_tags = all_tags + popup_response['all_tags']
+
+            all_tags.append(
+                """
+                                </alef_tooltip>
+                            </alef_column>
+                        </alef_section_general>
+                    </alef_questionstatement>
+                """
+            )
         except Exception as e:
-            print(f"DropDown_001 title not present in args {e}")
-
-        popup_response = get_popup_mlo_from_text(
-            text=text,
-            input_other_jsons_data=input_other_jsons_data,
-            all_files=all_files,
-            exiting_hashcode=exiting_hashcode
-        )
-
-        if popup_response:
-            all_files=popup_response['all_files']
-            exiting_hashcode=popup_response['exiting_hashcode']
-            all_tags=all_tags+popup_response['all_tags']
-
-        all_tags.append(
-            """
-                            </alef_tooltip>
-                        </alef_column>
-                    </alef_section_general>
-                </alef_questionstatement>
-            """
-        )
+            print(f"DropDown_001 error {e}")
 
         if dropDownText:
             drop_Down_Text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][dropDownText]

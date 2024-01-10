@@ -247,7 +247,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         """
-                            </alef_column>
+                        </alef_flipcards>
+                    </alef_column>
                 </alef_section>
         """
     )
