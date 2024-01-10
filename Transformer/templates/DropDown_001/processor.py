@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, text_en_html_to_html_text, get_popup_mlo_from_text
+from Transformer.helpers import generate_unique_folder_name, text_en_html_to_html_text, get_popup_mlo_from_text, mathml2latex_yarosh
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -189,6 +189,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 is_answer = "Yes"
             text = option['option']
             oText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text]
+
+            if "<math" in oText:
+                oText = mathml2latex_yarosh(equation=oText)
 
             o_resp = write_html(
                 text=oText, exiting_hashcode=exiting_hashcode

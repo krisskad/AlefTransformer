@@ -433,7 +433,8 @@ def mathml2latex_yarosh(equation):
     xslt = etree.parse(xslt_file)
     transform = etree.XSLT(xslt)
     newdom = transform(dom)
-    return str(newdom)
+    output = f"""<span class="math-tex">{str(newdom)}</span>"""
+    return output
 
 
 
