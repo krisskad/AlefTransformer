@@ -7,10 +7,11 @@ import os
 import json
 from django.conf import settings
 from bs4 import BeautifulSoup
-
+import traceback
 import os
 import zipfile
 from lxml import etree
+
 
 def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
     """
@@ -435,6 +436,16 @@ def mathml2latex_yarosh(equation):
     newdom = transform(dom)
     output = f"""<span class="math-tex">{str(newdom)}</span>"""
     return output
+
+
+def log_exceptions_to_file(exception, file_path):
+    try:
+        with open(file_path, 'a') as file:
+            traceback.print_exception(type(exception), exception, exception.__traceback__, file=file)
+            file.write('\n')  # Add a newline for clarity between different exceptions
+    except Exception as e:
+        print(f"Error logging exception to file: {e}")
+
 
 
 
