@@ -82,7 +82,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode)
 
         src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
-        src_en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_img['label']]
+        src_en_text = ""
+        if "label" in each_img:
+            src_en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_img['label']]
 
         path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
         os.makedirs(path_to_hashcode, exist_ok=True)

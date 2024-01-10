@@ -162,7 +162,9 @@ def iterative_process_data(all_dir_objs):
             "INPUT_COMMON_GLOSSARY_JSON_DATA":INPUT_COMMON_GLOSSARY_JSON_DATA,
             "INPUT_COMMON_GLOSSARY_IMAGES_DATA":INPUT_COMMON_GLOSSARY_IMAGES_DATA,
             "INPUT_COMMON_TEMPLATE_IMAGES_DATA":INPUT_COMMON_TEMPLATE_IMAGES_DATA,
-            "INPUT_COMMON_TEXT_JSON_DATA":INPUT_COMMON_TEXT_JSON_DATA
+            "INPUT_COMMON_TEXT_JSON_DATA":INPUT_COMMON_TEXT_JSON_DATA,
+            "OUTPUT_DIR":course_obj_dir_dict['OUTPUT_DIR'],
+            "COURSE_ID":course_obj_dir_dict['COURSE_ID']
         }
 
         # storing all hash strings
