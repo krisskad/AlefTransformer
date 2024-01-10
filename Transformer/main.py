@@ -176,7 +176,7 @@ def iterative_process_data(all_dir_objs):
         MLO_TEMPLATES_OUTPUT_LIST = []
         for item in input_pages:
             template_id = item['pageData']['templateID']
-            if template_id != "VideowithInputBox_001":
+            if template_id != "DropDown_001":
                 continue
 
             response = call_package(

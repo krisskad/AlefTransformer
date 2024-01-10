@@ -89,20 +89,7 @@ output =             <alef_section xlink:label="LKIK76TUISSIU7GLZRIBEWGNTEY" xp:
                                                                             xp:fieldtype="folder" customtype="Flipcard"
                                                                             height="500" multipleopen="false"
                                                                             flipdirection="Right">
-																<alef_questionstatement
-                                                                        xlink:label="LZBALU2MOCLMU5JJHTXNYIBKSWA"
-                                                                        xp:name="alef_questionstatement"
-                                                                        xp:description="" xp:fieldtype="folder">
-																	<alef_section_general
-                                                                            xlink:label="LDMNR4S22U3KEZIRFJVQD4MPPIY"
-                                                                            xp:name="alef_section_general"
-                                                                            xp:description="" xp:fieldtype="folder">
-																		<alef_column
-                                                                                xlink:label="LGDFHDXBKKJBE3GVUKICAXT2DL4"
-                                                                                xp:name="alef_column" xp:description=""
-                                                                                xp:fieldtype="folder" width="auto"/>
-																	</alef_section_general>
-																</alef_questionstatement>
+
                                                                 <alef_flipcard xlink:label="LYVNTRAG3FJ7EPBUB36P6FIRTD4"
                                                                                xp:name="alef_flipcard" xp:description=""
                                                                                xp:fieldtype="folder" centered="true">
@@ -175,20 +162,7 @@ output =             <alef_section xlink:label="LKIK76TUISSIU7GLZRIBEWGNTEY" xp:
                                                                             xp:fieldtype="folder" customtype="Flipcard"
                                                                             height="500" multipleopen="false"
                                                                             flipdirection="Right">
-																<alef_questionstatement
-                                                                        xlink:label="LKBYMRU5ROUKETO3RHY64ZBHGWA"
-                                                                        xp:name="alef_questionstatement"
-                                                                        xp:description="" xp:fieldtype="folder">
-																	<alef_section_general
-                                                                            xlink:label="LA5K7Y2J7R27U7J3QJKY7SCCJ6Q"
-                                                                            xp:name="alef_section_general"
-                                                                            xp:description="" xp:fieldtype="folder">
-																		<alef_column
-                                                                                xlink:label="LQIGREHMSPCIUNLOSVXMDHG57E4"
-                                                                                xp:name="alef_column" xp:description=""
-                                                                                xp:fieldtype="folder" width="auto"/>
-																	</alef_section_general>
-																</alef_questionstatement>
+
                                                                 <alef_flipcard xlink:label="LSWCDZ2W2KYZEHGIHXJHFEIUSWM"
                                                                                xp:name="alef_flipcard" xp:description=""
                                                                                xp:fieldtype="folder" centered="true">

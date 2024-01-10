@@ -38,6 +38,8 @@ This repository contains the source code for the AlefTransformer Django project.
 3. **Install Dependencies**
 
     ```bash
+    sudo apt-get install python3-lxml
+    sudo apt-get install libxml2-dev libxslt-dev python3-dev
     pip install -r requirements.txt
     ```
 

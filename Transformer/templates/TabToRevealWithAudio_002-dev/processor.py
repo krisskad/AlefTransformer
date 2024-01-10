@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, text_en_html_to_html_text, extract_span_info
+from Transformer.helpers import generate_unique_folder_name, text_en_html_to_html_text, get_popup_mlo_from_text
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -120,7 +120,101 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     tabArray = input_json_data["pageData"]["args"]["tabArray"]
 
     for each_obj in tabArray:
-        pass
+        if "tabType" in each_obj:
+            if each_obj["tabType"] == "image":
+                tabHeaderTxt = each_obj["tabHeaderTxt"]
+                TabContentText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_obj["TabContentText"]]
+                audio = each_obj["audio"]
+                if "bgImage" in each_obj:
+                    Image = each_obj["bgImage"]
+
+                qHtmlText = text_en_html_to_html_text(html_string=TabContentText)
+
+                qHtmlText_resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
+                all_files.add(qHtmlText_resp['relative_path'])
+                exiting_hashcode.add(qHtmlText_resp['hashcode'])
+
+                popup_resp = get_popup_mlo_from_text(
+                    text=TabContentText,
+                    exiting_hashcode=exiting_hashcode,
+                    all_files=all_files,
+                    input_other_jsons_data=input_other_jsons_data
+                )
+                popups = ""
+                if popup_resp:
+                    exiting_hashcode = popup_resp['exiting_hashcode']
+                    all_files = popup_resp['all_files']
+                    popups = "\n".join(popup_resp['all_tags'])
+
+                temp1 = []
+                for _ in range(10):
+                    hashcode_temp1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                    exiting_hashcode.add(hashcode_temp1)
+                    temp1.append(hashcode_temp1)
+
+                all_tags.append(
+                    f"""
+                        <alef_column xlink:label="{temp1[0]}" xp:name="alef_column"
+                                     xp:description="" xp:fieldtype="folder" width="5" alignment="Left"
+                                     cellspan="1">
+                            <alef_tooltip xlink:label="{temp1[1]}" xp:name="alef_tooltip"
+                                          xp:description="" xp:fieldtype="folder">
+                                <alef_html xlink:label="{qHtmlText_resp['hashcode']}" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../{qHtmlText_resp['relative_path']}"/>
+                                {popups}
+                            </alef_tooltip>
+                        </alef_column>
+                    """
+                )
+
+            if each_obj["tabType"] == "image":
+                tabHeaderTxt = each_obj["tabHeaderTxt"]
+                TabContentText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_obj["TabContentText"]]
+                audio = each_obj["audio"]
+                if "bgImage" in each_obj:
+                    Image = each_obj["bgImage"]
+
+                qHtmlText = text_en_html_to_html_text(html_string=TabContentText)
+
+                qHtmlText_resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
+                all_files.add(qHtmlText_resp['relative_path'])
+                exiting_hashcode.add(qHtmlText_resp['hashcode'])
+
+                popup_resp = get_popup_mlo_from_text(
+                    text=TabContentText,
+                    exiting_hashcode=exiting_hashcode,
+                    all_files=all_files,
+                    input_other_jsons_data=input_other_jsons_data
+                )
+                popups = ""
+                if popup_resp:
+                    exiting_hashcode = popup_resp['exiting_hashcode']
+                    all_files = popup_resp['all_files']
+                    popups = "\n".join(popup_resp['all_tags'])
+
+                temp1 = []
+                for _ in range(10):
+                    hashcode_temp1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                    exiting_hashcode.add(hashcode_temp1)
+                    temp1.append(hashcode_temp1)
+
+                all_tags.append(
+                    f"""
+                        <alef_column xlink:label="{temp1[0]}" xp:name="alef_column"
+                                     xp:description="" xp:fieldtype="folder" width="5" alignment="Left"
+                                     cellspan="1">
+                            <alef_tooltip xlink:label="{temp1[1]}" xp:name="alef_tooltip"
+                                          xp:description="" xp:fieldtype="folder">
+                                <alef_html xlink:label="{qHtmlText_resp['hashcode']}" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../{qHtmlText_resp['relative_path']}"/>
+                                {popups}
+                            </alef_tooltip>
+                        </alef_column>
+                    """
+                )
+
 
     response = {
         "XML_STRING": "".join(all_tags),

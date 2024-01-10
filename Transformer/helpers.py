@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 import os
 import zipfile
-
+from lxml import etree
 
 def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
     """
@@ -317,7 +317,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
 
             front_img = deck_oj['front']['img']
             front_content_list = deck_oj['front']['content']
-            front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON'][front_])
+            front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_])
                                       for front_ in front_content_list])
             front_text_resp = write_html_mlo(text=front_text, exiting_hashcode=exiting_hashcode)
             all_files.add(front_text_resp['relative_path'])
@@ -325,7 +325,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
 
             back_img = deck_oj['back']['img']
             back_content_list = deck_oj['back']['content']
-            back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON'][back_])
+            back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
                                      for back_ in back_content_list])
             back_text_resp = write_html_mlo(text=back_text, exiting_hashcode=exiting_hashcode)
             all_files.add(back_text_resp['relative_path'])
@@ -424,6 +424,16 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             "all_files":all_files
         }
     return {}
+
+
+def mathml2latex_yarosh(equation):
+    """ MathML to LaTeX conversion with XSLT from Vasil Yaroshevich """
+    xslt_file = os.path.join(settings.BASE_DIR, 'Transformer', 'assets', 'LaTex', 'mmltex.xsl')
+    dom = etree.fromstring(equation)
+    xslt = etree.parse(xslt_file)
+    transform = etree.XSLT(xslt)
+    newdom = transform(dom)
+    return str(newdom)
 
 
 
