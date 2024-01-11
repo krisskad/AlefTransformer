@@ -219,7 +219,7 @@ def iterative_process_data(all_dir_objs):
         )
 
         print(f"Removing temporary output {settings.OUTPUT_DIR}")
-        shutil.rmtree(settings.OUTPUT_DIR)
+        # shutil.rmtree(settings.OUTPUT_DIR)
 
         resp_list.append(
             {
