@@ -236,15 +236,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                         all_tags.append(
                             f"""
-                            <alef_option xlink:label="{temp1[8]}" xp:name="alef_option"
+                            <alef_option xlink:label="{temp1[0]}" xp:name="alef_option"
                                          xp:description="" xp:fieldtype="folder" iscorrect="{is_answer}">
-                                <alef_optionvalue xlink:label="{temp1[9]}"
+                                <alef_optionvalue xlink:label="{temp1[1]}"
                                                   xp:name="alef_optionvalue" xp:description=""
                                                   xp:fieldtype="folder">
-                                    <alef_section_general xlink:label="{temp1[10]}"
+                                    <alef_section_general xlink:label="{temp1[2]}"
                                                           xp:name="alef_section_general" xp:description=""
                                                           xp:fieldtype="folder">
-                                        <alef_column xlink:label="{temp1[11]}"
+                                        <alef_column xlink:label="{temp1[3]}"
                                                      xp:name="alef_column" xp:description=""
                                                      xp:fieldtype="folder" width="auto">
                                             <alef_html xlink:label="{o_resp['hashcode']}"
@@ -305,13 +305,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                     all_tags.append(
                         f"""
-                                <alef_{main_key}feedback xlink:label="{temp2[12]}"
+                                <alef_{main_key}feedback xlink:label="{temp2[0]}"
                                                       xp:name="alef_{main_key}feedback" xp:description=""
                                                       xp:fieldtype="folder">
-                                    <alef_section_general xlink:label="{temp2[13]}"
+                                    <alef_section_general xlink:label="{temp2[1]}"
                                                           xp:name="alef_section_general" xp:description=""
                                                           xp:fieldtype="folder">
-                                        <alef_column xlink:label="{temp2[14]}" xp:name="alef_column"
+                                        <alef_column xlink:label="{temp2[2]}" xp:name="alef_column"
                                                      xp:description="" xp:fieldtype="folder" width="auto">
                                             <alef_html xlink:label="{feedbackresp['hashcode']}" xp:name="alef_html"
                                                        xp:description="" xp:fieldtype="html"

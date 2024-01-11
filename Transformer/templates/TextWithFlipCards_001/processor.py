@@ -122,7 +122,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     for each_cat in container:
 
         temp1 = []
-        for _ in range(40):
+        for _ in range(20):
             hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode_temp)
             temp1.append(hashcode_temp)
