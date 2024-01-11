@@ -34,7 +34,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"]["text"]
     imageContent_list = input_json_data["pageData"]["args"]["textFieldData"]["imageContent"]
 
-    aud_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+    # aud_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
     ques_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_id]
     text_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
 
