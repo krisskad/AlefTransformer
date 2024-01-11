@@ -179,18 +179,18 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             try:
                 if image:
-                    resp = copy_to_hashcode_dir(
+                    imageresp = copy_to_hashcode_dir(
                         src_path=input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image],
                         exiting_hashcode=exiting_hashcode
                     )
-                    all_files.add(resp['relative_path'])
-                    exiting_hashcode.add(resp['hashcode'])
+                    all_files.add(imageresp['relative_path'])
+                    exiting_hashcode.add(imageresp['hashcode'])
 
                     all_tags.append(
                         f"""
-                             <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
+                             <alef_image xlink:label="{imageresp['hashcode']}" xp:name="alef_image"
                                     xp:description="" xp:fieldtype="image" alt="">
-                                <xp:img href="../../../{resp['relative_path']}"
+                                <xp:img href="../../../{imageresp['relative_path']}"
                                     width="834" height="890"/>
                             </alef_image>
                         """
@@ -204,8 +204,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         is_answer = "No"
                         if str(answer) == str(j):
                             is_answer = "Yes"
-                        text = option['option']
-                        oText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text]
+                        optiontext = option['option']
+                        oText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][optiontext]
 
                         if "<math" in oText:
                             oText = mathml2latex_yarosh(equation=oText)
@@ -241,6 +241,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     all_tags.append(
                         "</alef_options>"
                     )
+                else:
+                    print("DropDown_001 : option key not found")
             except Exception as e:
                 print(f"DropDown_001 options not present in args {e}")
 
@@ -253,67 +255,64 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                     main_key = key.split("_")[0]
 
-                    text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
-                    resp = write_html(
-                        text=text, exiting_hashcode=exiting_hashcode
+                    feedbacktext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+                    feedbackresp = write_html(
+                        text=feedbacktext, exiting_hashcode=exiting_hashcode
                     )
-                    all_files.add(resp['relative_path'])
-                    exiting_hashcode.add(resp['hashcode'])
-
-                    hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                    exiting_hashcode.add(hashcode1)
-                    hashcode2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                    exiting_hashcode.add(hashcode2)
-                    hashcode3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                    exiting_hashcode.add(hashcode3)
+                    all_files.add(feedbackresp['relative_path'])
+                    exiting_hashcode.add(feedbackresp['hashcode'])
 
                     all_tags.append(
                         f"""
-                                <alef_{main_key}feedback xlink:label="{hashcode1}"
+                                <alef_{main_key}feedback xlink:label="{temp[12]}"
                                                       xp:name="alef_{main_key}feedback" xp:description=""
                                                       xp:fieldtype="folder">
-                                    <alef_section_general xlink:label="{hashcode2}"
+                                    <alef_section_general xlink:label="{temp[13]}"
                                                           xp:name="alef_section_general" xp:description=""
                                                           xp:fieldtype="folder">
-                                        <alef_column xlink:label="{hashcode3}" xp:name="alef_column"
+                                        <alef_column xlink:label="{temp[14]}" xp:name="alef_column"
                                                      xp:description="" xp:fieldtype="folder" width="auto">
-                                            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                                            <alef_html xlink:label="{feedbackresp['hashcode']}" xp:name="alef_html"
                                                        xp:description="" xp:fieldtype="html"
-                                                       src="../../../{resp['relative_path']}"/>
+                                                       src="../../../{feedbackresp['relative_path']}"/>
                                         </alef_column>
                                     </alef_section_general>
                                 </alef_{main_key}feedback>
                             """
                     )
                     count = count + 1
+            else:
+                print("DropDown_001 : feedback is not found")
         except Exception as e:
             print(f"DropDown_001 feedback key not present in args {e}")
 
         try:
             if hint:
-                text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][hint['text']]
-                resp = write_html(
-                    text=text, exiting_hashcode=exiting_hashcode
+                hinttext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][hint['text']]
+                hintresp = write_html(
+                    text=hinttext, exiting_hashcode=exiting_hashcode
                 )
-                all_files.add(resp['relative_path'])
-                exiting_hashcode.add(resp['hashcode'])
+                all_files.add(hintresp['relative_path'])
+                exiting_hashcode.add(hintresp['hashcode'])
                 all_tags.append(
                     f"""
-                            <alef_hint xlink:label="LAPL54RA7QMGETBYH5OVQUIPMKE" xp:name="alef_hint"
+                            <alef_hint xlink:label="{temp[15]}" xp:name="alef_hint"
                                        xp:description="" xp:fieldtype="folder">
-                                <alef_section_general xlink:label="LBT3EYWPWKWLEPETPNEHXLUS4KY"
+                                <alef_section_general xlink:label="{temp[16]}"
                                                       xp:name="alef_section_general" xp:description=""
                                                       xp:fieldtype="folder">
-                                    <alef_column xlink:label="LPE5SMKOTKFLEXAEMW2BKHS74DU" xp:name="alef_column"
+                                    <alef_column xlink:label="{temp[17]}" xp:name="alef_column"
                                                  xp:description="" xp:fieldtype="folder" width="auto">
-                                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                                        <alef_html xlink:label="{hintresp['hashcode']}" xp:name="alef_html"
                                                    xp:description="" xp:fieldtype="html"
-                                                   src="../../../{resp['relative_path']}"/>
+                                                   src="../../../{hintresp['relative_path']}"/>
                                     </alef_column>
                                 </alef_section_general>
                             </alef_hint>
                         """
                 )
+            else:
+                print("DropDown_001 : hint is not found")
         except Exception as e:
             print(f"DropDown_001 hint key not present in args {e}")
 

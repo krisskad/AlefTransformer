@@ -123,47 +123,47 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         front_aud = front.get("audio")
         front_tags = []
         if front_text:
-            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][front_text]
-            resp = write_html(text=text, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp['hashcode'])
-            all_files.add(resp['relative_path'])
+            text1 = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][front_text]
+            resp1 = write_html(text=text1, exiting_hashcode=exiting_hashcode)
+            exiting_hashcode.add(resp1['hashcode'])
+            all_files.add(resp1['relative_path'])
             front_tags.append(
                 f"""
-                <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                <alef_html xlink:label="{resp1['hashcode']}" xp:name="alef_html"
                                        xp:description="" xp:fieldtype="html"
-                                       src="../../../{resp['relative_path']}"/>
+                                       src="../../../{resp1['relative_path']}"/>
                 """
             )
 
         if front_img:
-            img = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][front_img]
-            resp = copy_to_hashcode_dir(src_path=img, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp['hashcode'])
-            all_files.add(resp['relative_path'])
+            img1 = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][front_img]
+            resp2 = copy_to_hashcode_dir(src_path=img1, exiting_hashcode=exiting_hashcode)
+            exiting_hashcode.add(resp2['hashcode'])
+            all_files.add(resp2['relative_path'])
             front_tags.append(
                 f"""
-                <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
+                <alef_image xlink:label="{resp2['hashcode']}" xp:name="alef_image"
                                         xp:description="" xp:fieldtype="image" alt="">
-                                <xp:img href="../../../{resp['relative_path']}"
+                                <xp:img href="../../../{resp2['relative_path']}"
                                         width="696" height="890"/>
                             </alef_image>
                 """
             )
 
         if front_aud:
-            aud = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][front_aud]
-            resp = copy_to_hashcode_dir(src_path=aud, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp['hashcode'])
-            all_files.add(resp['relative_path'])
+            aud1 = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][front_aud]
+            resp3 = copy_to_hashcode_dir(src_path=aud1, exiting_hashcode=exiting_hashcode)
+            exiting_hashcode.add(resp3['hashcode'])
+            all_files.add(resp3['relative_path'])
             front_tags.append(
                 f"""
                             <alef_audionew xlink:label="{temp[5]}"
                                            xp:name="alef_audionew" xp:description=""
                                            xp:fieldtype="folder">
-                                <alef_audiofile xlink:label="{resp['hashcode']}"
+                                <alef_audiofile xlink:label="{resp3['hashcode']}"
                                                 xp:name="alef_audiofile" xp:description=""
                                                 audiocontrols="No" xp:fieldtype="file"
-                                                src="../../../{resp['relative_path']}"/>
+                                                src="../../../{resp3['relative_path']}"/>
                             </alef_audionew>
                 """
             )
@@ -174,48 +174,48 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         back_tags = []
         if back_text:
-            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][back_text]
-            resp = write_html(text=text, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp['hashcode'])
-            all_files.add(resp['relative_path'])
+            text1 = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][back_text]
+            resp4 = write_html(text=text1, exiting_hashcode=exiting_hashcode)
+            exiting_hashcode.add(resp4['hashcode'])
+            all_files.add(resp4['relative_path'])
             back_tags.append(
                 f"""
-                <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                <alef_html xlink:label="{resp4['hashcode']}" xp:name="alef_html"
                                        xp:description="" xp:fieldtype="html"
-                                       src="../../../{resp['relative_path']}"/>
+                                       src="../../../{resp4['relative_path']}"/>
                 """
             )
 
         if back_img:
-            img = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][back_img]
-            resp = copy_to_hashcode_dir(src_path=img, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp['hashcode'])
-            all_files.add(resp['relative_path'])
+            img1 = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][back_img]
+            resp5 = copy_to_hashcode_dir(src_path=img1, exiting_hashcode=exiting_hashcode)
+            exiting_hashcode.add(resp5['hashcode'])
+            all_files.add(resp5['relative_path'])
             back_tags.append(
                 f"""
-                <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
+                <alef_image xlink:label="{resp5['hashcode']}" xp:name="alef_image"
                                         xp:description="" xp:fieldtype="image" alt="">
-                                <xp:img href="../../../{resp['relative_path']}"
+                                <xp:img href="../../../{resp5['relative_path']}"
                                         width="696" height="890"/>
                             </alef_image>
                 """
             )
 
         if back_aud:
-            aud = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][back_aud]
-            resp = copy_to_hashcode_dir(src_path=aud, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp['hashcode'])
-            all_files.add(resp['relative_path'])
+            aud1 = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][back_aud]
+            resp6 = copy_to_hashcode_dir(src_path=aud1, exiting_hashcode=exiting_hashcode)
+            exiting_hashcode.add(resp6['hashcode'])
+            all_files.add(resp6['relative_path'])
 
             back_tags.append(
                 f"""
                             <alef_audionew xlink:label="{temp[6]}"
                                            xp:name="alef_audionew" xp:description=""
                                            xp:fieldtype="folder">
-                                <alef_audiofile xlink:label="{resp['hashcode']}"
+                                <alef_audiofile xlink:label="{resp6['hashcode']}"
                                                 xp:name="alef_audiofile" xp:description=""
                                                 audiocontrols="No" xp:fieldtype="file"
-                                                src="../../../{resp['relative_path']}"/>
+                                                src="../../../{resp6['relative_path']}"/>
                             </alef_audionew>
                 """
             )
