@@ -74,7 +74,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     try:
         # store all file paths like hashcode/filename
         all_files = set()
-        all_tags = []
+        all_tags = [
+            """
+            <!-- DropDown_001 -->
+
+            """
+        ]
 
         # Extracting variables
         # poster = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["poster"]]

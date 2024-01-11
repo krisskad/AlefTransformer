@@ -22,7 +22,12 @@ def write_html(text, destination_file_path):
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
+    all_tags = [
+        """
+        <!-- ClicktoRevealwithSubmit_001 -->
 
+        """
+    ]
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
 

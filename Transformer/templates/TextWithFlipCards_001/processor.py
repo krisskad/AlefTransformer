@@ -68,7 +68,12 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
-    all_tags = []
+    all_tags = [
+        """
+        <!-- TextWithFlipCards_001 -->
+
+        """
+    ]
 
     # Extracting variables
     ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
