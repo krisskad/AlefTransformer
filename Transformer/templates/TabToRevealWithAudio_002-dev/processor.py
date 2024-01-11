@@ -103,7 +103,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                              xp:fieldtype="folder" width="auto" cellspan="1">
                     <alef_presentation xlink:label="{temp[2]}" xp:name="alef_presentation"
                                        xp:description="" xp:fieldtype="folder" type="Tabs" showtitle="false"
-                                       tab_title="{qHtmlText}" multipleopen="false" firstopen="false">
+                                       tab_title="{htmlentities.decode(qHtmlText)}" multipleopen="false" firstopen="false">
                         <alef_section xlink:label="{temp[3]}" xp:name="alef_section"
                                       xp:description="Tooltip with right-column image" xp:fieldtype="folder"
                                       customclass="Normal">
@@ -112,6 +112,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                          cellspan="1">
                                 <alef_audionew xlink:label="{temp[5]}" xp:name="alef_audionew"
                                                xp:description="" xp:fieldtype="folder">
+                                        <alef_audiofile xlink:label="L7L65SVE5GTDEFJMSHKZOKSK3LA"
+                                        xp:name="alef_audiofile" xp:description=""
+                                        audiocontrols="No" xp:fieldtype="file"
+                                        src="../../../L7L65SVE5GTDEFJMSHKZOKSK3LA/CS_ELA9_L017_ANL_S03_AUD_001.mp3"/>
                                 </alef_audionew>
                             </alef_column>
         """

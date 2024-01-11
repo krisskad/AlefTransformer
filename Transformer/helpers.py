@@ -232,7 +232,22 @@ def validate_inputs_dirs(input_dir, output_dir, common_dir):
     return all_input_obj
 
 
+def mathml2latex_yarosh(html_string: str):
+    """ MathML to LaTeX conversion with XSLT from krishna kadam"""
+    xslt_file = os.path.join(settings.BASE_DIR, 'Transformer', 'assets', 'LaTex', 'mmltex.xsl')
+    dom = etree.fromstring(html_string)
+    xslt = etree.parse(xslt_file)
+    transform = etree.XSLT(xslt)
+    newdom = transform(dom)
+    newdom = str(newdom).replace("$", "")
+    output = f"""<span class="math-tex">{str(newdom)}</span>"""
+    return output
+
+
 def write_html_mlo(text, exiting_hashcode):
+
+    if "<math" in text:
+        text = mathml2latex_yarosh(html_string=text)
 
     template = f"""
     <html>
@@ -301,16 +316,17 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
     if text:
         all_tags = []
 
-        temp = []
-        for _ in range(40):
-            hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode_temp)
-            temp.append(hashcode_temp)
-
         # get span info
         span_info = extract_span_info(text=text)
 
         for span_content, span_attr_obj in span_info.items():
+
+            temp = []
+            for _ in range(15):
+                hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode_temp)
+                temp.append(hashcode_temp)
+
             data_ref = span_attr_obj["data-ref"]
             if data_ref is None:
                 continue
@@ -425,28 +441,5 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             "all_files":all_files
         }
     return {}
-
-
-def mathml2latex_yarosh(equation):
-    """ MathML to LaTeX conversion with XSLT from Vasil Yaroshevich """
-    xslt_file = os.path.join(settings.BASE_DIR, 'Transformer', 'assets', 'LaTex', 'mmltex.xsl')
-    dom = etree.fromstring(equation)
-    xslt = etree.parse(xslt_file)
-    transform = etree.XSLT(xslt)
-    newdom = transform(dom)
-    newdom = str(newdom).replace("$", "")
-    output = f"""<span class="math-tex">{str(newdom)}</span>"""
-    return output
-
-
-def log_exceptions_to_file(exception, file_path):
-    try:
-        with open(file_path, 'a') as file:
-            traceback.print_exception(type(exception), exception, exception.__traceback__, file=file)
-            file.write('\n')  # Add a newline for clarity between different exceptions
-    except Exception as e:
-        print(f"Error logging exception to file: {e}")
-
-
 
 
