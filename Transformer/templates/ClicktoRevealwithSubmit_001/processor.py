@@ -50,7 +50,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     os.makedirs(path_to_hashcode, exist_ok=True)
 
     write_html(text=text_en_data, destination_file_path=destination_file_path)
-    all_tags = [f"""
+    all_tags = all_tags + [f"""
         <alef_section xlink:label="LAP7NYP2JN6KE5KGPUQIKOYLTA4" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
         <alef_column xlink:label="LJWIBTGLBLI4EPEFWZLGS3A6FSQ" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
         <alef_multiplechoice xlink:label="LOVEQZON5YZEEFMM4JTJKJVPHI4" xp:name="alef_multiplechoice" xp:description="" xp:fieldtype="folder" alef_type="MC Radio Button" mcq_type="Image Only" questionfullwidth="false" questiontitle=" " questionnumber="1" nofcolumns="{nofcolumns}" submitattempts="{submitCount}" showtitle="true" alignstatement="left" showbackground="true" shuffleoptions="false" validation="Yes">
