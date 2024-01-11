@@ -18,7 +18,7 @@ from .helpers import zip_folder_contents, validate_inputs_dirs  # Import your fu
 
 
 def index(request):
-    return render(request, 'index2.html')
+    return render(request, 'index.html')
 
 
 class HomeView(ViewSet):
