@@ -164,7 +164,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         else:
             drop_Down_Text = ""
 
+        html_drop_down = []
         for i, obj in enumerate(dropDowns):
+            html_drop_down.append(
+                f"""
+                <span class="dropdown">{i}</span>
+                """
+            )
             try:
                 title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][obj['title']]
             except Exception as e:
@@ -250,6 +256,22 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     print("DropDown_001 : option key not found")
             except Exception as e:
                 print(f"DropDown_001 options not present in args {e}")
+
+        # write html
+        manual_html_opt = "".join(html_drop_down)
+        op_resp = write_html(
+            text=manual_html_opt, exiting_hashcode=exiting_hashcode
+        )
+        all_files.add(op_resp['relative_path'])
+        exiting_hashcode.add(op_resp['hashcode'])
+
+        all_tags.append(
+            f"""
+                    <alef_html xlink:label="{op_resp['hashcode']}" xp:name="alef_html"
+                       xp:description="" xp:fieldtype="html"
+                       src="../../../{op_resp['relative_path']}"/>
+            """
+        )
 
         try:
             if feedback:
