@@ -173,9 +173,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 )
 
             if each_obj["tabType"] == "image":
-                tabHeaderTxt = each_obj["tabHeaderTxt"]
+                # tabHeaderTxt = each_obj["tabHeaderTxt"]
                 TabContentText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_obj["TabContentText"]]
-                audio = each_obj["audio"]
+                # audio = each_obj["audio"]
                 if "bgImage" in each_obj:
                     Image = each_obj["bgImage"]
 
