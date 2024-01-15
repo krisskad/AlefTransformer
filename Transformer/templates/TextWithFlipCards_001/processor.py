@@ -4,18 +4,30 @@ import os, shutil
 import htmlentities
 
 
-def write_html(text, exiting_hashcode):
+def write_html(text, exiting_hashcode, align=None):
 
-    template = f"""
-    <html>
-    <head>
-        <title></title>
-    </head>
-    <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
-        {text}
-    </body>
-    </html>
-    """
+    if align:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            <div style="text-align:{align}">{text}</div>
+        </body>
+        </html>
+        """
+    else:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            {text}
+        </body>
+        </html>
+        """
 
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)

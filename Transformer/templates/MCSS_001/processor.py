@@ -230,7 +230,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
     except Exception as e:
-        print(f"image key is not present under args of (ignoring alef_image tag) MCSS_001: {e}")
+        print(f"MCSS_001 : {e}")
 
     all_tags.append(
         """

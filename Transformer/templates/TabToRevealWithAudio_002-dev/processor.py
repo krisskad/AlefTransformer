@@ -79,98 +79,163 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     textFieldData = input_json_data["pageData"]["args"]["textFieldData"]
 
     qText = textFieldData.get("qText", None)
-    qHtmlText = ""
-    text = ""
-    if qText:
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
-        qHtmlText = text_en_html_to_html_text(html_string=text)
+    text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
 
-    resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
-    all_files.add(resp['relative_path'])
-    exiting_hashcode.add(resp['hashcode'])
-
-    temp = []
-    for _ in range(40):
+    temp1 = []
+    for _ in range(3):
         hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp)
-        temp.append(hashcode_temp)
-
+        temp1.append(hashcode_temp)
     all_tags.append(
         f"""
-            <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description=""
-                          xp:fieldtype="folder" customclass="Normal">
-                <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
-                             xp:fieldtype="folder" width="auto" cellspan="1">
-                    <alef_presentation xlink:label="{temp[2]}" xp:name="alef_presentation"
-                                       xp:description="" xp:fieldtype="folder" type="Tabs" showtitle="false"
-                                       tab_title="{htmlentities.decode(qHtmlText)}" multipleopen="false" firstopen="false">
-                        <alef_section xlink:label="{temp[3]}" xp:name="alef_section"
-                                      xp:description="Tooltip with right-column image" xp:fieldtype="folder"
-                                      customclass="Normal">
-                            <alef_column xlink:label="{temp[4]}" xp:name="alef_column"
-                                         xp:description="" xp:fieldtype="folder" width="1" alignment="Center"
-                                         cellspan="1">
-                                <alef_audionew xlink:label="{temp[5]}" xp:name="alef_audionew"
-                                               xp:description="" xp:fieldtype="folder">
-                                        <alef_audiofile xlink:label="L7L65SVE5GTDEFJMSHKZOKSK3LA"
-                                        xp:name="alef_audiofile" xp:description=""
-                                        audiocontrols="No" xp:fieldtype="file"
-                                        src="../../../L7L65SVE5GTDEFJMSHKZOKSK3LA/CS_ELA9_L017_ANL_S03_AUD_001.mp3"/>
-                                </alef_audionew>
-                            </alef_column>
+        <alef_section xlink:label="{temp1[0]}" xp:name="alef_section" xp:description=""
+                              xp:fieldtype="folder" customclass="Normal">
+                    <alef_column xlink:label="{temp1[1]}" xp:name="alef_column" xp:description=""
+                                 xp:fieldtype="folder" width="auto" cellspan="1">
+                        <alef_presentation xlink:label="{temp1[2]}" xp:name="alef_presentation"
+                                           xp:description="" xp:fieldtype="folder" type="Tabs" showtitle="false"
+                                           tab_title="{htmlentities.decode(text)}" multipleopen="false" firstopen="false">
         """
     )
 
+    # Iterate Array
     tabArray = input_json_data["pageData"]["args"]["tabArray"]
 
     for each_obj in tabArray:
+        temp2 = []
+        for _ in range(40):
+            hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode_temp)
+            temp2.append(hashcode_temp)
+
         if "tabType" in each_obj:
             if each_obj["tabType"] == "image":
-                tabHeaderTxt = each_obj["tabHeaderTxt"]
-                TabContentText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_obj["TabContentText"]]
-                audio = each_obj["audio"]
-                if "bgImage" in each_obj:
-                    Image = each_obj["bgImage"]
-
-                qHtmlText = text_en_html_to_html_text(html_string=TabContentText)
-
-                qHtmlText_resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
-                all_files.add(qHtmlText_resp['relative_path'])
-                exiting_hashcode.add(qHtmlText_resp['hashcode'])
-
-                popup_resp = get_popup_mlo_from_text(
-                    text=TabContentText,
-                    exiting_hashcode=exiting_hashcode,
-                    all_files=all_files,
-                    input_other_jsons_data=input_other_jsons_data
-                )
-                popups = ""
-                if popup_resp:
-                    exiting_hashcode = popup_resp['exiting_hashcode']
-                    all_files = popup_resp['all_files']
-                    popups = "\n".join(popup_resp['all_tags'])
-
-                temp1 = []
-                for _ in range(10):
-                    hashcode_temp1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                    exiting_hashcode.add(hashcode_temp1)
-                    temp1.append(hashcode_temp1)
+                tabHeaderTxt = each_obj.get("tabHeaderTxt")
+                if tabHeaderTxt:
+                    tabHeaderTxt = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
+                else:
+                    print("No tab header text found. Assigned it as blank string")
+                    tabHeaderTxt = ""
 
                 all_tags.append(
                     f"""
-                        <alef_column xlink:label="{temp1[0]}" xp:name="alef_column"
-                                     xp:description="" xp:fieldtype="folder" width="5" alignment="Left"
-                                     cellspan="1">
-                            <alef_tooltip xlink:label="{temp1[1]}" xp:name="alef_tooltip"
-                                          xp:description="" xp:fieldtype="folder">
+                            <alef_section xlink:label="{temp2[0]}" xp:name="alef_section"
+                              xp:description="{htmlentities.encode(tabHeaderTxt)}" xp:fieldtype="folder"
+                              customclass="Normal">
+                    """
+                )
+
+                audio = each_obj.get("audio")
+                if audio:
+                    audio = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][audio]
+                    resp = copy_to_hashcode_dir(
+                        src_path=audio,
+                        exiting_hashcode=exiting_hashcode
+                    )
+                    all_files.add(resp['relative_path'])
+                    exiting_hashcode.add(resp['hashcode'])
+
+                    all_tags.append(
+                        f"""
+                            <alef_column xlink:label="{temp2[1]}" xp:name="alef_column"
+                                         xp:description="" xp:fieldtype="folder" width="1" alignment="Center"
+                                         cellspan="1">
+                                <alef_audionew xlink:label="{temp2[2]}" xp:name="alef_audionew"
+                                               xp:description="" xp:fieldtype="folder">
+                                        <alef_audiofile xlink:label="{resp['hashcode']}"
+                                        xp:name="alef_audiofile" xp:description=""
+                                        audiocontrols="No" xp:fieldtype="file"
+                                        src="../../../{resp['relative_path']}"/>
+                                </alef_audionew>
+                            </alef_column>
+                        """
+                    )
+
+                else:
+                    print("No tab audio found. Ignoring the tag")
+
+                TabContentText = each_obj.get("TabContentText")
+                if TabContentText:
+                    all_tags.append(
+                        f"""
+                            <alef_column xlink:label="{temp2[3]}" xp:name="alef_column"
+                                 xp:description="" xp:fieldtype="folder" width="5" alignment="Left"
+                                 cellspan="1">
+                        """
+                    )
+                    TabContentText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][TabContentText]
+                    qHtmlText = text_en_html_to_html_text(html_string=TabContentText)
+                    qHtmlText_resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
+                    all_files.add(qHtmlText_resp['relative_path'])
+                    exiting_hashcode.add(qHtmlText_resp['hashcode'])
+
+                    popup_resp = get_popup_mlo_from_text(
+                        text=TabContentText,
+                        exiting_hashcode=exiting_hashcode,
+                        all_files=all_files,
+                        input_other_jsons_data=input_other_jsons_data
+                    )
+                    if popup_resp:
+                        exiting_hashcode = popup_resp['exiting_hashcode']
+                        all_files = popup_resp['all_files']
+                        popups = "\n".join(popup_resp['all_tags'])
+
+                        all_tags.append(
+                            f"""
+
+                                    <alef_tooltip xlink:label="{temp1[4]}" xp:name="alef_tooltip"
+                                                  xp:description="" xp:fieldtype="folder">
+                                        <alef_questionstatement xlink:label="{temp2[5]}"
+                                                                xp:name="alef_questionstatement" xp:description=""
+                                                                xp:fieldtype="folder">
+                                            <alef_section_general xlink:label="{temp2[6]}"
+                                                                  xp:name="alef_section_general" xp:description=""
+                                                                  xp:fieldtype="folder">
+                                                <alef_column xlink:label="{temp2[7]}"
+                                                             xp:name="alef_column" xp:description=""
+                                                             xp:fieldtype="folder" width="auto"/>
+                                            </alef_section_general>
+                                        </alef_questionstatement>
+                                        <alef_html xlink:label="{qHtmlText_resp['hashcode']}" xp:name="alef_html"
+                                                   xp:description="" xp:fieldtype="html"
+                                                   src="../../../{qHtmlText_resp['relative_path']}"/>
+                                        {popups}
+                                    </alef_tooltip>
+                                </alef_column>
+                            """
+                        )
+
+                    else:
+                        all_tags.append(
+                            f"""
+                                <alef_questionstatement xlink:label="{temp2[5]}"
+                                                        xp:name="alef_questionstatement" xp:description=""
+                                                        xp:fieldtype="folder">
+                                    <alef_section_general xlink:label="{temp2[6]}"
+                                                          xp:name="alef_section_general" xp:description=""
+                                                          xp:fieldtype="folder">
+                                        <alef_column xlink:label="{temp2[7]}"
+                                                     xp:name="alef_column" xp:description=""
+                                                     xp:fieldtype="folder" width="auto"/>
+                                    </alef_section_general>
+                                </alef_questionstatement>
                                 <alef_html xlink:label="{qHtmlText_resp['hashcode']}" xp:name="alef_html"
                                            xp:description="" xp:fieldtype="html"
                                            src="../../../{qHtmlText_resp['relative_path']}"/>
-                                {popups}
-                            </alef_tooltip>
-                        </alef_column>
-                    """
-                )
+                            </alef_column>
+                            """
+                        )
+
+                else:
+                    print("No TabContentText found. Ignoring...")
+
+
+                bgImage = each_obj.get("bgImage")
+                if bgImage:
+                    bgImage = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][bgImage]
+                else:
+                    print("No tab bgImage text found. Assigned it as blank string")
+                    bgImage = ""
 
             if each_obj["tabType"] == "image":
                 # tabHeaderTxt = each_obj["tabHeaderTxt"]

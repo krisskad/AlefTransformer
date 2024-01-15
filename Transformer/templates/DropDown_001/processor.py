@@ -1,22 +1,34 @@
 from Transformer.helpers import (generate_unique_folder_name, text_en_html_to_html_text,
-                                 get_popup_mlo_from_text, mathml2latex_yarosh, log_exceptions_to_file)
+                                 get_popup_mlo_from_text, mathml2latex_yarosh)
 from django.conf import settings
 import os, shutil
 import htmlentities
 
 
-def write_html(text, exiting_hashcode):
+def write_html(text, exiting_hashcode, align=None):
 
-    template = f"""
-    <html>
-    <head>
-        <title></title>
-    </head>
-    <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
-        {text}
-    </body>
-    </html>
-    """
+    if align:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            <div style="text-align:{align}">{text}</div>
+        </body>
+        </html>
+        """
+    else:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            {text}
+        </body>
+        </html>
+        """
 
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
@@ -219,7 +231,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         oText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][optiontext]
 
                         if "<math" in oText:
-                            oText = mathml2latex_yarosh(equation=oText)
+                            oText = mathml2latex_yarosh(html_string=oText)
 
                         o_resp = write_html(
                             text=oText, exiting_hashcode=exiting_hashcode

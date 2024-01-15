@@ -130,11 +130,11 @@ input_2 =     {
         "templateID": "TextwithImage_001",
         "args": {
           "src": "aud_004",
+          "ques": "text_020",
           "background": {
             "type": "class",
             "src": "bg_backgroundColor_3"
           },
-          "ques": "text_020",
           "textFieldData": {
             "type": "h",
             "textContent": {
@@ -152,7 +152,7 @@ input_2 =     {
       }
     }
 
-otput_2 =                     <alef_section xlink:label="LBX4OBBRA2FPUVG6LQNF2MGFNFI" xp:name="alef_section"
+otput_2 =           <alef_section xlink:label="LBX4OBBRA2FPUVG6LQNF2MGFNFI" xp:name="alef_section"
                                   xp:description="Observing Photosynthesis" xp:fieldtype="folder"
                                   customclass="Text- Left">
 						<alef_column xlink:label="LGKCEP2Q2J3OENOZ36DL6AEOV3E" xp:name="alef_column" xp:description=""

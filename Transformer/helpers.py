@@ -318,7 +318,8 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
 
         # get span info
         span_info = extract_span_info(text=text)
-
+        if isinstance(span_info, str):
+            return ''
         for span_content, span_attr_obj in span_info.items():
 
             temp = []
