@@ -42,7 +42,7 @@ def get_existing_folders(dest_folder):
 
 def read_json(file_path):
     if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             try:
                 data = json.load(file)
                 return data
@@ -55,21 +55,21 @@ def read_json(file_path):
 
 
 def write_json(file_path, data):
-    with open(file_path, 'w') as json_file:
+    with open(file_path, 'w', encoding='utf-8') as json_file:
         json.dump(data, json_file, indent=4)  # 'indent=4' adds indentation for readability, optional
 
 
 def write_xml(file_path, xml_content):
     print("writing: ", file_path)
     xml_content = xml_content.replace("\n\n", "\n")
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding='utf-8') as file:
         file.write(xml_content.strip())
 
 
 def write_html(file_path, html_content):
     print("writing: ", file_path)
     html_content = html_content.replace("\n\n", "\n")
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding='utf-8') as file:
         file.write(html_content.strip())
 
 
@@ -268,7 +268,7 @@ def write_html_mlo(text, exiting_hashcode):
 
     path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
 
-    with open(path_to_html, "w") as file:
+    with open(path_to_html, "w", encoding='utf-8') as file:
         file.write(template.strip())
 
     relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
