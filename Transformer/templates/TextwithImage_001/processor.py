@@ -149,6 +149,29 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
 
+        src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+        resp = copy_to_hashcode_dir(
+            src_path=src_audio_path,
+            exiting_hashcode=exiting_hashcode
+        )
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+
+        hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode4)
+
+        all_tags.append(
+            f"""
+                            <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
+                                           xp:description="" xp:fieldtype="folder">
+                                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                                src="../../../{resp['relative_path']}"/>
+                            </alef_audionew>
+                        </alef_column>
+            """
+        )
+
     else:
 
         all_tags.append(
@@ -248,29 +271,34 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 """
             )
 
-    src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
-    resp = copy_to_hashcode_dir(
-        src_path=src_audio_path,
-        exiting_hashcode=exiting_hashcode
-    )
-    all_files.add(resp['relative_path'])
-    exiting_hashcode.add(resp['hashcode'])
+    if len(imageContent_list)>1:
+        src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+        resp = copy_to_hashcode_dir(
+            src_path=src_audio_path,
+            exiting_hashcode=exiting_hashcode
+        )
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
 
-    hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-    exiting_hashcode.add(hashcode4)
+        hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode4)
 
-    all_tags.append(
-        f"""
-                        <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
-                                       xp:description="" xp:fieldtype="folder">
-                            <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                                            xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                            src="../../../{resp['relative_path']}"/>
-                        </alef_audionew>
-                    </alef_column>
-                </alef_section>
-        """
-    )
+        all_tags.append(
+            f"""
+                            <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
+                                           xp:description="" xp:fieldtype="folder">
+                                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                                src="../../../{resp['relative_path']}"/>
+                            </alef_audionew>
+                        </alef_column>
+                    </alef_section>
+            """
+        )
+    else:
+        all_tags.append(
+            """</alef_section>"""
+        )
 
     response = {
         "XML_STRING": "".join(all_tags),
