@@ -312,9 +312,30 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
     return response
 
 
-def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: set, exiting_hashcode: set):
+def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: set, exiting_hashcode: set,
+                            enable_question_statement=None):
     if text:
         all_tags = []
+        question_statement = ""
+        if enable_question_statement:
+            temp1 = []
+            for _ in range(3):
+                hashcode_temp1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode_temp1)
+                temp1.append(hashcode_temp1)
+            question_statement = f"""
+            <alef_questionstatement xlink:label="{temp1[0]}"
+                                    xp:name="alef_questionstatement"
+                                    xp:description="" xp:fieldtype="folder">
+                <alef_section_general xlink:label="{temp1[1]}"
+                                      xp:name="alef_section_general"
+                                      xp:description="" xp:fieldtype="folder">
+                    <alef_column xlink:label="{temp1[2]}"
+                                 xp:name="alef_column" xp:description=""
+                                 xp:fieldtype="folder" width="auto"/>
+                </alef_section_general>
+            </alef_questionstatement>
+            """
 
         # get span info
         span_info = extract_span_info(text=text)
@@ -376,6 +397,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                                             xp:fieldtype="folder" customtype="Flipcard"
                                             height="500" multipleopen="false"
                                             flipdirection="Right">
+                                {question_statement}
                                 <alef_flipcard xlink:label="{temp[7]}"
                                                xp:name="alef_flipcard" xp:description=""
                                                xp:fieldtype="folder" centered="true">

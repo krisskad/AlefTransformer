@@ -110,7 +110,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     resp = write_html(
         text=HtmlText,
         exiting_hashcode=exiting_hashcode,
-        align=align
+        # align=align
     )
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
@@ -119,7 +119,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         text=text,
         input_other_jsons_data=input_other_jsons_data,
         all_files=all_files,
-        exiting_hashcode=exiting_hashcode
+        exiting_hashcode=exiting_hashcode,
+        enable_question_statement=True
     )
     hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode1)
@@ -133,7 +134,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         popup = "\n".join(popup_response['all_tags'])
 
         class_id = "Text with Images"
-        if len(imageContent_list)>1:
+        if not len(imageContent_list)>1:
             class_id = "Text- Left"
         all_tags.append(
             f"""
@@ -177,7 +178,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     else:
         class_id = "Text with Images"
-        if len(imageContent_list)>1:
+        if not len(imageContent_list)>1:
             class_id = "Text- Left"
         all_tags.append(
             f"""
