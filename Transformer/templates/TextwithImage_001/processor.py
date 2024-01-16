@@ -132,11 +132,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode = popup_response['exiting_hashcode']
         popup = "\n".join(popup_response['all_tags'])
 
+        class_id = "Text with Images"
+        if len(imageContent_list)>1:
+            class_id = "Text- Left"
         all_tags.append(
             f"""
             <alef_section xlink:label="{hashcode1}" xp:name="alef_section"
                                       xp:description="{htmlentities.encode(ques_src)}" xp:fieldtype="folder"
-                                      customclass="Text with Images">
+                                      customclass="{class_id}">
                 <alef_column xlink:label="{hashcode2}" xp:name="alef_column" xp:description=""
                                          xp:fieldtype="folder" width="auto" cellspan="1">
                     <alef_tooltip xlink:label="{hashcode3}" xp:name="alef_tooltip"
@@ -173,12 +176,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         )
 
     else:
-
+        class_id = "Text with Images"
+        if len(imageContent_list)>1:
+            class_id = "Text- Left"
         all_tags.append(
             f"""
             <alef_section xlink:label="{hashcode1}" xp:name="alef_section"
                                       xp:description="{htmlentities.encode(ques_src)}" xp:fieldtype="folder"
-                                      customclass="Text with Images">
+                                      customclass="{class_id}">
                 <alef_column xlink:label="{hashcode2}" xp:name="alef_column" xp:description=""
                                          xp:fieldtype="folder" width="auto" cellspan="1">
                     <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description=""
@@ -225,7 +230,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                                      xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
                         <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
                                                         xp:description="" xp:fieldtype="image" alt="{htmlentities.encode(src_en_text)}">
-                            <xp:img href="../../../{resp['relative_path']}" width="688"
+                            <xp:img href="../../../{resp['relative_path']}" width="891"
                                                         height="890"/>
                         </alef_image>
                     </alef_column>
