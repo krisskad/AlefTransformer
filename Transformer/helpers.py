@@ -240,6 +240,7 @@ def mathml2latex_yarosh(html_string: str):
     transform = etree.XSLT(xslt)
     newdom = transform(dom)
     newdom = str(newdom).replace("$", "")
+    newdom = f"\({newdom}\)"
     output = f"""<span class="math-tex">{str(newdom)}</span>"""
     return output
 
