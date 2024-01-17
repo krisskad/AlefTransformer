@@ -90,15 +90,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     dropItems = input_json_data["pageData"]["args"]["dropItems"]
     dragItems = input_json_data["pageData"]["args"]["dragItems"]
 
+    if "<math" in title:
+        title = mathml2latex_yarosh(html_string=title)
+
     resp = write_html(
         text=title,
         exiting_hashcode=exiting_hashcode
     )
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
-
-    if "<math" in title:
-        title = mathml2latex_yarosh(html_string=title)
 
     temp = []
     for _ in range(11):
