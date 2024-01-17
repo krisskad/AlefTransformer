@@ -58,7 +58,7 @@ input =     {
     }
 
 
-output =                     <alef_section xlink:label="LAGP5JVTSXWSEFK7WPB4RLJF7KA" xp:name="alef_section"
+output =              <alef_section xlink:label="LAGP5JVTSXWSEFK7WPB4RLJF7KA" xp:name="alef_section"
                                   xp:description="Look and decide if each item is a homogenous or a heterogeneous mixture."
                                   xp:fieldtype="folder" customclass="Normal">
 						<alef_column xlink:label="LMU6YDLDPOQFEFFPIU4W47OS7TU" xp:name="alef_column" xp:description=""

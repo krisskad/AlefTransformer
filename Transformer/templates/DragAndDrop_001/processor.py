@@ -1,23 +1,53 @@
-from Transformer.helpers import generate_unique_folder_name
+from Transformer.helpers import generate_unique_folder_name, mathml2latex_yarosh
 from django.conf import settings
 import os, shutil
 import htmlentities
 
 
-def write_html(text, destination_file_path):
-    template = f"""
-    <html>
-    <head>
-        <title></title>
-    </head>
-    <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
-        {text}
-    </body>
-    </html>
-    """
+def write_html(text, exiting_hashcode, align=None):
 
-    with open(destination_file_path, "w") as file:
+    if align:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            <div style="text-align:{align}">{text}</div>
+        </body>
+        </html>
+        """
+    else:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            {text}
+        </body>
+        </html>
+        """
+
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+
+    with open(path_to_html, "w") as file:
         file.write(template.strip())
+
+    relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
+
+    response = {
+        "relative_path": relative_path,
+        "hashcode": hashcode,
+    }
+
+    return response
 
 
 def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
@@ -60,43 +90,46 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     dropItems = input_json_data["pageData"]["args"]["dropItems"]
     dragItems = input_json_data["pageData"]["args"]["dragItems"]
 
-    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-    exiting_hashcode.add(hashcode)
+    resp = write_html(
+        text=title,
+        exiting_hashcode=exiting_hashcode
+    )
+    all_files.add(resp['relative_path'])
+    exiting_hashcode.add(resp['hashcode'])
 
-    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
-    os.makedirs(path_to_hashcode, exist_ok=True)
+    if "<math" in title:
+        title = mathml2latex_yarosh(html_string=title)
 
-    path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
-    write_html(text=title, destination_file_path=path_to_html)
-
-    relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
-    all_files.add(relative_path)
+    temp = []
+    for _ in range(11):
+        hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp)
+        temp.append(hashcode_temp)
 
     all_tags.append(
         f"""
-                <alef_section xlink:label="LAGP5JVTSXWSEFK7WPB4RLJF7KA" xp:name="alef_section"
+                <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
                               xp:description="{htmlentities.encode(title)}"
                               xp:fieldtype="folder" customclass="Normal">
-                    <alef_column xlink:label="LMU6YDLDPOQFEFFPIU4W47OS7TU" xp:name="alef_column" xp:description=""
+                    <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
                                  xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_categorization xlink:label="LMUW7ZRIVRJBEVJQDUE477YI4MY" xp:name="alef_categorization"
+                        <alef_categorization xlink:label="{temp[2]}" xp:name="alef_categorization"
                                              xp:description="" xp:fieldtype="folder"
-                                             href="categorization_MUW7ZRIVRJBEVJQDUE477YI4MY.json"
                                              alef_categorizationtype="Normal" categorization_type="Text with Image"
                                              alef_shownumberofoptions="No" alef_limitanswer="No"
                                              alef_stickyoptions="No" alef_verticaloptions="No" invertoptions="No"
                                              submitattempts="2" validation="No" theme="Standard">
-                            <alef_categorizationquestion xlink:label="LJPET2PRM5BFE3P76ISP6USYCVQ"
+                            <alef_categorizationquestion xlink:label="{temp[3]}"
                                                          xp:name="alef_categorizationquestion" xp:description=""
                                                          xp:fieldtype="folder">
-                                <alef_section_general xlink:label="LIC5PRWIUFPCE3OFUI7JEMAOJKE"
+                                <alef_section_general xlink:label="{temp[4]}"
                                                       xp:name="alef_section_general" xp:description=""
                                                       xp:fieldtype="folder">
-                                    <alef_column xlink:label="LPZOHCNTCVDZEVOVMNNMYR2K2BY" xp:name="alef_column"
+                                    <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
                                                  xp:description="" xp:fieldtype="folder" width="auto">
-                                        <alef_html xlink:label="{hashcode}" xp:name="alef_html"
+                                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
                                                    xp:description="" xp:fieldtype="html"
-                                                   src="../../../{relative_path}"/>
+                                                   src="../../../{resp['relative_path']}"/>
                                     </alef_column>
                                 </alef_section_general>
                             </alef_categorizationquestion>
@@ -104,14 +137,16 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     )
 
     all_tags.append(
-        """
-        <alef_categories xlink:label="LXSQPFAIORFAEVA7DBAUHKMT7TQ" xp:name="alef_categories"
+        f"""
+        <alef_categories xlink:label="{temp[6]}" xp:name="alef_categories"
                                                  xp:description="" xp:fieldtype="folder">
         """
     )
 
     for each_cat in dropItems:
         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_cat['title']]
+        if "<math" in title:
+            title = mathml2latex_yarosh(html_string=title)
 
         hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode)
@@ -133,26 +168,26 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 exiting_hashcode.add(resp['hashcode'])
 
                 text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
+                if "<math" in text:
+                    text = mathml2latex_yarosh(html_string=text)
 
-                hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                exiting_hashcode.add(hashcode)
-                hashcode2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                exiting_hashcode.add(hashcode)
-                hashcode3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                exiting_hashcode.add(hashcode)
-                hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                exiting_hashcode.add(hashcode)
+                temp2 = []
+                for _ in range(10):
+                    hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                    exiting_hashcode.add(hashcode_temp2)
+                    temp2.append(hashcode_temp2)
+
                 all_tags.append(
                     f"""
-                                                <alef_option xlink:label="{hashcode1}" xp:name="alef_option"
+                                                <alef_option xlink:label="{temp2[0]}" xp:name="alef_option"
                                                              xp:description="" xp:fieldtype="folder" label="{htmlentities.encode(text)}">
-                                                    <alef_optionvalue xlink:label="{hashcode2}"
+                                                    <alef_optionvalue xlink:label="{temp2[1]}"
                                                                       xp:name="alef_optionvalue" xp:description=""
                                                                       xp:fieldtype="folder">
-                                                        <alef_section_general xlink:label="{hashcode3}"
+                                                        <alef_section_general xlink:label="{temp2[3]}"
                                                                               xp:name="alef_section_general" xp:description=""
                                                                               xp:fieldtype="folder">
-                                                            <alef_column xlink:label="{hashcode4}"
+                                                            <alef_column xlink:label="{temp2[4]}"
                                                                          xp:name="alef_column" xp:description=""
                                                                          xp:fieldtype="folder" width="auto">
                                                                 <alef_image xlink:label="{resp['hashcode']}"
@@ -183,7 +218,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         f"""
-                        <alef_audionew xlink:label="LN5PBOJAOYJOE7GX2SLAMZKBPR4" xp:name="alef_audionew"
+                        <alef_audionew xlink:label="{temp[8]}" xp:name="alef_audionew"
                                        xp:description="" xp:fieldtype="folder">
                             <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
                                             xp:description="" audiocontrols="Yes" xp:fieldtype="file"
