@@ -113,20 +113,22 @@ def zip_folder_contents(folder_path, zip_filename='output.zip'):
 
 
 def extract_span_info(text):
-    soup = BeautifulSoup(text, 'html.parser')
-    spans = soup.find_all('span')
+    if "data-ref" in text or "id=" in text:
+        soup = BeautifulSoup(text, 'html.parser')
+        spans = soup.find_all('span')
 
-    if not spans:
-        return text
+        if not spans:
+            return text
 
-    span_info = {}
-    for span in spans:
-        content = span.text.strip()
-        span_info[content] = {
-            'id': span.get('id'),
-            'data-ref': span.get('data-ref')
-        }
-
+        span_info = {}
+        for span in spans:
+            content = span.text.strip()
+            span_info[content] = {
+                'id': span.get('id'),
+                'data-ref': span.get('data-ref')
+            }
+    else:
+        span_info = ''
     return span_info
 
 
