@@ -126,7 +126,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                              alef_categorizationtype="Normal" categorization_type="Text with Image"
                                              alef_shownumberofoptions="No" alef_limitanswer="No"
                                              alef_stickyoptions="No" alef_verticaloptions="No" invertoptions="No"
-                                             submitattempts="{submitCount}" validation="No" theme="Standard">
+                                             submitattempts="{submitCount}" validation="Yes" theme="Standard">
                             <alef_categorizationquestion xlink:label="{temp[3]}"
                                                          xp:name="alef_categorizationquestion" xp:description=""
                                                          xp:fieldtype="folder">
@@ -218,10 +218,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     )
 
     # add all hint, feedback, etc
+    count = 1
     for key, val in feedback.items():
+        if count > 2:
+            break
         base_key = key.split("_")[0]
 
         text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+        if "<math" in text_val:
+            text_val = mathml2latex_yarosh(html_string=text_val)
 
         resp = write_html(
             text=text_val,
@@ -255,10 +260,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             
             """
         )
+        count = count + 1
 
     # add all hint, feedback, etc
     for key, val in hint.items():
         text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+        if "<math" in text_val:
+            text_val = mathml2latex_yarosh(html_string=text_val)
 
         resp = write_html(
             text=text_val,
