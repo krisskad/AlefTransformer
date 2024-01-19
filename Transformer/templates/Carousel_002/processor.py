@@ -145,7 +145,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             input_other_jsons_data=input_other_jsons_data,
             all_files=all_files,
             exiting_hashcode=exiting_hashcode,
-            enable_question_statement=True
+            enable_question_statement=False
         )
 
         resp_image = copy_to_hashcode_dir(
