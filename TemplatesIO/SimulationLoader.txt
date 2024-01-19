@@ -1,0 +1,38 @@
+
+    {
+      "pageType": "Misc",
+      "pageData": {
+        "templateID": "SimulationLoader",
+        "bookPopUpButton": "true",
+        "sciBookIcon": "true",
+        "args": {
+          "type": "url",
+          "src": "https://phet.colorado.edu/sims/html/gravity-and-orbits/latest/gravity-and-orbits_all.html"
+        }
+      }
+    }
+
+
+                    <alef_section xlink:label="L3G32MIDKGA3EDAB43VXMJEFF2Q" xp:name="alef_section" xp:description=""
+                                  xp:fieldtype="folder" customclass="Normal">
+						<alef_column xlink:label="LGDU45YUS52HUPCMR6T24INW2R4" xp:name="alef_column" xp:description=""
+                                     xp:fieldtype="folder" width="auto" cellspan="1">
+							<simulation xlink:label="LAVXYJCSATVHUXPMXZWJJVDJEV4" xp:name="simulation" xp:description=""
+                                        xp:fieldtype="folder" iframeWidth="auto" iframeHeight="900" type="PhET">
+                                <alef_iframefile xlink:label="LR45FMNAWOI3EVI3EVO7MBZYG4E" xp:name="alef_iframefile"
+                                                 xp:description="" xp:fieldtype="file"
+                                                 src="../../../LR45FMNAWOI3EVI3EVO7MBZYG4E/gravity-and-orbits_en.html"/>
+							</simulation>
+						</alef_column>
+					</alef_section>
+
+<alef_section xlink:label="LZQDYC4RYJUNU5FQXNVMGYDSJ24" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+    <alef_column xlink:label="LVTFZWIQXTMDEHLMRTLBFNVJIAE" xp:origlabel="LVTFZWIQXTMDEHLMRTLBFNVJIAE" xp:name="alef_column" xp:description="" xp:locked="" xp:class="" xp:fieldtype="folder" width="auto" customoverlapping="0" cellspan="1" hasHighlight="No" hasNotes="No" localizationinHTML="No" localizationinAudio="No" localizationinImage="No" localizationinVideoText="No" localizationinVideoImage="No" localizationinVideoAudio="No" hasAnimal="No" hasDressing="No" hasCountryCity="No" hasCurrency="No" hasDate="No" hasFamousPersonality="No" hasFestival="No" hasFlag="No" hasFoodDrink="No" hasLandmark="No" hasMap="No" hasMeasurementUnit="No" hasNumber="No" hasPersonalName="No" hasSport="No" hasSymbol="No" hasTranslatedAudio="No" hasTranslatedText="No">
+        <simulation xlink:label="LRLTYMGOJ4NFEVBJSGESCTE6FUU" xp:origlabel="LRLTYMGOJ4NFEVBJSGESCTE6FUU" xp:name="simulation" xp:description="" xp:locked="" xp:class="" xp:fieldtype="folder" href="simulation_RLTYMGOJ4NFEVBJSGESCTE6FUU.html" xp:templateversion="1.0" xp:derivedItemClass="" iframeWidth="auto" iframeHeight="900" type="PhET">
+            <alef_iframefile xlink:label="LWDGQTV466IAU3CVQGDBPY64TLE" xp:origlabel="LWDGQTV466IAU3CVQGDBPY64TLE" xp:name="alef_iframefile" xp:description="" xp:locked="" xp:class="" xp:fieldtype="file" src="../../../LWDGQTV466IAU3CVQGDBPY64TLE/gravity-and-orbits_en.html"/>
+            <alef_simulationreader xlink:label="LSVNET7WQ4DXEBDTXX66X73NOEI" xp:origlabel="LSVNET7WQ4DXEBDTXX66X73NOEI" xp:name="alef_simulationreader" xp:description="" xp:locked="" xp:class="" xp:fieldtype="folder">
+                <alef_html xlink:label="LPG3RSL3LHJOUDHSVGINWVE6DP4" xp:origlabel="LPG3RSL3LHJOUDHSVGINWVE6DP4" xp:name="alef_html" xp:description="" xp:locked="" xp:internalChunksRelations="" xp:class="" xp:fieldtype="html" src="../../../LPG3RSL3LHJOUDHSVGINWVE6DP4/emptyHtmlModel.html"/>
+            </alef_simulationreader>
+        </simulation>
+    </alef_column>
+</alef_section>
