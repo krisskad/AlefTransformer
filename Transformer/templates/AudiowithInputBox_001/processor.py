@@ -177,27 +177,43 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     if "mediaBoxData" in input_json_data["pageData"]["args"]:
         img_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][
             input_json_data["pageData"]["args"]['mediaBoxData']["src"]]
+        resp = copy_to_hashcode_dir(src_path=img_src, exiting_hashcode=exiting_hashcode)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+
+        all_tags.append(
+            f"""
+            <alef_column xlink:label="{temp[23]}" xp:name="alef_column" xp:description=""
+                         xp:fieldtype="folder" width="auto" cellspan="1">
+                <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description=""
+                            xp:fieldtype="image" alt="" customWidth="600" customAlign="Center">
+                    <xp:img href="../../../{resp['relative_path']}" width="891"
+                            height="890"/>
+                </alef_image>
+            </alef_column>
+            """
+        )
     else:
         img_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][
             input_json_data["pageData"]["args"]['background']["src"]]
 
-    resp = copy_to_hashcode_dir(src_path=img_src, exiting_hashcode=exiting_hashcode)
-    all_files.add(resp['relative_path'])
-    exiting_hashcode.add(resp['hashcode'])
+        resp = copy_to_hashcode_dir(src_path=img_src, exiting_hashcode=exiting_hashcode)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
 
-    all_tags.append(
-        f"""
-        </alef_column>
-            <alef_column xlink:label="{temp[23]}" xp:name="alef_column" xp:description=""
-                         xp:fieldtype="folder" width="auto" cellspan="1">
-                <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description=""
-                            xp:fieldtype="image" alt="">
-                    <xp:img href="../../../{resp['relative_path']}" width="1920" height="1080"/>
-                </alef_image>
+        all_tags.append(
+            f"""
             </alef_column>
-        </alef_section>
-        """
-    )
+                <alef_column xlink:label="{temp[23]}" xp:name="alef_column" xp:description=""
+                             xp:fieldtype="folder" width="auto" cellspan="1">
+                    <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description=""
+                                xp:fieldtype="image" alt="">
+                        <xp:img href="../../../{resp['relative_path']}" width="1920" height="1080"/>
+                    </alef_image>
+                </alef_column>
+            </alef_section>
+            """
+        )
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,
