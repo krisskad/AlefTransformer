@@ -1,3 +1,5 @@
+
+Varient 1
 {
       "pageType": "Misc",
       "pageData": {
@@ -81,6 +83,200 @@
                   }
                 }
               ]
+            },
+            {
+              "tabHeaderTxt": "text_113",
+              "TabContentText": "text_089",
+              "tabType": "cards",
+              "container": [
+                {
+                  "deck": {
+                    "front": {
+                      "content": "text_067",
+                      "img": "img_038",
+                      "audio": "aud_027"
+                    },
+                    "back": {
+                      "content": "text_068",
+                      "img": "img_039",
+                      "audio": "aud_023"
+                    }
+                  }
+                },
+                {
+                  "deck": {
+                    "front": {
+                      "content": "text_069",
+                      "img": "img_040",
+                      "audio": "aud_028"
+                    },
+                    "back": {
+                      "content": "text_070",
+                      "img": "img_041",
+                      "audio": "aud_024"
+                    }
+                  }
+                },
+                {
+                  "deck": {
+                    "front": {
+                      "content": "text_071",
+                      "img": "img_042",
+                      "audio": "aud_029"
+                    },
+                    "back": {
+                      "content": "text_072",
+                      "img": "img_043",
+                      "audio": "aud_025"
+                    }
+                  }
+                },
+                {
+                  "deck": {
+                    "front": {
+                      "content": "text_073",
+                      "img": "img_044",
+                      "audio": "aud_030"
+                    },
+                    "back": {
+                      "content": "text_074",
+                      "img": "img_045",
+                      "audio": "aud_026"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "tabHeaderTxt": "text_112",
+              "TabContentText": "text_088",
+              "audio": "p011_audio_2",
+              "tabType": "video",
+              "videoData": {
+                "src": "vid_003"
+              }
+            },
+            {
+              "tabHeaderTxt": "text_111",
+              "TabContentText": "p024_tabContentTxt_1",
+              "audio": "p011_audio_1",
+              "tabType": "input",
+              "imageFirst": true,
+              "contentAlign": "h",
+              "imageData": {
+                "src": "img_040"
+              },
+              "textFieldData": {
+                "btnText": "text_006"
+              }
+            }
+          ]
+        }
+      }
+    }
+
+
+    Varient 2
+    {
+      "pageType": "Misc",
+      "pageData": {
+        "viewRef": "page_012",
+        "templateID": "TabToRevealWithAudio_002",
+        "args": {
+          "background": {
+            "type": "class",
+            "src": "bg_backgroundColor_3"
+          },
+          "textFieldData": {
+            "btnText": "text_012",
+            "qText": "text_063"
+          },
+          "tabArray": [
+            {
+              "tabHeaderTxt": "text_113",
+              "TabContentText": "text_089",
+              "tabType": "cards",
+              "container": [
+                {
+                  "deck": {
+                    "front": {
+                      "content": "text_067",
+                      "img": "img_038",
+                      "audio": "aud_027"
+                    },
+                    "back": {
+                      "content": "text_068",
+                      "img": "img_039",
+                      "audio": "aud_023"
+                    }
+                  }
+                },
+                {
+                  "deck": {
+                    "front": {
+                      "content": "text_069",
+                      "img": "img_040",
+                      "audio": "aud_028"
+                    },
+                    "back": {
+                      "content": "text_070",
+                      "img": "img_041",
+                      "audio": "aud_024"
+                    }
+                  }
+                },
+                {
+                  "deck": {
+                    "front": {
+                      "content": "text_071",
+                      "img": "img_042",
+                      "audio": "aud_029"
+                    },
+                    "back": {
+                      "content": "text_072",
+                      "img": "img_043",
+                      "audio": "aud_025"
+                    }
+                  }
+                },
+                {
+                  "deck": {
+                    "front": {
+                      "content": "text_073",
+                      "img": "img_044",
+                      "audio": "aud_030"
+                    },
+                    "back": {
+                      "content": "text_074",
+                      "img": "img_045",
+                      "audio": "aud_026"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "tabHeaderTxt": "text_112",
+              "TabContentText": "text_088",
+              "audio": "p011_audio_2",
+              "tabType": "video",
+              "videoData": {
+                "src": "vid_003"
+              }
+            },
+            {
+              "tabHeaderTxt": "text_111",
+              "TabContentText": "p024_tabContentTxt_1",
+              "audio": "p011_audio_1",
+              "tabType": "input",
+              "imageFirst": true,
+              "contentAlign": "h",
+              "imageData": {
+                "src": "img_040"
+              },
+              "textFieldData": {
+                "btnText": "text_006"
+              }
             }
           ]
         }

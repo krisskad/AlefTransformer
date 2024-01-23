@@ -230,7 +230,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
     except Exception as e:
-        print(f"MCSS_001 : {e}")
+        # print(f"MCSS_001 : {e}")
+        pass
 
     all_tags.append(
         """

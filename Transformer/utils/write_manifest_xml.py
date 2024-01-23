@@ -38,7 +38,7 @@ def write_imsmanifest_xml(all_manifest_files, exiting_hashcode):
                 xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
                 <general>
                     <title>
-                        <langstring xml:lang="x-none">MITR Reveal and Inspire Widgets</langstring>
+                        <langstring xml:lang="x-none">Test</langstring>
                     </title>
                 </general>
             </lom>
