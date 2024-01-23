@@ -105,17 +105,6 @@
 										</alef_audionew>
                                         <alef_tooltip xlink:label="LADAXFOJYAP3URACSEBJOYEWYME" xp:name="alef_tooltip"
                                                       xp:description="" xp:fieldtype="folder">
-											<alef_questionstatement xlink:label="LNUOHJIS5JFBEPL6FWZDTQI56MA"
-                                                                    xp:name="alef_questionstatement" xp:description=""
-                                                                    xp:fieldtype="folder">
-												<alef_section_general xlink:label="LPGVABDLNTL3U3IW46CNNH3P67Y"
-                                                                      xp:name="alef_section_general" xp:description=""
-                                                                      xp:fieldtype="folder">
-													<alef_column xlink:label="LHWFYNFIL4XTEJAKL2YDH5JECPQ"
-                                                                 xp:name="alef_column" xp:description=""
-                                                                 xp:fieldtype="folder" width="auto"/>
-												</alef_section_general>
-											</alef_questionstatement>
                                             <alef_html xlink:label="LYHQGOBSKUMUUZLFB6RDFPA63PY" xp:name="alef_html"
                                                        xp:description="" xp:fieldtype="html"
                                                        src="../../../LYHQGOBSKUMUUZLFB6RDFPA63PY/emptyHtmlModel.html"/>
@@ -133,20 +122,6 @@
                                                                         xp:fieldtype="folder" customtype="Flipcard"
                                                                         height="500" multipleopen="false"
                                                                         flipdirection="Right">
-															<alef_questionstatement
-                                                                    xlink:label="LR6PLV67WWQPEFLML7IBHIIADDQ"
-                                                                    xp:name="alef_questionstatement" xp:description=""
-                                                                    xp:fieldtype="folder">
-																<alef_section_general
-                                                                        xlink:label="LPPPXAS6DUCQEJNQYI256GBFQ2U"
-                                                                        xp:name="alef_section_general" xp:description=""
-                                                                        xp:fieldtype="folder">
-																	<alef_column
-                                                                            xlink:label="LMNHE7USZVBKUNOL7XJEZF6EYJU"
-                                                                            xp:name="alef_column" xp:description=""
-                                                                            xp:fieldtype="folder" width="auto"/>
-																</alef_section_general>
-															</alef_questionstatement>
                                                             <alef_flipcard xlink:label="LGENFOBVQWOUEJCGWGZPLNPP2JU"
                                                                            xp:name="alef_flipcard" xp:description=""
                                                                            xp:fieldtype="folder" centered="true">

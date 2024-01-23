@@ -189,17 +189,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         </alef_audionew>
                         <alef_tooltip xlink:label="{temp2[3]}" xp:name="alef_tooltip"
                                                       xp:description="" xp:fieldtype="folder">
-                            <alef_questionstatement xlink:label="{temp2[4]}"
-                                                    xp:name="alef_questionstatement" xp:description=""
-                                                    xp:fieldtype="folder">
-                                <alef_section_general xlink:label="{temp2[5]}"
-                                                      xp:name="alef_section_general" xp:description=""
-                                                      xp:fieldtype="folder">
-                                    <alef_column xlink:label="{temp2[6]}"
-                                                 xp:name="alef_column" xp:description=""
-                                                 xp:fieldtype="folder" width="auto"/>
-                                </alef_section_general>
-                            </alef_questionstatement>
                             <alef_html xlink:label="{resp_desc['hashcode']}" xp:name="alef_html"
                                        xp:description="" xp:fieldtype="html"
                                        src="../../../{resp_desc['relative_path']}"/>
