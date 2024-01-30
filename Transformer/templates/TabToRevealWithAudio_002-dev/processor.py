@@ -106,11 +106,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     tabArray = input_json_data["pageData"]["args"]["tabArray"]
 
     for each_obj in tabArray:
-        temp2 = []
-        for _ in range(40):
-            hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode_temp)
-            temp2.append(hashcode_temp)
 
         if "tabType" in each_obj:
             if each_obj["tabType"] == "image":
@@ -119,8 +114,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 exiting_hashcode.add(img_xml['hashcode'])
                 all_tags.append(img_xml['XML_STRING'])
 
-            if each_obj["tabType"] == "buttonWithPopup":
-                button_with_popup_xml = button_with_popup(each_obj, input_other_jsons_data, exiting_hashcode)
+            # if each_obj["tabType"] == "buttonWithPopup":
+            #     button_with_popup_xml = button_with_popup(each_obj, input_other_jsons_data, exiting_hashcode)
+            #     all_files.add(img_xml['relative_path'])
+            #     exiting_hashcode.add(img_xml['hashcode'])
+            #     all_tags.append(img_xml['XML_STRING'])
+
+            if each_obj['tabType'] == "cards":
+                flipcards_xml = flipcards(each_obj, input_other_jsons_data, exiting_hashcode)
+                all_files.add(flipcards_xml['relative_path'])
+                exiting_hashcode.add(flipcards_xml['hashcode'])
+                all_tags.append(flipcards_xml['XML_STRING'])
 
     response = {
         "XML_STRING": "".join(all_tags),
