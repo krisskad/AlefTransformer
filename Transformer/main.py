@@ -207,8 +207,8 @@ def iterative_process_data(all_dir_objs):
 
         write_imsmanifest_xml(
             all_manifest_files=ALL_MANIFEST_FILES,
-            exiting_hashcode=GENERATED_HASH_CODES
-
+            exiting_hashcode=GENERATED_HASH_CODES,
+            input_other_jsons_data=OTHER_JSON_DATA,
         )
 
         print("Zipping output and moving it to output dir")

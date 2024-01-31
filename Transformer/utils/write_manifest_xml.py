@@ -16,7 +16,7 @@ IMSMANIFEST_XML = """
 """
 
 
-def write_imsmanifest_xml(all_manifest_files, exiting_hashcode):
+def write_imsmanifest_xml(all_manifest_files, exiting_hashcode, input_other_jsons_data):
     file_tags = []
     mlo_html_path = ""
     mlo_html_folder_hash = ""
@@ -38,7 +38,7 @@ def write_imsmanifest_xml(all_manifest_files, exiting_hashcode):
                 xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
                 <general>
                     <title>
-                        <langstring xml:lang="x-none">Test</langstring>
+                        <langstring xml:lang="x-none">{input_other_jsons_data['COURSE_ID']}</langstring>
                     </title>
                 </general>
             </lom>

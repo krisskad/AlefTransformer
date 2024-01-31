@@ -57,6 +57,11 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
     subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
     # goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText']]
 
+    if subtitle:
+        lesson_objective_param = f"""lessonObjective="{htmlentities.encode(subtitle)}"""
+    else:
+        lesson_objective_param = ""
+
     image_thumb_hashcode = ""
     relative_file = ""
     for key, val in input_other_jsons_data['INPUT_IMAGES_JSON_DATA'].items():
@@ -78,12 +83,13 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
 
             shutil.copy2(image_thumb_src_file_path, image_thumb_destination_file_path)
 
+
     all_tags.append(
         f"""
         <alef_page xlink:label="L3LHLS7DTRTJUNCWSZX3M3LWYTA" xp:name="alef_page" xp:description="{htmlentities.encode(head)}" xp:fieldtype="folder" unittitle="{htmlentities.encode(title)} | {htmlentities.encode(subtitle)}" view="Normal" direction="LTR" allowautoplay="false" style="Style 1" customizationid="Custom_R&amp;I" width="1440" height="810" fixeddimension="No" includetoolkit="No" sequence="000">
         <alef_section xlink:label="LQ4IMNKPTQHQE7AX3D5FGM4JWME" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
         <alef_column xlink:label="LWWHJYSORL7KENOW64SWOKJ5WBQ" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-        <alef_presentation xlink:label="LIJI7RDHJDESULCGOSP6YH5EFBI" xp:name="alef_presentation" xp:description="" xp:fieldtype="folder" type="Carousel" ela_title1="{htmlentities.encode(title)}" ela_title2="{htmlentities.encode(subtitle)}" lessonObjective="{htmlentities.encode(subtitle)}" showtitle="false" multipleopen="false" firstopen="false">
+        <alef_presentation xlink:label="LIJI7RDHJDESULCGOSP6YH5EFBI" xp:name="alef_presentation" xp:description="" xp:fieldtype="folder" type="Carousel" ela_title1="{htmlentities.encode(title)}" ela_title2="{htmlentities.encode(subtitle)}" {lesson_objective_param} showtitle="false" multipleopen="false" firstopen="false">
         <alef_section xlink:label="LWUQ7OPC4ESGENIZOZLXH4RQVCA" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
         <alef_column xlink:label="LQAFGRAHGOWUUPHQGMY2IWFZWKU" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1" />
         </alef_section>
