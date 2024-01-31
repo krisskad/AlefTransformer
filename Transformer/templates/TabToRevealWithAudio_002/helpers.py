@@ -68,11 +68,8 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 
     return response
 
-
-
-def image_xml(input_json_data, input_other_jsons_data, exiting_hashcode):
+def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     """
-
     :param input_json_data: {
               "tabType": "image",
               "tabHeaderTxt": "text_108",
@@ -254,7 +251,7 @@ def image_xml(input_json_data, input_other_jsons_data, exiting_hashcode):
     return response
 
 
-def video_xml(input_json_data, input_other_jsons_data, exiting_hashcode):
+def video(input_json_data, input_other_jsons_data, exiting_hashcode):
     """
 
     :param input_json_data: {
@@ -652,6 +649,7 @@ def button_with_popup(input_json_data, input_other_jsons_data, exiting_hashcode)
 
     return response
 
+
 def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
     """
 
@@ -727,7 +725,7 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_tags = []
 
     temp = []
-    for _ in range(10):
+    for _ in range(20):
         hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp)
         temp.append(hashcode_temp)
@@ -767,6 +765,12 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
     container = input_json_data.get("container", None)
     if container:
         for each_card_obj in container:
+
+            temp3 = []
+            for _ in range(20):
+                hashcode_temp3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode_temp3)
+                temp3.append(hashcode_temp3)
 
             front_obj = each_card_obj['deck'].get('front', None)
             if "content" in front_obj:
@@ -849,7 +853,7 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                     all_pop_ups_xml = "\n".join(all_pop_ups)
                     front_objcontent_text_xml = f"""
-                    <alef_tooltip xlink:label="{temp[11]}"
+                    <alef_tooltip xlink:label="{temp3[0]}"
                                   xp:name="alef_tooltip" xp:description=""
                                   xp:fieldtype="folder">
                         <alef_html xlink:label="{front_objcontent_text_resp['hashcode']}"
@@ -882,14 +886,14 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             if "audio" in front_obj:
                 front_objaudio = front_obj['audio']
-                front_objaudio_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][front_objaudio]
+                front_objaudio_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][front_objaudio]
                 front_objaudio_src_resp = copy_to_hashcode_dir(src_path=front_objaudio_src,
                                                              exiting_hashcode=exiting_hashcode)
                 all_files.add(front_objaudio_src_resp['relative_path'])
                 exiting_hashcode.add(front_objaudio_src_resp['hashcode'])
 
                 front_objaudio_src_xml = f"""
-                <alef_audionew xlink:label="{temp[6]}"
+                <alef_audionew xlink:label="{temp3[2]}"
                                            xp:name="alef_audionew" xp:description=""
                                            xp:fieldtype="folder">
                     <alef_audiofile xlink:label="{front_objaudio_src_resp['hashcode']}"
@@ -1008,7 +1012,7 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             if "img" in back_obj:
                 back_objimg = back_obj['img']
-                back_objimg_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][back_objimg]
+                back_objimg_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][back_objimg]
                 back_objimg_src_resp = copy_to_hashcode_dir(src_path=back_objimg_src, exiting_hashcode=exiting_hashcode)
                 all_files.add(back_objimg_src_resp['relative_path'])
                 exiting_hashcode.add(back_objimg_src_resp['hashcode'])
@@ -1026,7 +1030,7 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             if "audio" in back_obj:
                 back_objaudio = back_obj['audio']
-                back_objaudio_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][back_objaudio]
+                back_objaudio_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][back_objaudio]
 
                 back_objaudio_src_resp = copy_to_hashcode_dir(src_path=back_objaudio_src,
                                                                exiting_hashcode=exiting_hashcode)
@@ -1034,7 +1038,7 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
                 exiting_hashcode.add(back_objaudio_src_resp['hashcode'])
 
                 back_objaudio_src_xml = f"""
-                                <alef_audionew xlink:label="{temp[6]}"
+                                <alef_audionew xlink:label="{temp3[3]}"
                                                            xp:name="alef_audionew" xp:description=""
                                                            xp:fieldtype="folder">
                                     <alef_audiofile xlink:label="{back_objaudio_src_resp['hashcode']}"
@@ -1048,13 +1052,13 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             all_tags.append(
                 f"""
-                <alef_flipcard xlink:label="{temp[7]}"
+                <alef_flipcard xlink:label="{temp3[4]}"
                        xp:name="alef_flipcard" xp:description=""
                        xp:fieldtype="folder" centered="true">
-                    <alef_section xlink:label="{temp[8]}"
+                    <alef_section xlink:label="{temp3[5]}"
                                   xp:name="alef_section" xp:description=""
                                   xp:fieldtype="folder" customclass="Normal">
-                        <alef_column xlink:label="{temp[9]}"
+                        <alef_column xlink:label="{temp3[6]}"
                                      xp:name="alef_column" xp:description=""
                                      xp:fieldtype="folder" width="auto" cellspan="1">
                             {front_objcontent_text_xml}
@@ -1062,10 +1066,10 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
                             {front_objaudio_src_xml}
                         </alef_column>
                     </alef_section>
-                    <alef_section xlink:label="{temp[10]}"
+                    <alef_section xlink:label="{temp3[7]}"
                                   xp:name="alef_section" xp:description=""
                                   xp:fieldtype="folder" customclass="Normal">
-                        <alef_column xlink:label="{temp[10]}"
+                        <alef_column xlink:label="{temp3[8]}"
                                      xp:name="alef_column" xp:description=""
                                      xp:fieldtype="folder" width="auto" cellspan="1">
                             {back_objcontent_text_xml}
