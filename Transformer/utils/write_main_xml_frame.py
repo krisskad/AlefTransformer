@@ -58,7 +58,7 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
     # goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText']]
 
     if subtitle:
-        lesson_objective_param = f"""lessonObjective="{htmlentities.encode(subtitle)}"""
+        lesson_objective_param = f'lessonObjective="{htmlentities.encode(subtitle)}"'
     else:
         lesson_objective_param = ""
 
@@ -82,7 +82,6 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
             os.makedirs(path_to_hashcode, exist_ok=True)
 
             shutil.copy2(image_thumb_src_file_path, image_thumb_destination_file_path)
-
 
     all_tags.append(
         f"""

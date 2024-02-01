@@ -132,6 +132,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             #     exiting_hashcode.update(video_xml['GENERATED_HASH_CODES'])
             #     all_tags.append(video_xml['XML_STRING'])
 
+    all_tags.append(
+        """
+                </alef_presentation>
+            </alef_column>
+        </alef_section>
+        """
+    )
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,

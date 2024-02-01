@@ -108,6 +108,21 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             </alef_section>
             """
         )
+
+        # all_tags.append(
+        #     f"""
+        #     <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+        #         <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+        #             <simulation xlink:label="{temp[2]}" xp:name="simulation" xp:description="" xp:fieldtype="folder" iframeWidth="auto" iframeHeight="900" type="PhET">
+        #                 <alef_iframefile xlink:label="{temp[3]}" xp:name="alef_iframefile" xp:description="" xp:fieldtype="file" src="{src}"/>
+        #                 <alef_simulationreader xlink:label="{temp[4]}" xp:name="alef_simulationreader" xp:description="" xp:fieldtype="folder">
+        #                     <alef_html xlink:label="LPG3RSL3LHJOUDHSVGINWVE6DP4" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../LPG3RSL3LHJOUDHSVGINWVE6DP4/emptyHtmlModel.html"/>
+        #                 </alef_simulationreader>
+        #             </simulation>
+        #         </alef_column>
+        #     </alef_section>
+        #     """
+        # )
     else:
         print(f"SimulationLoader only supports url type currently but provided: {type}")
 
