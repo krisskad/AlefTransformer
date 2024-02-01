@@ -61,17 +61,7 @@ output =             <alef_section xlink:label="LKIK76TUISSIU7GLZRIBEWGNTEY" xp:
 											<alef_tooltip xlink:label="LMMUFLASMZWAUZGPM5H7VTAYDAI"
                                                           xp:name="alef_tooltip" xp:description=""
                                                           xp:fieldtype="folder">
-												<alef_questionstatement xlink:label="LX4XOECBSPNME3NY4J5LUWP5VAM"
-                                                                        xp:name="alef_questionstatement"
-                                                                        xp:description="" xp:fieldtype="folder">
-													<alef_section_general xlink:label="LJ43BBOZQ66XETP4FBYQOMZ2MWY"
-                                                                          xp:name="alef_section_general"
-                                                                          xp:description="" xp:fieldtype="folder">
-														<alef_column xlink:label="LEW7PEK2H4ZNEHBHI5AUDL5HVO4"
-                                                                     xp:name="alef_column" xp:description=""
-                                                                     xp:fieldtype="folder" width="auto"/>
-													</alef_section_general>
-												</alef_questionstatement>
+
                                                 <alef_html xlink:label="LI62BNOPANVYEZIEP7D5S6QLPPM" xp:name="alef_html"
                                                            xp:description="" xp:fieldtype="html"
                                                            src="../../../LI62BNOPANVYEZIEP7D5S6QLPPM/emptyHtmlModel.html"/>
