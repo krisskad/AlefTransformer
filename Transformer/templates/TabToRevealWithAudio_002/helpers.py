@@ -1090,11 +1090,6 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
         </alef_section>
         """
     )
-    all_tags.append(
-        """
-        </alef_section>
-        """
-    )
 
     response = {
         "XML_STRING": "".join(all_tags),
