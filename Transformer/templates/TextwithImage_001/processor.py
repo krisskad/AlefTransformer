@@ -99,6 +99,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     imageContent_list = input_json_data["pageData"]["args"]["textFieldData"]["imageContent"]
 
+    if len(imageContent_list)>1:
+        align = True
+    else:
+        align = False
+
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
     # aud_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
@@ -110,7 +115,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     resp = write_html(
         text=HtmlText,
         exiting_hashcode=exiting_hashcode,
-        align="True"
+        align=align
     )
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])

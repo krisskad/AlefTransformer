@@ -135,7 +135,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                      xp:name="alef_interactivesection" xp:description=""
                                      xp:fieldtype="folder" alef_appearingtime="00:00:20">
                 <alef_section xlink:label="LIVU5PWWJJYIUNOJDQC74IQBPJQ" xp:name="alef_section"
-                              xp:description="" xp:fieldtype="folder" customclass="Normal">
+                              xp:description="" xp:fieldtype="folder" customclass="Input Box">
                     <alef_column xlink:label="LO5E4LJHR2O2URGYJZ4SUMLYSDU" xp:name="alef_column"
                                  xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
                         <alef_notebook xlink:label="LDTATVQFVOCLUDEFJOITWJVIECA"

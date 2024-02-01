@@ -13,7 +13,7 @@ def write_html(text, exiting_hashcode, align=None):
             <title></title>
         </head>
         <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
-            <div style="text-align:{align}">{text}</div>
+            <div style="text-align:center">{text}</div>
         </body>
         </html>
         """
@@ -102,7 +102,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode_temp)
         temp.append(hashcode_temp)
 
-    resp = write_html(text=text, exiting_hashcode=exiting_hashcode)
+    resp = write_html(text=text, exiting_hashcode=exiting_hashcode, align=True)
     exiting_hashcode.add(resp['hashcode'])
     all_files.add(resp['relative_path'])
 

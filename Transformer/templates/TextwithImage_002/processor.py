@@ -4,20 +4,50 @@ import os, shutil
 import htmlentities
 
 
-def write_html(text, destination_file_path):
-    template = f"""
-    <html>
-    <head>
-        <title></title>
-    </head>
-    <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
-        {text}
-    </body>
-    </html>
-    """
+def write_html(text, exiting_hashcode, align=None):
 
-    with open(destination_file_path, "w") as file:
+    if align:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            <div style="text-align:center">{text}</div>
+        </body>
+        </html>
+        """
+    else:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            {text}
+        </body>
+        </html>
+        """
+
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+
+    with open(path_to_html, "w") as file:
         file.write(template.strip())
+
+    relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
+
+    response = {
+        "relative_path": relative_path,
+        "hashcode": hashcode,
+    }
+
+    return response
 
 
 def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
@@ -67,16 +97,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
 
-    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-    exiting_hashcode.add(hashcode)
-
-    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
-    os.makedirs(path_to_hashcode, exist_ok=True)
-
-    path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
-    write_html(text=title, destination_file_path=path_to_html)
-
-    relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
+    text_resp = write_html(text=title, exiting_hashcode=exiting_hashcode, align=True)
+    all_files.add(text_resp['relative_path'])
+    exiting_hashcode.add(text_resp['hashcode'])
 
     all_image_tags_list = []
     for each_img in images:
@@ -106,9 +129,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                       xp:description="" xp:fieldtype="folder" customclass="Normal">
                             <alef_column xlink:label="LRL766D37GBFUDKE4GWXV7D6PKI" xp:name="alef_column"
                                          xp:description="" xp:fieldtype="folder" width="12" cellspan="1">
-                                <alef_html xlink:label="{hashcode}" xp:name="alef_html"
+                                <alef_html xlink:label="{text_resp['hashcode']}" xp:name="alef_html"
                                            xp:description="" xp:fieldtype="html"
-                                           src="../../../{relative_path}"/>
+                                           src="../../../{text_resp['relative_path']}"/>
                                 {all_image_tags}
                                 <alef_audionew xlink:label="LYFPVNQZMPTKEPOB2OVPZ5YZSSU" xp:name="alef_audionew"
                                                xp:description="" xp:fieldtype="folder">
