@@ -76,6 +76,15 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
               "TabContentText": "text_036",
               "audio": "aud_008",
               "bgImage": "img_034"
+            },
+            {
+              "tabType": "image",
+              "tabHeaderTxt": "text_109",
+              "TabContentText": "text_036",
+              "audio": "aud_008",
+              "imageData": {
+                "src": "img_040"
+              }
             }
     :param input_other_jsons_data:
     :param exiting_hashcode:
@@ -107,7 +116,7 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     imageData = input_json_data.get("imageData", None)
     if imageData:
-        imageData_src = input_json_data.get("src", None)
+        imageData_src = imageData.get("src", None)
         if imageData_src:
             imageData_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][imageData_src]
             resp_img = copy_to_hashcode_dir(src_path=imageData_src, exiting_hashcode=exiting_hashcode)
