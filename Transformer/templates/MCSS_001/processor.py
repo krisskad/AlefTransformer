@@ -59,6 +59,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # Extracting variables
     ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
     src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    image_check = input_json_data["pageData"]["args"].get("image", None)
+    if image_check:
+        nofcolumns = 1
+    else:
+        nofcolumns = 2
+
     # submit = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["submit"]]
     # showAnswer = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"].get("showAnswer", None)]
     submitCount = input_json_data["pageData"]["args"]["submitCount"]
@@ -101,7 +107,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         <alef_multiplechoice xlink:label="{hashcode3}" xp:name="alef_multiplechoice"
                                              xp:description="" xp:fieldtype="folder" alef_type="MC Radio Button"
                                              questionfullwidth="false" questiontitle=" " questionnumber=" "
-                                             nofcolumns="2" submitattempts="{submitCount}" showtitle="false"
+                                             nofcolumns="{nofcolumns}" submitattempts="{submitCount}" showtitle="false"
                                              alignstatement="center" showbackground="false" shuffleoptions="true"
                                              validation="Yes">
                             <alef_questionstatement xlink:label="{hashcode4}"
