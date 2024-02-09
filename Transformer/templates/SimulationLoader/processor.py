@@ -81,6 +81,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
     all_tags = []
+    all_tags = [
+        """
+        <!-- SimulationLoader -->
+
+        """
+    ]
 
     type = input_json_data["pageData"]["args"]["type"]
     src = input_json_data["pageData"]["args"]["src"]

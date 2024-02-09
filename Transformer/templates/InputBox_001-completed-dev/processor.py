@@ -70,6 +70,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files = set()
     all_tags = []
 
+    all_tags = [
+        """
+        <!-- InputBox_001 -->
+
+        """
+    ]
+
     # Extracting variables
     src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
     extraTexts = input_json_data["pageData"]["args"]["extraTexts"]
