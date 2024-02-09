@@ -2,6 +2,7 @@ from Transformer.helpers import generate_unique_folder_name, text_en_html_to_htm
 from django.conf import settings
 import os, shutil
 import htmlentities
+from bs4 import BeautifulSoup
 
 
 def write_html(text, exiting_hashcode):
@@ -102,6 +103,8 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     tabHeaderTxt = input_json_data.get("tabHeaderTxt", None)
     if tabHeaderTxt:
         tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
+        tabHeaderTxt_text = BeautifulSoup(tabHeaderTxt_text, "lxml").text
+
     else:
         print("tabHeaderTxt Is not provided")
         tabHeaderTxt_text = ""
