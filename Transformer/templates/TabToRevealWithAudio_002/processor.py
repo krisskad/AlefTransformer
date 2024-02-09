@@ -3,6 +3,7 @@ from django.conf import settings
 import os, shutil
 import htmlentities
 from .helpers import *
+from bs4 import BeautifulSoup
 
 
 def write_html(text, exiting_hashcode):
@@ -88,6 +89,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     qText = textFieldData.get("qText", None)
     if qText:
         text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
+        text = BeautifulSoup(text, "lxml").text
     else:
         print("qText Not provided")
         text = ""
