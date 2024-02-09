@@ -55,10 +55,10 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
     head = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['head']]
     title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['title']]
     subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
-    # goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText']]
+    goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText']]
 
     if subtitle:
-        lesson_objective_param = f'lessonObjective="{htmlentities.encode(subtitle)}"'
+        lesson_objective_param = f'lessonObjective="{htmlentities.encode(goalText)}"'
     else:
         lesson_objective_param = ""
 
