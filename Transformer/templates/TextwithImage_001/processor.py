@@ -171,13 +171,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         all_tags.append(
             f"""
-                            <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
-                                           xp:description="" xp:fieldtype="folder">
-                                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                                src="../../../{resp['relative_path']}"/>
-                            </alef_audionew>
-                        </alef_column>
+            <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
+                           xp:description="" xp:fieldtype="folder">
+                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                src="../../../{resp['relative_path']}"/>
+            </alef_audionew>
             """
         )
 
@@ -296,20 +295,21 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         all_tags.append(
             f"""
-                            <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
-                                           xp:description="" xp:fieldtype="folder">
-                                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                                src="../../../{resp['relative_path']}"/>
-                            </alef_audionew>
-                        </alef_column>
-                    </alef_section>
+            <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
+                           xp:description="" xp:fieldtype="folder">
+                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                src="../../../{resp['relative_path']}"/>
+            </alef_audionew>
             """
         )
-    else:
-        all_tags.append(
-            """</alef_section>"""
-        )
+
+    all_tags.append(
+        """
+            </alef_column>
+        </alef_section>
+        """
+    )
 
     response = {
         "XML_STRING": "".join(all_tags),
