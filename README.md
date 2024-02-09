@@ -14,6 +14,16 @@ This repository contains the source code for the AlefTransformer Django project.
 - Python 3.6 or higher
 - Git
 
+### Install Essential Dependencies
+   ```bash
+   sudo apt-get install -y build-essential && sudo apt-get install -y checkinstall && sudo apt-get install -y libreadline-gplv2-dev && sudo apt-get install -y libncursesw5-dev && sudo apt-get install -y libssl-dev && sudo apt-get install -y libsqlite3-dev && sudo apt-get install -y tk-dev && sudo apt-get install -y libgdbm-dev && sudo apt-get install -y libc6-dev && sudo apt-get install -y libbz2-dev && sudo apt-get install -y zlib1g-dev && sudo apt-get install -y openssl && sudo apt-get install -y libffi-dev && sudo apt-get install -y python3-dev && sudo apt-get install -y python3-setuptools && sudo apt-get install -y wget
+   ```
+
+### If MacOS then run following command to resolve certificate error
+   ```bash
+   open /Applications/Python\ 3.7/Install\ Certificates.command
+   ```
+
 ### Installation Steps
 
 1. **Clone the repository**
@@ -25,13 +35,18 @@ This repository contains the source code for the AlefTransformer Django project.
 
 2. **Create a Virtual Environment**
 
+    Using virtualenv
     ```bash
-    # Using virtualenv
     python3 -m venv env
-    # Activate the virtual environment
-    # On Windows
+   ```
+    Activate the virtual environment\
+    If On Windows
+
+   ```bash
     .\env\Scripts\activate
-    # On Unix or MacOS
+   ```
+   If On Unix or MacOS
+   ```bash
     source env/bin/activate
     ```
 

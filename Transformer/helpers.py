@@ -11,6 +11,8 @@ import traceback
 import os
 import zipfile
 from lxml import etree
+from xml.sax.handler import ContentHandler
+from xml.sax import make_parser
 
 
 def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
@@ -600,5 +602,11 @@ def get_popup_mlo_small_from_text(text: str, input_other_jsons_data: dict, all_f
             "all_files":all_files
         }
     return {}
+
+
+def parsefile(file):
+    parser = make_parser(  )
+    parser.setContentHandler(ContentHandler(  ))
+    parser.parse(file)
 
 
