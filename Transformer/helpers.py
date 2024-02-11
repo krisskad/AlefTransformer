@@ -1,18 +1,17 @@
 import glob
-import random
+# import random
 import shutil
 import random
 import string
-import os
+# import os
 import json
 from django.conf import settings
 from bs4 import BeautifulSoup
-import traceback
+# import traceback
 import os
 import zipfile
 from lxml import etree
-from xml.sax.handler import ContentHandler
-from xml.sax import make_parser
+import xml.etree.ElementTree as ET
 
 
 def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
@@ -631,9 +630,14 @@ def get_popup_mlo_small_from_text(text: str, input_other_jsons_data: dict, all_f
     return {}
 
 
-def parsefile(file):
-    parser = make_parser(  )
-    parser.setContentHandler(ContentHandler(  ))
-    parser.parse(file)
+def is_valid_xml(xml_string):
+    try:
+        etree.fromstring(xml_string)
+        return True
+    except Exception as e:
+        if "Namespace" in e and "prefix" in e:
+            return True
+        else:
+            return False
 
 

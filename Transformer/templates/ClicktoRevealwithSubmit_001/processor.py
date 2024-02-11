@@ -50,13 +50,20 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     os.makedirs(path_to_hashcode, exist_ok=True)
 
     write_html(text=text_en_data, destination_file_path=destination_file_path)
+
+    temp = []
+    for _ in range(10):
+        hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp2)
+        temp.append(hashcode_temp2)
+
     all_tags = all_tags + [f"""
-        <alef_section xlink:label="LAP7NYP2JN6KE5KGPUQIKOYLTA4" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
-        <alef_column xlink:label="LJWIBTGLBLI4EPEFWZLGS3A6FSQ" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-        <alef_multiplechoice xlink:label="LOVEQZON5YZEEFMM4JTJKJVPHI4" xp:name="alef_multiplechoice" xp:description="" xp:fieldtype="folder" alef_type="MC Radio Button" mcq_type="Image Only" questionfullwidth="false" questiontitle=" " questionnumber="1" nofcolumns="{nofcolumns}" submitattempts="{submitCount}" showtitle="true" alignstatement="left" showbackground="true" shuffleoptions="false" validation="Yes">
-            <alef_questionstatement xlink:label="LEDRZJ2QUU62UDEKOZUCSLAZRGE" xp:name="alef_questionstatement" xp:description="" xp:fieldtype="folder">
-                <alef_section_general xlink:label="LO7IEOFM6KYTEVLZGBKB6IKW7U4" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                    <alef_column xlink:label="LLCUDPN4QIAWUJJSFHBNTPTXYME" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
+        <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+        <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+        <alef_multiplechoice xlink:label="{temp[2]}" xp:name="alef_multiplechoice" xp:description="" xp:fieldtype="folder" alef_type="MC Radio Button" mcq_type="Image Only" questionfullwidth="false" questiontitle=" " questionnumber="1" nofcolumns="{nofcolumns}" submitattempts="{submitCount}" showtitle="true" alignstatement="left" showbackground="true" shuffleoptions="false" validation="Yes">
+            <alef_questionstatement xlink:label="{temp[3]}" xp:name="alef_questionstatement" xp:description="" xp:fieldtype="folder">
+                <alef_section_general xlink:label="{temp[4]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
+                    <alef_column xlink:label="{temp[5]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
                         <alef_html xlink:label="{hashcode}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
                     </alef_column>
                 </alef_section_general>
@@ -91,17 +98,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         else:
             isCorrect = "No"
 
-        temp = []
+        temp1 = []
         for _ in range(4):
             hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode)
-            temp.append(hashcode)
+            temp1.append(hashcode)
 
         all_tags.append(f"""
-                        <alef_choice xlink:label="{temp[0]}" xp:name="alef_choice" xp:description="" xp:fieldtype="folder" isCorrect="{isCorrect}" label="{en_title}">
-                            <alef_choicevalue xlink:label="{temp[1]}" xp:name="alef_choicevalue" xp:description="" xp:fieldtype="folder">
-                                <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                                    <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
+                        <alef_choice xlink:label="{temp1[0]}" xp:name="alef_choice" xp:description="" xp:fieldtype="folder" isCorrect="{isCorrect}" label="{en_title}">
+                            <alef_choicevalue xlink:label="{temp1[1]}" xp:name="alef_choicevalue" xp:description="" xp:fieldtype="folder">
+                                <alef_section_general xlink:label="{temp1[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
+                                    <alef_column xlink:label="{temp1[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
                                         <alef_image xlink:label="{image_thumb_hashcode}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
                                             <xp:img href="../../../{image_relative_path}" width="765" height="890" />
                                         </alef_image>

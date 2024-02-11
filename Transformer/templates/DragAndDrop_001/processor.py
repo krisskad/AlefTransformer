@@ -224,18 +224,18 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         f"""
-                        <alef_audionew xlink:label="{temp[8]}" xp:name="alef_audionew"
-                                       xp:description="" xp:fieldtype="folder">
-                            <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                                            xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                            src="../../../{resp['relative_path']}"/>
-                        </alef_audionew>
+        <alef_audionew xlink:label="{temp[8]}" xp:name="alef_audionew"
+                       xp:description="" xp:fieldtype="folder">
+            <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                            xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                            src="../../../{resp['relative_path']}"/>
+        </alef_audionew>
         """
     )
 
     all_tags.append(
         """
-                        </alef_column>
+                </alef_column>
             </alef_section>
         """
     )

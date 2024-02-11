@@ -108,7 +108,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     exiting_hashcode.add(resp['hashcode'])
 
     temp = []
-    for _ in range(40):
+    for _ in range(25):
         hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp)
         temp.append(hashcode_temp)
@@ -172,7 +172,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         f"""
-        <alef_audionew xlink:label="{temp[22]}" xp:name="alef_audionew"
+        <alef_audionew xlink:label="{temp[19]}" xp:name="alef_audionew"
                        xp:description="" xp:fieldtype="folder">
             <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
                             xp:description="" audiocontrols="Yes" xp:fieldtype="file"
@@ -193,7 +193,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         all_tags.append(
             f"""
-            <alef_column xlink:label="{temp[23]}" xp:name="alef_column" xp:description=""
+            <alef_column xlink:label="{temp[20]}" xp:name="alef_column" xp:description=""
                          xp:fieldtype="folder" width="auto" cellspan="1">
                 <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description=""
                             xp:fieldtype="image" alt="" customWidth="600" customAlign="Center">
@@ -214,7 +214,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         all_tags.append(
             f"""
             
-            <alef_column xlink:label="{temp[23]}" xp:name="alef_column" xp:description=""
+            <alef_column xlink:label="{temp[21]}" xp:name="alef_column" xp:description=""
                          xp:fieldtype="folder" width="auto" cellspan="1">
                 <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description=""
                             xp:fieldtype="image" alt="">

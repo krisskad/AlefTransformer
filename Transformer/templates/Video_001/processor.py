@@ -52,13 +52,19 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     relative_path = os.path.join(hashcode, str(os.path.basename(src_path)))
     all_files.add(relative_path)
 
+    temp = []
+    for _ in range(10):
+        hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp2)
+        temp.append(hashcode_temp2)
+
     all_tags.append(
         f"""
-                <alef_section xlink:label="L7TSKMZUG2EQUFCA6CVF4I67LWU" xp:name="alef_section" xp:description=""
+                <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description=""
                               xp:fieldtype="folder" customclass="Normal">
-                    <alef_column xlink:label="L4C3XOFCJROOEJI422KGY5EKTIA" xp:name="alef_column" xp:description=""
+                    <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
                                  xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_advancedvideo xlink:label="LOSARP4JK7VNUNNBJ3YHVE7W23E" xp:name="alef_advancedvideo"
+                        <alef_advancedvideo xlink:label="{temp[2]}" xp:name="alef_advancedvideo"
                                             xp:description="" xp:fieldtype="folder">
                             <alef_video xlink:label="{hashcode}" xp:name="alef_video"
                                         xp:description="" xp:fieldtype="movie">

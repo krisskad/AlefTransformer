@@ -119,21 +119,27 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         )
     all_image_tags = "\n".join(all_image_tags_list)
 
+    temp = []
+    for _ in range(10):
+        hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp2)
+        temp.append(hashcode_temp2)
+
     all_tags.append(
         f"""
-    <alef_section xlink:label="L3K4XYFNVTJTUBO4TEQK2KXHRSQ" xp:name="alef_section"
+    <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
                               xp:description="{htmlentities.encode(ques)}" xp:fieldtype="folder" customclass="Normal">
-                    <alef_column xlink:label="LCZLORRV75HOUTHTWT37A5I6JUQ" xp:name="alef_column" xp:description=""
+                    <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
                                  xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_section xlink:label="LDT2SP3TM33IUPNCF7WAOHOPUI4" xp:name="alef_section"
+                        <alef_section xlink:label="{temp[3]}" xp:name="alef_section"
                                       xp:description="" xp:fieldtype="folder" customclass="Normal">
-                            <alef_column xlink:label="LRL766D37GBFUDKE4GWXV7D6PKI" xp:name="alef_column"
+                            <alef_column xlink:label="{temp[4]}" xp:name="alef_column"
                                          xp:description="" xp:fieldtype="folder" width="12" cellspan="1">
                                 <alef_html xlink:label="{text_resp['hashcode']}" xp:name="alef_html"
                                            xp:description="" xp:fieldtype="html"
                                            src="../../../{text_resp['relative_path']}"/>
                                 {all_image_tags}
-                                <alef_audionew xlink:label="LYFPVNQZMPTKEPOB2OVPZ5YZSSU" xp:name="alef_audionew"
+                                <alef_audionew xlink:label="{temp[5]}" xp:name="alef_audionew"
                                                xp:description="" xp:fieldtype="folder">
                                     <alef_audiofile xlink:label="{resp['hashcode']}"
                                                     xp:name="alef_audiofile" xp:description="" audiocontrols="Yes"

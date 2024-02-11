@@ -1,6 +1,6 @@
 import importlib
 from django.conf import settings
-from Transformer.helpers import read_json, zip_folder_contents
+from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml
 from Transformer.utils.write_main_xml_frame import write_mlo
 from Transformer.utils.write_manifest_xml import write_imsmanifest_xml
 import os, shutil
@@ -176,6 +176,8 @@ def iterative_process_data(all_dir_objs):
         input_pages = INPUT_STRUCTURE_JSON_DATA.get('pages', [])
 
         MLO_TEMPLATES_OUTPUT_LIST = []
+
+        STATUS = []
         for item in input_pages:
             template_id = item['pageData']['templateID']
             # if template_id != "TabToRevealWithAudio_002":
@@ -192,38 +194,57 @@ def iterative_process_data(all_dir_objs):
                 hash_codes = response['GENERATED_HASH_CODES']
                 manifest_files = response['MANIFEST_FILES']
                 if section:
-                    MLO_TEMPLATES_OUTPUT_LIST.append(section)
-                    GENERATED_HASH_CODES.update(hash_codes)
-                    ALL_MANIFEST_FILES.update(manifest_files)
+                    if is_valid_xml(xml_string=section):
+                        MLO_TEMPLATES_OUTPUT_LIST.append(section)
+                        GENERATED_HASH_CODES.update(hash_codes)
+                        ALL_MANIFEST_FILES.update(manifest_files)
+                    else:
+                        STATUS.append(f"section xml invalid: {template_id}")
+                        print(f"Section XML is Invalid: {template_id}")
+                else:
+                    STATUS.append(f"No XML generated for: {template_id}")
+                    print(f"No xml code generated for Section: {template_id}")
+            else:
+                STATUS.append(f"No response for: {template_id}")
+                print(f"No response for Section: {template_id}")
 
+        all_sections = "\n".join(MLO_TEMPLATES_OUTPUT_LIST)
         mlo_response = write_mlo(
-            sections=MLO_TEMPLATES_OUTPUT_LIST,
+            sections=all_sections,
             input_other_jsons_data=OTHER_JSON_DATA,
             exiting_hashcode=GENERATED_HASH_CODES
         )
 
-        GENERATED_HASH_CODES.update(mlo_response['GENERATED_HASH_CODES'])
-        ALL_MANIFEST_FILES.update(mlo_response['MANIFEST_FILES'])
+        if is_valid_xml(mlo_response['XM_STRING']): # validate MLO file
+            GENERATED_HASH_CODES.update(mlo_response['GENERATED_HASH_CODES'])
+            ALL_MANIFEST_FILES.update(mlo_response['MANIFEST_FILES'])
 
-        write_imsmanifest_xml(
-            all_manifest_files=ALL_MANIFEST_FILES,
-            exiting_hashcode=GENERATED_HASH_CODES,
-            input_other_jsons_data=OTHER_JSON_DATA,
-        )
+            write_imsmanifest_xml(
+                all_manifest_files=ALL_MANIFEST_FILES,
+                exiting_hashcode=GENERATED_HASH_CODES,
+                input_other_jsons_data=OTHER_JSON_DATA,
+            )
 
-        print("Zipping output and moving it to output dir")
-        zip_folder_contents(
-            folder_path=str(settings.OUTPUT_DIR),
-            zip_filename=str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'],
-                                          course_obj_dir_dict['COURSE_ID'] + ".zip"))
-        )
-
+            print("Zipping output and moving it to output dir")
+            zip_folder_contents(
+                folder_path=str(settings.OUTPUT_DIR),
+                zip_filename=str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'],
+                                              course_obj_dir_dict['COURSE_ID'] + ".zip"))
+            )
+        else:
+            STATUS.append(f"Invalid MLO XML : {course_obj_dir_dict['COURSE_ID']}")
+            print(f"Invalid MLO XML : {course_obj_dir_dict['COURSE_ID']}")
         print(f"Removing temporary output {settings.OUTPUT_DIR}")
         shutil.rmtree(settings.OUTPUT_DIR)
 
+        if STATUS:
+            status_msg = ", ".join(STATUS)
+        else:
+            status_msg = "successfully"
+
         resp_list.append(
             {
-                "status": "successfully",
+                "status": status_msg,
                 "message": "successfully processed course1",
                 "course_name": course_obj_dir_dict['COURSE_ID'],
                 "log_file":""

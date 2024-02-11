@@ -805,3 +805,56 @@ Varient 1
 							</alef_presentation>
 						</alef_column>
 					</alef_section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<alef_popupvalue xlink:label="LSGUA7AFAP6WUVAER2GJR3GJFM4"
+                                                             xp:name="alef_popupvalue" xp:description=""
+                                                             xp:fieldtype="folder">
+                        <alef_section_general xlink:label="LRWJMLE2KWT5UFKVKDNSRW2EVVM"
+                                              xp:name="alef_section_general" xp:description=""
+                                              xp:fieldtype="folder">
+                            <alef_column xlink:label="LVGPNC6VK6YNU7JYKSE6NPZ7DZQ"
+                                         xp:name="alef_column" xp:description=""
+                                         xp:fieldtype="folder" width="auto">
+
+                              <alef_html
+                                        xlink:label="LJ22IJAOLFHGU7H2R6NZOJ4UWWI"
+                                        xp:name="alef_html" xp:description=""
+                                        xp:fieldtype="html"
+                                        src="../../../LJ22IJAOLFHGU7H2R6NZOJ4UWWI/emptyHtmlModel.html"/>
+                                <alef_image
+                                        xlink:label="L6FVMXPUMFUTENFMB4J7WOY5BHQ"
+                                        xp:name="alef_image" xp:description=""
+                                        xp:fieldtype="image" alt="">
+                                    <xp:img href="../../../L6FVMXPUMFUTENFMB4J7WOY5BHQ/invisible_2 (1).png"
+                                            width="345" height="220"/>
+                                </alef_image>
+
+                            </alef_column>
+                        </alef_section_general>
+                    </alef_popupvalue>

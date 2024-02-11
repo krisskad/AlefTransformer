@@ -52,9 +52,21 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
         """<alef_mlo xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xp="http://www.giuntilabs.com/exact/xp_v1d0" xlink:label="LT7KP3OIZ2WREPBI2GM7LDEXRZU" xp:name="mlo" xp:description="Test" href="mlo.html" xp:version="3.1" xp:editortype="webeditor" xml:space="preserve" xml:class="" webeditorsafe="true" xp:deliverytype="SCORM" direction="LTR" sequence="000" xp:templateversion="1.0" xp:derivedItemClass="">"""
     ]
 
-    head = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['head']]
-    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['title']]
-    subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
+    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('head', None):
+        head = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['head']]
+    else:
+        head = ""
+
+    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('title', None):
+        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['title']]
+    else:
+        title = ""
+
+    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('subtitle', None):
+        subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
+    else:
+        subtitle = ""
+
     if "goalText" in input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']:
         goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText'], None)
         if goalText:
@@ -100,9 +112,9 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
         """,
     )
 
-    all_sections = "\n".join(sections)
+    # all_sections = "\n".join(sections)
 
-    all_tags.append(all_sections)
+    all_tags.append(sections)
 
     all_tags.append(
         """
@@ -148,7 +160,8 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
 
     response = {
         "MANIFEST_FILES":all_files,
-        "GENERATED_HASH_CODES":exiting_hashcode
+        "GENERATED_HASH_CODES":exiting_hashcode,
+        "XM_STRING":xml_content
     }
 
     return response

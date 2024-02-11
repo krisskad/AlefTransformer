@@ -100,13 +100,19 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
 
+    temp = []
+    for _ in range(14):
+        hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp2)
+        temp.append(hashcode_temp2)
+
     all_tags.append(
         f"""
-            <alef_section xlink:label="LSGD7QMA6HX7UXNS6SDM6O63WMI" xp:name="alef_section" xp:description=""
+            <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description=""
                           xp:fieldtype="folder" customclass="Normal">
-                <alef_column xlink:label="LJRCSAKECTQ3ERKSZGJE2YIQNPQ" xp:name="alef_column" xp:description=""
+                <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
                              xp:fieldtype="folder" width="auto" cellspan="1">
-                    <alef_advancedvideo xlink:label="LS3DTK36ZJPTUDJQPXACNUAGCSU" xp:name="alef_advancedvideo"
+                    <alef_advancedvideo xlink:label="{temp[2]}" xp:name="alef_advancedvideo"
                                         xp:description="" xp:fieldtype="folder">
                         <alef_video xlink:label="{resp['hashcode']}" xp:name="alef_video"
                                     xp:description="" xp:fieldtype="movie">
@@ -131,26 +137,26 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_tags.append(
         f"""
 
-            <alef_interactivesection xlink:label="L6CDHQWQR4IHEDPQ35Y6F3SR34Q"
+            <alef_interactivesection xlink:label="{temp[3]}"
                                      xp:name="alef_interactivesection" xp:description=""
                                      xp:fieldtype="folder" alef_appearingtime="00:00:20">
-                <alef_section xlink:label="LIVU5PWWJJYIUNOJDQC74IQBPJQ" xp:name="alef_section"
+                <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
                               xp:description="" xp:fieldtype="folder" customclass="Normal">
-                    <alef_column xlink:label="LO5E4LJHR2O2URGYJZ4SUMLYSDU" xp:name="alef_column"
+                    <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
                                  xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_notebook xlink:label="LDTATVQFVOCLUDEFJOITWJVIECA"
+                        <alef_notebook xlink:label="{temp[6]}"
                                        xp:name="alef_notebook" xp:description=""
                                        xp:fieldtype="folder">
-                            <alef_questionstatement xlink:label="LM2K3XRMZM3JUJFEM7D4CN5PORM"
+                            <alef_questionstatement xlink:label="{temp[7]}"
                                                     xp:name="alef_questionstatement"
                                                     xp:description="" xp:fieldtype="folder">
-                                <alef_section_general xlink:label="LHPBTUA4JAACEZI44JCNPHFO57U"
+                                <alef_section_general xlink:label="{temp[8]}"
                                                       xp:name="alef_section_general"
                                                       xp:description="" xp:fieldtype="folder">
-                                    <alef_column xlink:label="LF35ACFV4IRUENJNOI7KWAZC43Q"
+                                    <alef_column xlink:label="{temp[9]}"
                                                  xp:name="alef_column" xp:description=""
                                                  xp:fieldtype="folder" width="auto">
-                                        <alef_tooltip xlink:label="LE4N4ARLWVTEU5MPG7KTPF627I4"
+                                        <alef_tooltip xlink:label="{temp[10]}"
                                                       xp:name="alef_tooltip" xp:description=""
                                                       xp:fieldtype="folder">
                                             <alef_html xlink:label="{resp['hashcode']}"
