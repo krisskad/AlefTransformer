@@ -117,13 +117,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     for slide in slides:
         image_id = slide.get("image")
         text_id = slide.get("text")
-        title = slide.get("title")
+        title_id = slide.get("title")
         description = slide.get("description")
         audio_id = slide.get("audio")
 
         audio = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][audio_id]
         text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title]
+        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title_id]
         description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][description]
 
         image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image_id]
