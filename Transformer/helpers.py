@@ -407,6 +407,8 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 </alef_section>
                 """
             else:
+                front_text_resp = {"hashcode":"", "front_text_resp":""}
+                front_img_tag = ""
                 front_section = ""
 
             if "back" in deck_oj:
@@ -460,35 +462,63 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             else:
                 back_section = ""
 
-            all_tags.append(
-                f"""
-                <alef_popupvalue xlink:label="{temp[0]}"
-                                 xp:name="alef_popupvalue" xp:description=""
-                                 xp:fieldtype="folder">
-                    <alef_section_general xlink:label="{temp[1]}"
-                                          xp:name="alef_section_general"
-                                          xp:description="" xp:fieldtype="folder">
-                        <alef_column xlink:label="{temp[2]}"
-                                     xp:name="alef_column" xp:description=""
-                                     xp:fieldtype="folder" width="auto">
-                            <alef_flipcards xlink:label="{temp[3]}"
-                                            xp:name="alef_flipcards" xp:description=""
-                                            xp:fieldtype="folder" customtype="Flipcard"
-                                            height="500" multipleopen="false"
-                                            flipdirection="Right">
-                                {question_statement}
-                                <alef_flipcard xlink:label="{temp[7]}"
-                                               xp:name="alef_flipcard" xp:description=""
-                                               xp:fieldtype="folder" centered="true">
-                                    {front_section}
-                                    {back_section}
-                                </alef_flipcard>
-                            </alef_flipcards>
-                        </alef_column>
-                    </alef_section_general>
-                </alef_popupvalue>
-                """
-            )
+            if not "back" in deck_oj:
+                all_tags.append(
+                    f"""
+                    <alef_popupvalue xlink:label="{temp[0]}"
+                                     xp:name="alef_popupvalue" xp:description=""
+                                     xp:fieldtype="folder">
+                        <alef_section_general xlink:label="{temp[1]}"
+                                              xp:name="alef_section_general"
+                                              xp:description="" xp:fieldtype="folder">
+                            <alef_column xlink:label="{temp[2]}"
+                                         xp:name="alef_column" xp:description=""
+                                         xp:fieldtype="folder" width="auto">
+                                         
+                                <alef_html
+                                    xlink:label="{front_text_resp['hashcode']}"
+                                    xp:name="alef_html"
+                                    xp:description=""
+                                    xp:fieldtype="html"
+                                    src="../../../{front_text_resp['relative_path']}"/>
+                                
+                                {front_img_tag}
+                            </alef_column>
+                        </alef_section_general>
+                    </alef_popupvalue>
+                    """
+                )
+
+            else:
+                all_tags.append(
+                    f"""
+                    <alef_popupvalue xlink:label="{temp[0]}"
+                                     xp:name="alef_popupvalue" xp:description=""
+                                     xp:fieldtype="folder">
+                        <alef_section_general xlink:label="{temp[1]}"
+                                              xp:name="alef_section_general"
+                                              xp:description="" xp:fieldtype="folder">
+                            <alef_column xlink:label="{temp[2]}"
+                                         xp:name="alef_column" xp:description=""
+                                         xp:fieldtype="folder" width="auto">
+                                <alef_flipcards xlink:label="{temp[3]}"
+                                                xp:name="alef_flipcards" xp:description=""
+                                                xp:fieldtype="folder" customtype="Flipcard"
+                                                height="500" multipleopen="false"
+                                                flipdirection="Right">
+                                    {question_statement}
+                                    <alef_flipcard xlink:label="{temp[7]}"
+                                                   xp:name="alef_flipcard" xp:description=""
+                                                   xp:fieldtype="folder" centered="true">
+                                        {front_section}
+                                        {back_section}
+                                    </alef_flipcard>
+                                </alef_flipcards>
+                            </alef_column>
+                        </alef_section_general>
+                    </alef_popupvalue>
+                    """
+                )
         return {
             "all_tags": all_tags,
             "exiting_hashcode":exiting_hashcode,

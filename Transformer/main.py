@@ -248,8 +248,8 @@ def iterative_process_data(all_dir_objs):
 
         resp_list.append(
             {
-                "status": status_msg,
-                "message": "successfully processed course1",
+                "status": "successfully",
+                "message": status_msg,
                 "course_name": course_obj_dir_dict['COURSE_ID'],
                 "log_file":""
             }
