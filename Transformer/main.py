@@ -193,14 +193,13 @@ def iterative_process_data(all_dir_objs):
                 section = response['XML_STRING']
                 hash_codes = response['GENERATED_HASH_CODES']
                 manifest_files = response['MANIFEST_FILES']
+                if response.get('STATUS', None):
+                    STATUS = STATUS + response.get('STATUS', None)
+
                 if section:
-                    if is_valid_xml(xml_string=section):
-                        MLO_TEMPLATES_OUTPUT_LIST.append(section)
-                        GENERATED_HASH_CODES.update(hash_codes)
-                        ALL_MANIFEST_FILES.update(manifest_files)
-                    else:
-                        STATUS.append(f"section xml invalid: {template_id}")
-                        print(f"Section XML is Invalid: {template_id}")
+                    MLO_TEMPLATES_OUTPUT_LIST.append(section)
+                    GENERATED_HASH_CODES.update(hash_codes)
+                    ALL_MANIFEST_FILES.update(manifest_files)
                 else:
                     STATUS.append(f"No XML generated for: {template_id}")
                     print(f"No xml code generated for Section: {template_id}")
@@ -215,25 +214,30 @@ def iterative_process_data(all_dir_objs):
             exiting_hashcode=GENERATED_HASH_CODES
         )
 
-        if is_valid_xml(mlo_response['XM_STRING']): # validate MLO file
-            GENERATED_HASH_CODES.update(mlo_response['GENERATED_HASH_CODES'])
-            ALL_MANIFEST_FILES.update(mlo_response['MANIFEST_FILES'])
+        # is_mlo_valid = is_valid_xml(mlo_response['XM_STRING'])
 
-            write_imsmanifest_xml(
-                all_manifest_files=ALL_MANIFEST_FILES,
-                exiting_hashcode=GENERATED_HASH_CODES,
-                input_other_jsons_data=OTHER_JSON_DATA,
-            )
+        # if is_mlo_valid is True: # validate MLO file
+        #     print("")
+        # else:
+        #     STATUS.append(f"Invalid MLO XML Error : {is_mlo_valid}")
+        #     print(f"Invalid MLO XML : {is_mlo_valid}")
 
-            print("Zipping output and moving it to output dir")
-            zip_folder_contents(
-                folder_path=str(settings.OUTPUT_DIR),
-                zip_filename=str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'],
-                                              course_obj_dir_dict['COURSE_ID'] + ".zip"))
-            )
-        else:
-            STATUS.append(f"Invalid MLO XML : {course_obj_dir_dict['COURSE_ID']}")
-            print(f"Invalid MLO XML : {course_obj_dir_dict['COURSE_ID']}")
+        GENERATED_HASH_CODES.update(mlo_response['GENERATED_HASH_CODES'])
+        ALL_MANIFEST_FILES.update(mlo_response['MANIFEST_FILES'])
+
+        write_imsmanifest_xml(
+            all_manifest_files=ALL_MANIFEST_FILES,
+            exiting_hashcode=GENERATED_HASH_CODES,
+            input_other_jsons_data=OTHER_JSON_DATA,
+        )
+
+        print("Zipping output and moving it to output dir")
+        zip_folder_contents(
+            folder_path=str(settings.OUTPUT_DIR),
+            zip_filename=str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'],
+                                          course_obj_dir_dict['COURSE_ID'] + ".zip"))
+        )
+
         print(f"Removing temporary output {settings.OUTPUT_DIR}")
         shutil.rmtree(settings.OUTPUT_DIR)
 

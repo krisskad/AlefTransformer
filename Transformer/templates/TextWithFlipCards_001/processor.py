@@ -88,16 +88,37 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     ]
 
     # Extracting variables
-    ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
+    try:
+        ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
+    except Exception as e:
+        print(f"error: {e} --> in TextWithFlipCards_001")
+        response = {
+            "XML_STRING": "".join(all_tags),
+            "GENERATED_HASH_CODES": exiting_hashcode,
+            "MANIFEST_FILES": all_files,
+            "STATUS":[f"error: {e} --> in TextWithFlipCards_001", ]
+        }
+        return response
     # src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["text"]]
+
+    try:
+        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["text"]]
+    except Exception as e:
+        print(f"error: {e} --> in TextWithFlipCards_001")
+        response = {
+            "XML_STRING": "".join(all_tags),
+            "GENERATED_HASH_CODES": exiting_hashcode,
+            "MANIFEST_FILES": all_files,
+            "STATUS": [f"error: {e} --> in TextWithFlipCards_001", ]
+        }
+        return response
 
     # visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
     #     input_json_data["pageData"]["args"]["visibleElements"]]
     container = input_json_data["pageData"]["args"]["container"]
 
     temp = []
-    for _ in range(40):
+    for _ in range(10):
         hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp)
         temp.append(hashcode_temp)
@@ -110,7 +131,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         f"""
                 <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
                               xp:description="{htmlentities.encode(ques)}" xp:fieldtype="folder" customclass="Normal">
-                    <alef_column xlink:label="L7NDSACLUKKJUBE7ALSOHDYVHLQ" xp:name="alef_column" xp:description=""
+                    <alef_column xlink:label="{temp[5]}" xp:name="alef_column" xp:description=""
                                  xp:fieldtype="folder" width="auto" cellspan="1">
                         <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description=""
                                    xp:fieldtype="html"
@@ -286,14 +307,21 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     return response
 
 
+
 def process_page_data(page_data, other_json_data, exiting_hashcode):
     # Custom processing for ClicktoRevealwithSubmit_001
     # Use page_data as needed
-
-    xml_output = create_mlo(
-        input_json_data=page_data,
-        input_other_jsons_data=other_json_data,
-        exiting_hashcode=exiting_hashcode
-    )
-
+    try:
+        xml_output = create_mlo(
+            input_json_data=page_data,
+            input_other_jsons_data=other_json_data,
+            exiting_hashcode=exiting_hashcode
+        )
+    except Exception as e:
+        xml_output = {
+            "XML_STRING": "",
+            "GENERATED_HASH_CODES": set(),
+            "MANIFEST_FILES": set(),
+            "STATUS": [f"Error : {e}", ]
+        }
     return xml_output

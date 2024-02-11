@@ -305,11 +305,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 def process_page_data(page_data, other_json_data, exiting_hashcode):
     # Custom processing for ClicktoRevealwithSubmit_001
     # Use page_data as needed
-
-    xml_output = create_mlo(
-        input_json_data=page_data,
-        input_other_jsons_data=other_json_data,
-        exiting_hashcode=exiting_hashcode
-    )
-
+    try:
+        xml_output = create_mlo(
+            input_json_data=page_data,
+            input_other_jsons_data=other_json_data,
+            exiting_hashcode=exiting_hashcode
+        )
+    except Exception as e:
+        xml_output = {
+            "XML_STRING": "",
+            "GENERATED_HASH_CODES": set(),
+            "MANIFEST_FILES": set(),
+            "STATUS": [f"Error : {e}", ]
+        }
     return xml_output

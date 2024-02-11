@@ -635,9 +635,10 @@ def is_valid_xml(xml_string):
         etree.fromstring(xml_string)
         return True
     except Exception as e:
-        if "Namespace" in e and "prefix" in e:
+        if "Namespace" in str(e) and "prefix" in str(e):
             return True
         else:
-            return False
+            print(e)
+            return str(e)
 
 
