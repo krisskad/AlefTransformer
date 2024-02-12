@@ -672,3 +672,22 @@ def is_valid_xml(xml_string):
             return str(e)
 
 
+def write_to_file(file_path, content):
+    """
+    Write content to a text file.
+
+    Args:
+        file_path (str): The path to the file to write to.
+        content (str): The content to write into the file.
+    """
+    try:
+        # Open the file in 'write' mode ('w')
+        with open(file_path, 'w') as file:
+            # Write the content to the file
+            file.write(content)
+        print("Content written to", file_path)
+    except IOError:
+        print("Error: Unable to write to file", file_path)
+
+
+

@@ -1,6 +1,6 @@
 import importlib
 from django.conf import settings
-from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml
+from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file
 from Transformer.utils.write_main_xml_frame import write_mlo
 from Transformer.utils.write_manifest_xml import write_imsmanifest_xml
 import os, shutil
@@ -251,15 +251,19 @@ def iterative_process_data(all_dir_objs):
 
         if STATUS:
             status_msg = ", ".join(STATUS)
+            log_file_path = str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'], f"{course_obj_dir_dict['COURSE_ID']}.txt"))
+            write_to_file(file_path=log_file_path, content=status_msg)
+
         else:
             status_msg = "successfully"
+            log_file_path = ""
 
         resp_list.append(
             {
                 "status": "successfully",
                 "message": status_msg,
                 "course_name": course_obj_dir_dict['COURSE_ID'],
-                "log_file":""
+                "log_file":log_file_path
             }
         )
 
