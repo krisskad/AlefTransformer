@@ -253,14 +253,15 @@ def iterative_process_data(all_dir_objs):
             status_msg = ", ".join(STATUS)
             log_file_path = str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'], f"{course_obj_dir_dict['COURSE_ID']}.txt"))
             write_to_file(file_path=log_file_path, content=status_msg)
-
+            status = "Warning: please check the log"
         else:
+            status = "successfully"
             status_msg = "successfully"
             log_file_path = ""
 
         resp_list.append(
             {
-                "status": "successfully",
+                "status": status,
                 "message": status_msg,
                 "course_name": course_obj_dir_dict['COURSE_ID'],
                 "log_file":log_file_path
