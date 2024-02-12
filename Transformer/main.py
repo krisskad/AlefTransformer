@@ -155,7 +155,7 @@ def iterative_process_data(all_dir_objs):
 
         # Iterate through the dictionary and replace '&' with 'and' in all values
         for key, value in INPUT_EN_TEXT_JSON_DATA.items():
-            INPUT_EN_TEXT_JSON_DATA[key] = value.replace("’", "'")
+            INPUT_EN_TEXT_JSON_DATA[key] = value.encode('ascii', 'ignore').decode('ascii')
 
         OTHER_JSON_DATA = {
             "INPUT_STRUCTURE_JSON_DATA": INPUT_STRUCTURE_JSON_DATA,
