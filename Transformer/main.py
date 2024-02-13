@@ -198,9 +198,9 @@ def iterative_process_data(all_dir_objs):
                 exiting_hashcode=GENERATED_HASH_CODES
             )
             if response:
-                section = response['XML_STRING']
-                hash_codes = response['GENERATED_HASH_CODES']
-                manifest_files = response['MANIFEST_FILES']
+                section = response.get('XML_STRING')
+                hash_codes = response.get('GENERATED_HASH_CODES')
+                manifest_files = response.get('MANIFEST_FILES')
                 if response.get('STATUS', None):
                     STATUS = STATUS + response.get('STATUS', None)
 
@@ -250,7 +250,7 @@ def iterative_process_data(all_dir_objs):
         shutil.rmtree(settings.OUTPUT_DIR)
 
         if STATUS:
-            status_msg = ", ".join(STATUS)
+            status_msg = "\n\n".join(STATUS)
             log_file_path = str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'], f"{course_obj_dir_dict['COURSE_ID']}.txt"))
             write_to_file(file_path=log_file_path, content=status_msg)
             status = "Warning: please check the log"

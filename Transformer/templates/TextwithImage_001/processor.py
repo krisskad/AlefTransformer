@@ -5,7 +5,6 @@ import htmlentities
 
 
 def write_html(text, exiting_hashcode, align=None):
-
     if align:
         template = f"""
         <html>
@@ -92,23 +91,36 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     ]
 
     # Assigning values to variables
-    aud_id = input_json_data["pageData"]["args"]["src"]
-    ques_id = input_json_data["pageData"]["args"]["ques"]
-    text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"]["text"]
+    aud_id = input_json_data["pageData"]["args"].get("src")
+    ques_id = input_json_data["pageData"]["args"].get("ques")
+    text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"].get("text")
     # align = input_json_data["pageData"]["args"]["textFieldData"]["textContent"].get("type", None)
 
-    imageContent_list = input_json_data["pageData"]["args"]["textFieldData"]["imageContent"]
+    imageContent_list = input_json_data["pageData"]["args"]["textFieldData"].get("imageContent")
 
-    if len(imageContent_list)>1:
-        align = True
+    if imageContent_list:
+        if len(imageContent_list) > 1:
+            align = True
+        else:
+            align = False
     else:
-        align = False
+        print("imageContent_list not provided")
+        raise Exception("imageContent_list not provided")
 
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
     # aud_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
-    ques_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_id]
-    text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+    try:
+        ques_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_id]
+    except:
+        ques_src = ""
+        print(f"{ques_id} not exist in en_text")
+        # raise Exception(f"{ques_id} not exist in en_text")
+
+    try:
+        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+    except:
+        raise Exception(f"{text_id} not exist in en_text")
 
     HtmlText = text_en_html_to_html_text(html_string=text)
 
@@ -139,7 +151,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         popup = "\n".join(popup_response['all_tags'])
 
         class_id = "Text with Images"
-        if not len(imageContent_list)>1:
+        if not len(imageContent_list) > 1:
             class_id = "Text- Left"
         all_tags.append(
             f"""
@@ -158,7 +170,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
 
-        src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+        try:
+            src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+        except:
+            raise Exception(f"{aud_id} not exist in audio json")
         resp = copy_to_hashcode_dir(
             src_path=src_audio_path,
             exiting_hashcode=exiting_hashcode
@@ -182,7 +197,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     else:
         class_id = "Text with Images"
-        if not len(imageContent_list)>1:
+        if not len(imageContent_list) > 1:
             class_id = "Text- Left"
         all_tags.append(
             f"""
@@ -197,9 +212,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
 
-
     # image columns
-    if len(imageContent_list)>1:
+    if len(imageContent_list) > 1:
         hashcode3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode3)
 
@@ -214,7 +228,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode)
 
-            src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
+            try:
+                src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
+            except Exception as e:
+                raise Exception(e)
             resp = copy_to_hashcode_dir(
                 src_path=src_image_path,
                 exiting_hashcode=exiting_hashcode
@@ -252,8 +269,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             # print(each_img)
             hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode)
-
-            src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
+            try:
+                src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
+            except Exception as e:
+                raise Exception(f"{e}")
             resp = copy_to_hashcode_dir(
                 src_path=src_image_path,
                 exiting_hashcode=exiting_hashcode
@@ -281,8 +300,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 """
             )
 
-    if len(imageContent_list)>1:
-        src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+    if len(imageContent_list) > 1:
+        try:
+            src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+        except:
+            raise Exception(f"{aud_id} not present in audio json")
         resp = copy_to_hashcode_dir(
             src_path=src_audio_path,
             exiting_hashcode=exiting_hashcode
@@ -318,7 +340,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     }
 
     return response
-
 
 
 def process_page_data(page_data, other_json_data, exiting_hashcode):

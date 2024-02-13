@@ -96,6 +96,16 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
             os.makedirs(path_to_hashcode, exist_ok=True)
 
             shutil.copy2(image_thumb_src_file_path, image_thumb_destination_file_path)
+            break
+
+    if relative_file:
+        launchPage_img = f"""
+        <alef_image xlink:label="{image_thumb_hashcode}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
+            <xp:img href="../../../{relative_file}" width="1920" height="1080" />
+        </alef_image>
+        """
+    else:
+        launchPage_img = ""
 
     all_tags.append(
         f"""
@@ -106,9 +116,7 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
         <alef_section xlink:label="LWUQ7OPC4ESGENIZOZLXH4RQVCA" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
         <alef_column xlink:label="LQAFGRAHGOWUUPHQGMY2IWFZWKU" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1" />
         </alef_section>
-        <alef_image xlink:label="{image_thumb_hashcode}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
-        <xp:img href="../../../{relative_file}" width="1920" height="1080" />
-        </alef_image>
+        {launchPage_img}
         """,
     )
 

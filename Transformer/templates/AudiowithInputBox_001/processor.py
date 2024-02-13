@@ -100,9 +100,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     qHtmlText = ""
     text = ""
     if qText:
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
-        qHtmlText = text_en_html_to_html_text(html_string=text)
-
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
+            qHtmlText = text_en_html_to_html_text(html_string=text)
+        except:
+            raise Exception(f"{qText} not found in en text")
+    else:
+        raise Exception(f"qText not found in structure.json")
     resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
@@ -165,7 +169,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     )
 
-    src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    try:
+        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    except:
+        raise Exception("src not found for audio")
     resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
@@ -185,8 +192,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         "</alef_column>"
     )
     if "mediaBoxData" in input_json_data["pageData"]["args"]:
-        img_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][
-            input_json_data["pageData"]["args"]['mediaBoxData']["src"]]
+        try:
+            img_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][
+                input_json_data["pageData"]["args"]['mediaBoxData']["src"]]
+        except:
+            raise Exception("src not found within mediaBoxData")
+
         resp = copy_to_hashcode_dir(src_path=img_src, exiting_hashcode=exiting_hashcode)
         all_files.add(resp['relative_path'])
         exiting_hashcode.add(resp['hashcode'])
@@ -204,8 +215,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
     else:
-        img_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][
-            input_json_data["pageData"]["args"]['background']["src"]]
+        try:
+            img_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][
+                input_json_data["pageData"]["args"]['background']["src"]]
+        except:
+            raise Exception("background src not found")
 
         resp = copy_to_hashcode_dir(src_path=img_src, exiting_hashcode=exiting_hashcode)
         all_files.add(resp['relative_path'])
