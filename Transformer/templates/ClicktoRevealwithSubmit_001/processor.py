@@ -1,9 +1,11 @@
-from Transformer.helpers import generate_unique_folder_name
+from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong
 from django.conf import settings
 import os, shutil
 
 
 def write_html(text, destination_file_path):
+    text = convert_html_to_strong(html_str=text)
+
     template = f"""
     <html>
     <head>

@@ -1,10 +1,14 @@
-from Transformer.helpers import generate_unique_folder_name, mathml2latex_yarosh, text_en_html_to_html_text, get_popup_mlo_from_text
+from Transformer.helpers import (generate_unique_folder_name,
+                                 mathml2latex_yarosh,
+                                 text_en_html_to_html_text,
+                                 get_popup_mlo_from_text, convert_html_to_strong)
 from django.conf import settings
 import os, shutil
 import htmlentities
 
 
 def write_html(text, exiting_hashcode, align=None):
+    text = convert_html_to_strong(html_str=text)
 
     if align:
         template = f"""

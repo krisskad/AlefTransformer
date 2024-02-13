@@ -690,4 +690,18 @@ def write_to_file(file_path, content):
         print("Error: Unable to write to file", file_path)
 
 
+def convert_html_to_strong(html_str):
+    # Parse the HTML string
+    soup = BeautifulSoup(html_str, 'html.parser')
 
+    # Find all <span> tags with style attribute containing "font-family: Roboto-Bold;"
+    span_tags = soup.find_all('span', style=lambda value: value and 'font-family: Roboto-Bold;' in value)
+
+    # Replace <span> tags with <strong> tags
+    for span_tag in span_tags:
+        strong_tag = soup.new_tag('strong')
+        strong_tag.string = span_tag.string
+        span_tag.replace_with(strong_tag)
+
+    # Return the modified HTML
+    return str(soup)

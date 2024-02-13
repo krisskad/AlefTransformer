@@ -105,6 +105,7 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
         </alef_image>
         """
     else:
+        print("launchPage.png is not anywhere in images.json")
         launchPage_img = ""
 
     all_tags.append(

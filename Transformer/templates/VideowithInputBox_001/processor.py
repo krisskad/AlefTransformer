@@ -1,10 +1,13 @@
-from Transformer.helpers import generate_unique_folder_name, text_en_html_to_html_text, extract_span_info
+from Transformer.helpers import (generate_unique_folder_name,
+                                 text_en_html_to_html_text,
+                                 extract_span_info, convert_html_to_strong)
 from django.conf import settings
 import os, shutil
 import htmlentities
 
 
 def write_html(text, exiting_hashcode, align=None):
+    text = convert_html_to_strong(html_str=text)
 
     if align:
         template = f"""
