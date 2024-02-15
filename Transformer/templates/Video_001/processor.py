@@ -39,7 +39,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     os.makedirs(path_to_hashcode, exist_ok=True)
 
     # Assigning values to variables
-    src = input_json_data["pageData"]["args"]["src"]
+    try:
+        src = input_json_data["pageData"]["args"]["src"]
+    except:
+        raise Exception("Error: Video_001 --> src video not found")
 
     if src.startswith("vid"):
         src_path = input_other_jsons_data['INPUT_VIDEO_JSON_DATA'][src]

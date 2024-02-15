@@ -93,31 +93,21 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
     except Exception as e:
         print(f"error: {e} --> in TextWithFlipCards_001")
-        response = {
-            "XML_STRING": "".join(all_tags),
-            "GENERATED_HASH_CODES": exiting_hashcode,
-            "MANIFEST_FILES": all_files,
-            "STATUS":[f"error: {e} --> in TextWithFlipCards_001", ]
-        }
-        return response
+        ques = ""
     # src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
 
     try:
         text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["text"]]
     except Exception as e:
-        print(f"error: {e} --> in TextWithFlipCards_001")
-        response = {
-            "XML_STRING": "".join(all_tags),
-            "GENERATED_HASH_CODES": exiting_hashcode,
-            "MANIFEST_FILES": all_files,
-            "STATUS": [f"error: {e} --> in TextWithFlipCards_001", ]
-        }
-        return response
+        raise Exception(f"error: {e} --> in TextWithFlipCards_001")
+
 
     # visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
     #     input_json_data["pageData"]["args"]["visibleElements"]]
-    container = input_json_data["pageData"]["args"]["container"]
-
+    try:
+        container = input_json_data["pageData"]["args"]["container"]
+    except:
+        raise Exception("error: TextWithFlipCards_001 --> container not found")
     temp = []
     for _ in range(10):
         hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
@@ -160,8 +150,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode_temp)
             temp1.append(hashcode_temp)
-
-        front = each_cat["deck"]['front']
+        try:
+            front = each_cat["deck"]['front']
+        except:
+            front = {}
         back = each_cat["deck"]['back']
 
         front_text = front.get("content", None)

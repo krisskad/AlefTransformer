@@ -1,7 +1,7 @@
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text,
                                  get_popup_mlo_from_text,
-                                    convert_html_to_strong
+                                convert_html_to_strong, remove_html_tags
                                  )
 from django.conf import settings
 import os, shutil
@@ -118,6 +118,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # aud_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
     try:
         ques_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_id]
+        ques_src = remove_html_tags(ques_src)
+
     except:
         ques_src = ""
         print(f"{ques_id} not exist in en_text")
@@ -126,7 +128,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     try:
         text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
     except:
-        raise Exception(f"{text_id} not exist in en_text")
+        raise Exception(f"Error: TextwithImage_001 --> {text_id} not exist in en_text")
 
     HtmlText = text_en_html_to_html_text(html_string=text)
 
@@ -179,7 +181,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         try:
             src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
         except:
-            raise Exception(f"{aud_id} not exist in audio json")
+            raise Exception(f"Error; TextwithImage_001 --> {aud_id} not exist in audio json")
         resp = copy_to_hashcode_dir(
             src_path=src_audio_path,
             exiting_hashcode=exiting_hashcode
@@ -237,7 +239,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             try:
                 src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
             except Exception as e:
-                raise Exception(e)
+                print("Error: TextwithImage_001 --> image")
+                continue
             resp = copy_to_hashcode_dir(
                 src_path=src_image_path,
                 exiting_hashcode=exiting_hashcode
@@ -245,10 +248,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             all_files.add(resp['relative_path'])
             exiting_hashcode.add(resp['hashcode'])
 
-            src_en_text = ""
-            if "label" in each_img:
+            try:
                 src_en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_img['label']]
-
+                src_en_text = remove_html_tags(src_en_text)
+            except:
+                print("Error: TextwithImage_001 --> label not found")
+                src_en_text = ""
             hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode1)
 
@@ -278,7 +283,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             try:
                 src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
             except Exception as e:
-                raise Exception(f"{e}")
+                print(f"Error: TextwithImage_001 --> image not found")
+                continue
             resp = copy_to_hashcode_dir(
                 src_path=src_image_path,
                 exiting_hashcode=exiting_hashcode
@@ -286,10 +292,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             all_files.add(resp['relative_path'])
             exiting_hashcode.add(resp['hashcode'])
 
-            src_en_text = ""
-            if "label" in each_img:
+            try:
                 src_en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_img['label']]
-
+                src_en_text = remove_html_tags(src_en_text)
+            except:
+                print(f"Error: TextwithImage_001 --> label not found")
             hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode1)
 
@@ -309,28 +316,29 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     if len(imageContent_list) > 1:
         try:
             src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+
+            resp = copy_to_hashcode_dir(
+                src_path=src_audio_path,
+                exiting_hashcode=exiting_hashcode
+            )
+            all_files.add(resp['relative_path'])
+            exiting_hashcode.add(resp['hashcode'])
+
+            hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode4)
+
+            all_tags.append(
+                f"""
+                <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
+                               xp:description="" xp:fieldtype="folder">
+                    <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                    xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                    src="../../../{resp['relative_path']}"/>
+                </alef_audionew>
+                """
+            )
         except:
-            raise Exception(f"{aud_id} not present in audio json")
-        resp = copy_to_hashcode_dir(
-            src_path=src_audio_path,
-            exiting_hashcode=exiting_hashcode
-        )
-        all_files.add(resp['relative_path'])
-        exiting_hashcode.add(resp['hashcode'])
-
-        hashcode4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-        exiting_hashcode.add(hashcode4)
-
-        all_tags.append(
-            f"""
-            <alef_audionew xlink:label="{hashcode4}" xp:name="alef_audionew"
-                           xp:description="" xp:fieldtype="folder">
-                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                src="../../../{resp['relative_path']}"/>
-            </alef_audionew>
-            """
-        )
+            print(f"Error: TextwithImage_001 --> audio not found")
 
     all_tags.append(
         """

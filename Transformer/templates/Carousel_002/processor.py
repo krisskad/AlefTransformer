@@ -2,7 +2,8 @@ from Transformer.helpers import (generate_unique_folder_name,
                                  mathml2latex_yarosh,
                                  text_en_html_to_html_text,
                                  get_popup_mlo_from_text,
-                                    convert_html_to_strong
+                                 convert_html_to_strong,
+                                 remove_html_tags
                                  )
 from django.conf import settings
 import os, shutil
@@ -100,7 +101,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
     # description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["description"]]
 
-    slides = input_json_data["pageData"]["args"]["slides"]
+    try:
+        slides = input_json_data["pageData"]["args"]["slides"]
+    except:
+        raise Exception('Error: Carousel_002 --> slides not found')
 
     temp = []
     for _ in range(10):
@@ -127,12 +131,38 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         description = slide.get("description")
         audio_id = slide.get("audio")
 
-        audio = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][audio_id]
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title_id]
-        description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][description]
+        try:
+            audio = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][audio_id]
+        except:
+            raise Exception('Error: Carousel_002 --> audio not found inside slide')
 
-        image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image_id]
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+            text = remove_html_tags(text)
+
+        except:
+            text = ""
+            print('Warning: Carousel_002 --> text not found inside slide')
+
+            # raise Exception('Error: Carousel_002 --> text not found inside slide')
+
+        try:
+            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title_id]
+            title = remove_html_tags(title)
+        except:
+            # raise Exception('Error: Carousel_002 --> title not found inside slide')
+            print('Warning: Carousel_002 --> title not found inside slide')
+            title = ""
+
+        try:
+            description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][description]
+        except:
+            raise Exception('Error: Carousel_002 --> description not found inside slide')
+
+        try:
+            image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image_id]
+        except:
+            raise Exception('Error: Carousel_002 --> image not found inside slide')
 
         if "<math" in title:
             title = mathml2latex_yarosh(html_string=title)

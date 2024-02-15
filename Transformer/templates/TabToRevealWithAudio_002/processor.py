@@ -90,7 +90,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
         text = BeautifulSoup(text, "lxml").text
     else:
-        print("qText Not provided")
+        print("warning: TabToRevealWithAudio_002 --> qText Not provided")
         text = ""
 
     temp1 = []
@@ -111,7 +111,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     )
 
     # Iterate Array
-    tabArray = input_json_data["pageData"]["args"]["tabArray"]
+    try:
+        tabArray = input_json_data["pageData"]["args"]["tabArray"]
+    except:
+        print("error: TabToRevealWithAudio_002 --> tabArray not present")
+        tabArray = []
 
     for each_obj in tabArray:
 

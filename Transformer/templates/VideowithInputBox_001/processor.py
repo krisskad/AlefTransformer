@@ -96,8 +96,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # Extracting variables
     # poster = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["poster"]]
-    src = input_other_jsons_data['INPUT_VIDEO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    textFieldData = input_json_data["pageData"]["args"]["textFieldData"]
+    try:
+        src = input_other_jsons_data['INPUT_VIDEO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    except:
+        raise Exception("Error: VideowithInputBox_001 --> src audio not found")
+
+    try:
+        textFieldData = input_json_data["pageData"]["args"]["textFieldData"]
+    except:
+        raise Exception("Error: VideowithInputBox_001 --> textFieldData not found")
 
     resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])
@@ -130,7 +137,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     qHtmlText = ""
     text = ""
     if qText:
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
+        except:
+            raise Exception("Error: VideowithInputBox_001 --> qText not found")
+
         qHtmlText = text_en_html_to_html_text(html_string=text)
 
     resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
@@ -176,47 +187,59 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         data_ref = span_attr_obj["data-ref"]
         if data_ref is None:
             continue
-        deck_oj = input_other_jsons_data["INPUT_COMMON_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
+        try:
+            deck_oj = input_other_jsons_data["INPUT_COMMON_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
+        except:
+            raise Exception("Error: VideowithInputBox_001 --> deck not found in glossary")
 
-        front_img = deck_oj['front']['img']
-        front_content_list = deck_oj['front']['content']
-        front_text_list = []
+        try:
+            front_img = deck_oj['front']['img']
+            front_content_list = deck_oj['front']['content']
 
-        for front_ in front_content_list:
-            content = input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_]
-            front_text_list.append(str(content))
+            front_text_list = []
 
-        front_text = "<hr>".join(front_text_list)
+            for front_ in front_content_list:
+                content = input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_]
+                front_text_list.append(str(content))
 
-        front_text_resp = write_html(text=front_text, exiting_hashcode=exiting_hashcode)
-        all_files.add(front_text_resp['relative_path'])
-        exiting_hashcode.add(front_text_resp['hashcode'])
+            front_text = "<hr>".join(front_text_list)
 
-        back_img = deck_oj['back']['img']
-        back_content_list = deck_oj['back']['content']
+            front_text_resp = write_html(text=front_text, exiting_hashcode=exiting_hashcode)
+            all_files.add(front_text_resp['relative_path'])
+            exiting_hashcode.add(front_text_resp['hashcode'])
+        except Exception as e:
+            print(f"Error: VideowithInputBox_001 --> front card {e}")
+            continue
 
-        back_text_list = []
+        try:
+            back_img = deck_oj['back']['img']
+            back_content_list = deck_oj['back']['content']
 
-        for back_ in back_content_list:
-            content = str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
-            back_text_list.append(content)
+            back_text_list = []
 
-        back_text = "<hr>".join(back_text_list)
+            for back_ in back_content_list:
+                content = str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
+                back_text_list.append(content)
 
-        back_text_resp = write_html(text=back_text, exiting_hashcode=exiting_hashcode)
-        all_files.add(back_text_resp['relative_path'])
-        exiting_hashcode.add(back_text_resp['hashcode'])
+            back_text = "<hr>".join(back_text_list)
 
-        front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
-        back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
+            back_text_resp = write_html(text=back_text, exiting_hashcode=exiting_hashcode)
+            all_files.add(back_text_resp['relative_path'])
+            exiting_hashcode.add(back_text_resp['hashcode'])
 
-        front_img_path_resp = copy_to_hashcode_dir(src_path=front_img_path, exiting_hashcode=exiting_hashcode)
-        all_files.add(front_img_path_resp['relative_path'])
-        exiting_hashcode.add(front_img_path_resp['hashcode'])
+            front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
+            back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
 
-        back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
-        all_files.add(back_img_path_resp['relative_path'])
-        exiting_hashcode.add(back_img_path_resp['hashcode'])
+            front_img_path_resp = copy_to_hashcode_dir(src_path=front_img_path, exiting_hashcode=exiting_hashcode)
+            all_files.add(front_img_path_resp['relative_path'])
+            exiting_hashcode.add(front_img_path_resp['hashcode'])
+
+            back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
+            all_files.add(back_img_path_resp['relative_path'])
+            exiting_hashcode.add(back_img_path_resp['hashcode'])
+        except Exception as e:
+            print(f"Error: VideowithInputBox_001 --> back {e}")
+            continue
 
         temp = []
         for _ in range(20):
@@ -344,7 +367,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     }
 
     return response
-
 
 
 def process_page_data(page_data, other_json_data, exiting_hashcode):

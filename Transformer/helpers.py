@@ -705,3 +705,8 @@ def convert_html_to_strong(html_str):
 
     # Return the modified HTML
     return str(soup)
+
+
+def remove_html_tags(text):
+    soup = BeautifulSoup(text, "html.parser")
+    return soup.get_text()

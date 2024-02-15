@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong
+from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, remove_html_tags
 from django.conf import settings
 import os, shutil
 
@@ -33,13 +33,28 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
 
-    text_en_id = input_json_data['pageData']['args']['ques']
-    submitCount = input_json_data['pageData']['args']['submitCount']
-    # multiAnswer = input_json_data['pageData']['args']['multiAnswer']
-    thumbs = input_json_data['pageData']['args']['thumbs']
-    nofcolumns = len(thumbs)
+    try:
+        text_en_id = input_json_data['pageData']['args']['ques']
+    except:
+        raise Exception('Error: ClicktoRevealwithSubmit_001 --> ques not found')
 
-    text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][text_en_id]
+    try:
+        submitCount = input_json_data['pageData']['args']['submitCount']
+    except:
+        raise Exception('Error: ClicktoRevealwithSubmit_001 --> submitCount not found')
+
+    # multiAnswer = input_json_data['pageData']['args']['multiAnswer']
+    try:
+        thumbs = input_json_data['pageData']['args']['thumbs']
+        nofcolumns = len(thumbs)
+    except:
+        raise Exception('Error: ClicktoRevealwithSubmit_001 --> thumbs not found')
+
+    try:
+        text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][text_en_id]
+    except:
+        raise Exception('Error: ClicktoRevealwithSubmit_001 --> text not found')
+
     destination_file_path = os.path.join(settings.OUTPUT_DIR, hashcode, "emptyHtmlModel.html")
     html_file_path = str(os.path.join(hashcode, "emptyHtmlModel.html"))
 
@@ -74,9 +89,18 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # choices
     for each_thumb in thumbs:
+        try:
+            en_title = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][each_thumb['title']]
+            en_title = remove_html_tags(en_title)
+        except:
+            en_title = ""
+            print('Error: ClicktoRevealwithSubmit_001 --> title not found')
+            # raise Exception('Error: ClicktoRevealwithSubmit_001 --> title not found')
 
-        en_title = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][each_thumb['title']]
-        image_thumb_relative_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][each_thumb['image']]
+        try:
+            image_thumb_relative_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][each_thumb['image']]
+        except:
+            raise Exception('Error: ClicktoRevealwithSubmit_001 --> image not found')
 
         image_thumb_hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(image_thumb_hashcode)
@@ -120,172 +144,182 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         </alef_choice>
                     """)
 
-    feedback = input_json_data['pageData']['args']['feedback']
-    feedback_added = set()
-    for key, val in feedback.items():
-        if key in feedback_added:
-            continue
+    try:
+        feedback = input_json_data['pageData']['args']['feedback']
 
-        temp = []
-        for _ in range(4):
-            # Generate a unique folder name for each file
-            hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode)
-            temp.append(hashcode)
+        feedback_added = set()
+        for key, val in feedback.items():
+            if key in feedback_added:
+                continue
 
-        if "correct" == key:
-            text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
-            destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
-            html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
+            temp = []
+            for _ in range(4):
+                # Generate a unique folder name for each file
+                hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode)
+                temp.append(hashcode)
 
-            # Create the unique folder if it doesn't exist
-            relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
-            all_files.add(relative_file)
+            if "correct" == key:
+                text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
+                destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
+                html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
 
-            # create folder
-            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
-            os.makedirs(path_to_hashcode, exist_ok=True)
+                # Create the unique folder if it doesn't exist
+                relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
+                all_files.add(relative_file)
 
-            write_html(text=text_en_data, destination_file_path=destination_file_path)
-            all_tags.append(f"""
-                    <alef_correctfeedback xlink:label="{temp[1]}" xp:name="alef_correctfeedback" xp:description="" xp:fieldtype="folder">
+                # create folder
+                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
+                os.makedirs(path_to_hashcode, exist_ok=True)
+
+                write_html(text=text_en_data, destination_file_path=destination_file_path)
+                all_tags.append(f"""
+                        <alef_correctfeedback xlink:label="{temp[1]}" xp:name="alef_correctfeedback" xp:description="" xp:fieldtype="folder">
+                            <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
+                                <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
+                                    <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
+                                </alef_column>
+                            </alef_section_general>
+                        </alef_correctfeedback>
+                    """)
+
+            if "incorrect_2" in key:
+                text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
+                destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
+                html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
+
+                # Create the unique folder if it doesn't exist
+                relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
+                all_files.add(relative_file)
+
+                # create folder
+                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
+                os.makedirs(path_to_hashcode, exist_ok=True)
+
+                write_html(text=text_en_data, destination_file_path=destination_file_path)
+                all_tags.append(f"""
+                    <alef_incorrectfeedback xlink:label="{temp[1]}" xp:name="alef_incorrectfeedback" xp:description="" xp:fieldtype="folder">
                         <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
                             <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
                                 <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
                             </alef_column>
                         </alef_section_general>
-                    </alef_correctfeedback>
-                """)
+                    </alef_incorrectfeedback>
+                    """)
 
-        if "incorrect_2" in key:
-            text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
-            destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
-            html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
+            if "incorrect_1" in key:
+                text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
+                destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
+                html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
 
-            # Create the unique folder if it doesn't exist
-            relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
-            all_files.add(relative_file)
+                # Create the unique folder if it doesn't exist
+                relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
+                all_files.add(relative_file)
 
-            # create folder
-            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
-            os.makedirs(path_to_hashcode, exist_ok=True)
+                # create folder
+                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
+                os.makedirs(path_to_hashcode, exist_ok=True)
 
-            write_html(text=text_en_data, destination_file_path=destination_file_path)
-            all_tags.append(f"""
-                <alef_incorrectfeedback xlink:label="{temp[1]}" xp:name="alef_incorrectfeedback" xp:description="" xp:fieldtype="folder">
+                write_html(text=text_en_data, destination_file_path=destination_file_path)
+                all_tags.append(f"""
+                    <alef_partialfeedback xlink:label="{temp[1]}" xp:name="alef_partialfeedback" xp:description="" xp:fieldtype="folder">
+                        <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
+                            <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
+                                <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
+                            </alef_column>
+                        </alef_section_general>
+                    </alef_partialfeedback>
+                    """)
+
+            feedback_added.add(key)
+    except:
+        raise print('Warning: ClicktoRevealwithSubmit_001 --> feedback not found')
+
+    try:
+        hint = input_json_data['pageData']['args']['hint']
+        hint_added = set()
+        for key, val in hint.items():
+            if key in hint_added:
+                continue
+
+            temp = []
+            for _ in range(4):
+                hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode)
+                temp.append(hashcode)
+
+            if "text" in key:
+                text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
+                destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
+                html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
+
+                # Create the unique folder if it doesn't exist
+                relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
+                all_files.add(relative_file)
+
+                # create folder
+                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
+                os.makedirs(path_to_hashcode, exist_ok=True)
+
+                write_html(text=text_en_data, destination_file_path=destination_file_path)
+                all_tags.append(f"""
+                <alef_hint xlink:label="{temp[1]}" xp:name="alef_hint" xp:description="" xp:fieldtype="folder">
                     <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
                         <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
                             <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
                         </alef_column>
                     </alef_section_general>
-                </alef_incorrectfeedback>
+                </alef_hint>
                 """)
-
-        if "incorrect_1" in key:
-            text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
-            destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
-            html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
-
-            # Create the unique folder if it doesn't exist
-            relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
-            all_files.add(relative_file)
-
-            # create folder
-            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
-            os.makedirs(path_to_hashcode, exist_ok=True)
-
-            write_html(text=text_en_data, destination_file_path=destination_file_path)
-            all_tags.append(f"""
-                <alef_partialfeedback xlink:label="{temp[1]}" xp:name="alef_partialfeedback" xp:description="" xp:fieldtype="folder">
-                    <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                        <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
-                            <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
-                        </alef_column>
-                    </alef_section_general>
-                </alef_partialfeedback>
-                """)
-
-        feedback_added.add(key)
-
-    hint = input_json_data['pageData']['args']['hint']
-    hint_added = set()
-    for key, val in hint.items():
-        if key in hint_added:
-            continue
-
-        temp = []
-        for _ in range(4):
-            hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode)
-            temp.append(hashcode)
-
-        if "text" in key:
-            text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
-            destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
-            html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
-
-            # Create the unique folder if it doesn't exist
-            relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
-            all_files.add(relative_file)
-
-            # create folder
-            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
-            os.makedirs(path_to_hashcode, exist_ok=True)
-
-            write_html(text=text_en_data, destination_file_path=destination_file_path)
-            all_tags.append(f"""
-            <alef_hint xlink:label="{temp[1]}" xp:name="alef_hint" xp:description="" xp:fieldtype="folder">
-                <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                    <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
-                        <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
-                    </alef_column>
-                </alef_section_general>
-            </alef_hint>
-            """)
-        hint_added.add(key)
+            hint_added.add(key)
+    except:
+        print('Warning: ClicktoRevealwithSubmit_001 --> hint not found')
 
     all_tags.append("""</alef_multiplechoice>""")
 
-    feedBackAudio = input_json_data['pageData']['args']['feedBackAudio']
+    try:
+        feedBackAudio = input_json_data['pageData']['args']['feedBackAudio']
 
-    ### Adding correct audio
-    for key, val in feedBackAudio.items():
+        ### Adding correct audio
+        for key, val in feedBackAudio.items():
 
-        temp = []
-        for _ in range(4):
-            hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode)
-            temp.append(hashcode)
+            temp = []
+            for _ in range(4):
+                hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(hashcode)
+                temp.append(hashcode)
 
-        if "correct" == key:
+            if "correct" == key:
 
-            audio_thumb_relative_path = input_other_jsons_data["INPUT_AUDIO_JSON_DATA"][val]
+                audio_thumb_relative_path = input_other_jsons_data["INPUT_AUDIO_JSON_DATA"][val]
 
-            audio_thumb_hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(audio_thumb_hashcode)
-            audio_thumb_destination_file_path = str(
-                os.path.join(settings.OUTPUT_DIR, audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path)))
-            audio_relative_path = str(os.path.join(audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path)))
-            audio_thumb_src_file_path = str(os.path.join(settings.INPUT_APP_DIR, audio_thumb_relative_path))
+                audio_thumb_hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+                exiting_hashcode.add(audio_thumb_hashcode)
+                audio_thumb_destination_file_path = str(
+                    os.path.join(settings.OUTPUT_DIR, audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path)))
+                audio_relative_path = str(os.path.join(audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path)))
+                audio_thumb_src_file_path = str(os.path.join(settings.INPUT_APP_DIR, audio_thumb_relative_path))
 
-            # Create the unique folder if it doesn't exist
-            relative_file = os.path.join(audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path))
-            all_files.add(relative_file)
+                # Create the unique folder if it doesn't exist
+                relative_file = os.path.join(audio_thumb_hashcode, os.path.basename(audio_thumb_relative_path))
+                all_files.add(relative_file)
 
-            # create folder
-            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, audio_thumb_hashcode)
-            os.makedirs(path_to_hashcode, exist_ok=True)
+                # create folder
+                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, audio_thumb_hashcode)
+                os.makedirs(path_to_hashcode, exist_ok=True)
 
-            shutil.copy2(audio_thumb_src_file_path, audio_thumb_destination_file_path)
+                shutil.copy2(audio_thumb_src_file_path, audio_thumb_destination_file_path)
 
-            all_tags.append(
-                f"""
-                    <alef_audionew xlink:label="{temp[0]}" xp:name="alef_audionew" xp:description="" xp:fieldtype="folder">
-                        <alef_audiofile xlink:label="{audio_thumb_hashcode}" xp:name="alef_audiofile" xp:description="" audiocontrols="Yes" xp:fieldtype="file" src="../../../{audio_relative_path}" />
-                    </alef_audionew>
-                    """
-            )
-            break
+                all_tags.append(
+                    f"""
+                        <alef_audionew xlink:label="{temp[0]}" xp:name="alef_audionew" xp:description="" xp:fieldtype="folder">
+                            <alef_audiofile xlink:label="{audio_thumb_hashcode}" xp:name="alef_audiofile" xp:description="" audiocontrols="Yes" xp:fieldtype="file" src="../../../{audio_relative_path}" />
+                        </alef_audionew>
+                        """
+                )
+                break
+    except:
+        print('warning: ClicktoRevealwithSubmit_001 --> feedbackAudio not found')
 
     all_tags.append(
         """

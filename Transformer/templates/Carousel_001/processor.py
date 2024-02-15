@@ -95,11 +95,20 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     ]
 
     # Extracting variables
-    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
+    try:
+        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
+    except:
+        raise Exception('Error: Carousel_001 --> title not found')
     # src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["description"]]
+    try:
+        description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["description"]]
+    except:
+        raise Exception('Error: Carousel_001 --> description not found')
 
-    slides = input_json_data["pageData"]["args"]["slides"]
+    try:
+        slides = input_json_data["pageData"]["args"]["slides"]
+    except:
+        raise Exception('Error: Carousel_001 --> slides not found')
 
     if "<math" in title:
         title = mathml2latex_yarosh(html_string=title)
@@ -177,8 +186,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         image_id = slide.get("image")
         text_id = slide.get("text")
 
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-        image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image_id]
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+        except:
+            raise Exception('Error: Carousel_001 --> text not found inside slide')
+
+        try:
+            image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image_id]
+        except:
+            raise Exception('Error: Carousel_001 --> image not found inside slide')
 
         if "<math" in text:
             text = mathml2latex_yarosh(html_string=text)

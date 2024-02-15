@@ -1,5 +1,6 @@
 from Transformer.helpers import (generate_unique_folder_name, text_en_html_to_html_text,
-                                 get_popup_mlo_from_text, mathml2latex_yarosh, convert_html_to_strong)
+                                 get_popup_mlo_from_text, mathml2latex_yarosh,
+                                 convert_html_to_strong, remove_html_tags)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -170,12 +171,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 """
             )
         except Exception as e:
-            print(f"DropDown_001 error {e}")
+            raise Exception(f'Error: DropDown_001 --> {e}')
 
-        if dropDownText:
+        try:
             drop_Down_Text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][dropDownText]
-        else:
+        except:
             drop_Down_Text = ""
+            print('Error: DragAndDrop_003 --> dropDown text not found')
 
         html_drop_down = []
         for i, obj in enumerate(dropDowns):
@@ -186,7 +188,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             )
             try:
                 title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][obj['title']]
+                title = remove_html_tags(title)
+
             except Exception as e:
+                title = ""
                 print(f"DropDown_001 title not present in DropDown list {e}")
 
             image = obj.get('image', None)
@@ -229,7 +234,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         if str(answer) == str(j):
                             is_answer = "Yes"
                         optiontext = option['option']
-                        oText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][optiontext]
+                        try:
+                            oText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][optiontext]
+                        except Exception as e:
+                            print(f"DropDown_001 oText key not present in args {e}")
+                            continue
 
                         if "<math" in oText:
                             oText = mathml2latex_yarosh(html_string=oText)
@@ -302,7 +311,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                     main_key = key.split("_")[0]
 
-                    feedbacktext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+                    try:
+                        feedbacktext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+                    except Exception as e:
+                        print(f"DropDown_001 feedback text not present in args {e}")
+                        continue
+
                     feedbackresp = write_html(
                         text=feedbacktext, exiting_hashcode=exiting_hashcode
                     )

@@ -1,5 +1,5 @@
 from Transformer.helpers import (generate_unique_folder_name,
-                                 mathml2latex_yarosh, convert_html_to_strong)
+                                 mathml2latex_yarosh, convert_html_to_strong, remove_html_tags)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -91,12 +91,27 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     ]
     # Extracting variables
-    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
-    src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    try:
+        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
+    except:
+        raise Exception('Error: DragAndDrop_001 --> title not found')
+
+    try:
+        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    except:
+        raise Exception('Error: DragAndDrop_001 --> src not found')
+
     # visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
     #     input_json_data["pageData"]["args"]["visibleElements"]]
-    dropItems = input_json_data["pageData"]["args"]["dropItems"]
-    dragItems = input_json_data["pageData"]["args"]["dragItems"]
+    try:
+        dropItems = input_json_data["pageData"]["args"]["dropItems"]
+    except:
+        raise Exception('Error: DragAndDrop_001 --> dropItems not found')
+
+    try:
+        dragItems = input_json_data["pageData"]["args"]["dragItems"]
+    except:
+        raise Exception('Error: DragAndDrop_001 --> dragItems not found')
 
     if "<math" in title:
         title = mathml2latex_yarosh(html_string=title)
@@ -114,10 +129,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode_temp)
         temp.append(hashcode_temp)
 
+    clean_title = remove_html_tags(title)
+
     all_tags.append(
         f"""
                 <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
-                              xp:description="{htmlentities.encode(title)}"
+                              xp:description="{htmlentities.encode(clean_title)}"
                               xp:fieldtype="folder" customclass="Normal">
                     <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
                                  xp:fieldtype="folder" width="auto" cellspan="1">
@@ -152,7 +169,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     )
 
     for each_cat in dropItems:
-        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_cat['title']]
+        try:
+            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_cat['title']]
+            title = remove_html_tags(title)
+        except:
+            title = ""
+            print('Error: DragAndDrop_001 --> title not found')
+
         if "<math" in title:
             title = mathml2latex_yarosh(html_string=title)
 
@@ -168,14 +191,22 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         for each_option in dragItems:
 
             if each_option['dropId'] == each_cat['dropId']:
-
-                image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_option['image']]
+                try:
+                    image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_option['image']]
+                except:
+                    raise Exception('Error: DragAndDrop_001 --> image not found inside dragItems')
 
                 resp = copy_to_hashcode_dir(src_path=image, exiting_hashcode=exiting_hashcode)
                 all_files.add(resp['relative_path'])
                 exiting_hashcode.add(resp['hashcode'])
 
-                text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
+                try:
+                    text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
+                    text = remove_html_tags(text)
+                except:
+                    text = ""
+                    print('Error: DragAndDrop_001 --> text not found inside dragItems')
+
                 if "<math" in text:
                     text = mathml2latex_yarosh(html_string=text)
 

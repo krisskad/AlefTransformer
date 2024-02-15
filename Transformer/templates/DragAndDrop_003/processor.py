@@ -1,5 +1,5 @@
 from Transformer.helpers import (generate_unique_folder_name,
-                                 mathml2latex_yarosh, convert_html_to_strong)
+                                 mathml2latex_yarosh, remove_html_tags, convert_html_to_strong)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -92,20 +92,46 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     ]
 
     # Extracting variables
-    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
-    src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    try:
+        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
+    except:
+        raise Exception('Error: DragAndDrop_003 --> title not found')
+
+    try:
+        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    except:
+        raise Exception('Error: DragAndDrop_003 --> src not found')
 
     # submit = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["submit"]]
-    submitCount = input_json_data["pageData"]["args"]["submitCount"]
+    try:
+        submitCount = input_json_data["pageData"]["args"]["submitCount"]
+    except:
+        submitCount = 3
+        print('Error: DragAndDrop_003 --> submitCount not found')
+
     # showAnswer = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["showAnswer"]]
-    feedback = input_json_data["pageData"]["args"]["feedback"]
+    try:
+        feedback = input_json_data["pageData"]["args"]["feedback"]
+    except:
+        raise Exception('Error: DragAndDrop_003 --> feedback not found')
+
     # feedBackAudio = input_json_data["pageData"]["args"]["feedBackAudio"]
-    hint = input_json_data["pageData"]["args"]["hint"]
+    try:
+        hint = input_json_data["pageData"]["args"]["hint"]
+    except:
+        raise Exception('Error: DragAndDrop_003 --> hint not found')
 
     # visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
     #     input_json_data["pageData"]["args"]["visibleElements"]]
-    dropItems = input_json_data["pageData"]["args"]["dropItems"]
-    dragItems = input_json_data["pageData"]["args"]["dragItems"]
+    try:
+        dropItems = input_json_data["pageData"]["args"]["dropItems"]
+    except:
+        raise Exception('Error: DragAndDrop_003 --> dropItems not found')
+
+    try:
+        dragItems = input_json_data["pageData"]["args"]["dragItems"]
+    except:
+        raise Exception('Error: DragAndDrop_003 --> dragItems not found')
 
     if "<math" in title:
         title = mathml2latex_yarosh(html_string=title)
@@ -122,11 +148,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp)
         temp.append(hashcode_temp)
+    clean_title = remove_html_tags(title)
 
     all_tags.append(
         f"""
                 <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
-                              xp:description="{htmlentities.encode(title)}"
+                              xp:description="{htmlentities.encode(clean_title)}"
                               xp:fieldtype="folder" customclass="Normal">
                     <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
                                  xp:fieldtype="folder" width="auto" cellspan="1">
@@ -163,7 +190,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     for each_cat in dropItems:
         hashcode_temp1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp1)
-        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_cat['title']]
+        try:
+            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_cat['title']]
+            title = remove_html_tags(title)
+        except:
+            title = ""
+            print('Error: DragAndDrop_003 --> title not found in dropItems')
+
         if "<math" in title:
             title = mathml2latex_yarosh(html_string=title)
 
@@ -181,14 +214,22 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 hashcode_temp1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
                 exiting_hashcode.add(hashcode_temp1)
                 temp1.append(hashcode_temp1)
-
-            image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_option['image']]
+            try:
+                image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_option['image']]
+            except:
+                raise Exception('Error: DragAndDrop_003 --> image not found in dragItems')
 
             resp = copy_to_hashcode_dir(src_path=image, exiting_hashcode=exiting_hashcode)
             all_files.add(resp['relative_path'])
             exiting_hashcode.add(resp['hashcode'])
 
-            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
+            try:
+                text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
+                text = remove_html_tags(text)
+            except:
+                text = ""
+                print('Error: DragAndDrop_003 --> text not found in dragItems')
+
             if "<math" in text:
                 text = mathml2latex_yarosh(html_string=text)
 
@@ -232,8 +273,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         if count > 2:
             break
         base_key = key.split("_")[0]
+        try:
+            text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+        except:
+            print('warning: DragAndDrop_003 --> text missing in feedback')
+            continue
 
-        text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
         if "<math" in text_val:
             text_val = mathml2latex_yarosh(html_string=text_val)
 
@@ -273,7 +318,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # add all hint, feedback, etc
     for key, val in hint.items():
-        text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+        try:
+            text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+        except:
+            print('warning: DragAndDrop_003 --> text missing in hint')
+            continue
+
         if "<math" in text_val:
             text_val = mathml2latex_yarosh(html_string=text_val)
 
@@ -311,22 +361,25 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append("</alef_categorization>")
 
-    resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
-    all_files.add(resp['relative_path'])
-    exiting_hashcode.add(resp['hashcode'])
+    try:
+        resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
 
-    hashcode_temp4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-    exiting_hashcode.add(hashcode_temp4)
-    all_tags.append(
-        f"""
-                        <alef_audionew xlink:label="{hashcode_temp4}" xp:name="alef_audionew"
-                                       xp:description="" xp:fieldtype="folder">
-                            <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                                            xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                            src="../../../{resp['relative_path']}"/>
-                        </alef_audionew>
-        """
-    )
+        hashcode_temp4 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp4)
+        all_tags.append(
+            f"""
+                            <alef_audionew xlink:label="{hashcode_temp4}" xp:name="alef_audionew"
+                                           xp:description="" xp:fieldtype="folder">
+                                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                                src="../../../{resp['relative_path']}"/>
+                            </alef_audionew>
+            """
+        )
+    except:
+        print('warning: DragAndDrop_003 --> audio missing')
 
     all_tags.append(
         """

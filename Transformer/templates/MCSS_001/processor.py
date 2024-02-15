@@ -59,8 +59,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     ]
     # Extracting variables
-    ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
-    src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    try:
+        ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
+    except:
+        raise Exception("Error: MCSS_001 --> ques not found")
+    try:
+        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    except:
+        raise Exception("Error: MCSS_001 --> src not found")
+
     image_check = input_json_data["pageData"]["args"].get("image", None)
     if image_check:
         nofcolumns = 1
@@ -69,7 +76,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # submit = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["submit"]]
     # showAnswer = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"].get("showAnswer", None)]
-    submitCount = input_json_data["pageData"]["args"]["submitCount"]
+    try:
+        submitCount = input_json_data["pageData"]["args"]["submitCount"]
+    except:
+        submitCount = 3
+        print("Error: MCSS_001 --> submitCount not found")
+
     # rightContainer = input_json_data["pageData"]["args"].get("rightContainer", None)
     feedback = input_json_data["pageData"]["args"].get("feedback", None)
     # hint = input_json_data["pageData"]["args"].get("hint", None)
@@ -130,7 +142,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     )
 
     for each_op in options:
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_op['text']]
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_op['text']]
+        except:
+            print("Error: MCSS_001 --> text not found inside option")
+            continue
 
         hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode)
@@ -182,7 +198,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             break
         main_key = key.split("_")[0]
 
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+        except:
+            print("Error: MCSS_001 --> text not found inside feedback")
+            continue
 
         hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode)
@@ -239,7 +259,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         )
     except Exception as e:
         # print(f"MCSS_001 : {e}")
-        pass
+        print("Error: MCSS_001 --> image not found")
 
     all_tags.append(
         """
@@ -247,21 +267,24 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     )
 
-    resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
-    all_files.add(resp['relative_path'])
-    exiting_hashcode.add(resp['hashcode'])
+    try:
+        resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
 
-    hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-    exiting_hashcode.add(hashcode1)
+        hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode1)
 
-    all_tags.append(f"""
-                        <alef_audionew xlink:label="{hashcode1}" xp:name="alef_audionew"
-                                       xp:description="" xp:fieldtype="folder">
-                            <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                                            xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                            src="../../../{resp['relative_path']}"/>
-                        </alef_audionew>
-    """)
+        all_tags.append(f"""
+                            <alef_audionew xlink:label="{hashcode1}" xp:name="alef_audionew"
+                                           xp:description="" xp:fieldtype="folder">
+                                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                                src="../../../{resp['relative_path']}"/>
+                            </alef_audionew>
+        """)
+    except:
+        print("Error: MCSS_001 --> src audio not found")
 
     all_tags.append(
         """

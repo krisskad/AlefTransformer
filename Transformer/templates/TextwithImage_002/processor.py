@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong
+from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, remove_html_tags
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -89,10 +89,27 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     ]
     # Assigning values to variables
     # Extracting variables
-    src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
-    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
-    images = input_json_data["pageData"]["args"]["textFieldData"]["imageContent"]
+    try:
+        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    except:
+        raise Exception('Error: TextwithImage_002 --> src not found')
+
+    try:
+        ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
+        ques = remove_html_tags(ques)
+    except:
+        ques = ""
+        print('Error: TextwithImage_002 --> ques not found')
+
+    try:
+        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
+    except:
+        raise Exception('Error: TextwithImage_002 --> title not found')
+
+    try:
+        images = input_json_data["pageData"]["args"]["textFieldData"]["imageContent"]
+    except:
+        raise Exception('Error: TextwithImage_002 --> images not found')
 
     resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])
@@ -104,7 +121,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_image_tags_list = []
     for each_img in images:
-        img_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
+        try:
+            img_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
+        except:
+            print('Error: TextwithImage_002 --> image not found inside image list')
+            continue
         img_resp = copy_to_hashcode_dir(src_path=img_path, exiting_hashcode=exiting_hashcode)
         all_files.add(img_resp['relative_path'])
         exiting_hashcode.add(img_resp['hashcode'])
