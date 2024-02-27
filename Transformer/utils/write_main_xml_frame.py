@@ -1,6 +1,8 @@
+import glob
+
 import htmlentities
 import os
-from Transformer.helpers import generate_unique_folder_name, write_xml, write_html
+from Transformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags
 import shutil
 from django.conf import settings
 
@@ -54,21 +56,26 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
 
     if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('head', None):
         head = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['head']]
+        head = remove_html_tags(head)
     else:
         head = ""
 
     if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('title', None):
         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['title']]
+        title = remove_html_tags(title)
     else:
         title = ""
 
     if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('subtitle', None):
         subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
+        subtitle = remove_html_tags(subtitle)
+
     else:
         subtitle = ""
 
     if "goalText" in input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']:
         goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText'], None)
+        goalText = remove_html_tags(goalText)
         if goalText:
             lesson_objective_param = f'lessonObjective="{htmlentities.encode(goalText)}"'
         else:
@@ -88,7 +95,7 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
             image_thumb_src_file_path = str(os.path.join(settings.INPUT_APP_DIR, 'images', os.path.basename(val)))
 
             # Create the unique folder if it doesn't exist
-            relative_file = os.path.join(image_thumb_hashcode, "launchPage.png")
+            relative_file = os.path.join(image_thumb_hashcode, os.path.basename(val))
             all_files.add(relative_file)
 
             # create folder
@@ -97,6 +104,14 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
 
             shutil.copy2(image_thumb_src_file_path, image_thumb_destination_file_path)
             break
+    if not image_thumb_hashcode:
+        all_images = glob.glob(os.path.join(settings.INPUT_APP_DIR, "images", "*"))
+        for each_img in all_images:
+            if "launchPage" in each_img:
+                resp = copy_to_hashcode_dir(src_path=os.path.join("images", os.path.basename(each_img)), exiting_hashcode=exiting_hashcode)
+                image_thumb_hashcode = resp['hashcode']
+                relative_file = resp['relative_path']
+                break
 
     if relative_file:
         launchPage_img = f"""
@@ -108,14 +123,20 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
         print("launchPage.png is not anywhere in images.json")
         launchPage_img = ""
 
+    temp = []
+    for _ in range(7):
+        hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp2)
+        temp.append(hashcode_temp2)
+
     all_tags.append(
         f"""
-        <alef_page xlink:label="L3LHLS7DTRTJUNCWSZX3M3LWYTA" xp:name="alef_page" xp:description="{htmlentities.encode(head)}" xp:fieldtype="folder" unittitle="{htmlentities.encode(title)} | {htmlentities.encode(subtitle)}" view="Normal" direction="LTR" allowautoplay="false" style="Style 1" customizationid="Custom_R&amp;I" width="1440" height="810" fixeddimension="No" includetoolkit="No" sequence="000">
-        <alef_section xlink:label="LQ4IMNKPTQHQE7AX3D5FGM4JWME" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
-        <alef_column xlink:label="LWWHJYSORL7KENOW64SWOKJ5WBQ" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-        <alef_presentation xlink:label="LIJI7RDHJDESULCGOSP6YH5EFBI" xp:name="alef_presentation" xp:description="" xp:fieldtype="folder" type="Carousel" ela_title1="{htmlentities.encode(title)}" ela_title2="{htmlentities.encode(subtitle)}" {lesson_objective_param} showtitle="false" multipleopen="false" firstopen="false">
-        <alef_section xlink:label="LWUQ7OPC4ESGENIZOZLXH4RQVCA" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
-        <alef_column xlink:label="LQAFGRAHGOWUUPHQGMY2IWFZWKU" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1" />
+        <alef_page xlink:label="{temp[0]}" xp:name="alef_page" xp:description="{htmlentities.encode(head)}" xp:fieldtype="folder" unittitle="{htmlentities.encode(title)} | {htmlentities.encode(subtitle)}" view="Normal" direction="LTR" allowautoplay="false" style="Style 1" customizationid="Custom_R&amp;I" width="1440" height="810" fixeddimension="No" includetoolkit="No" sequence="000">
+        <alef_section xlink:label="{temp[1]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+        <alef_column xlink:label="{temp[2]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+        <alef_presentation xlink:label="{temp[3]}" xp:name="alef_presentation" xp:description="" xp:fieldtype="folder" type="Carousel" ela_title1="{htmlentities.encode(title)}" ela_title2="{htmlentities.encode(subtitle)}" {lesson_objective_param} showtitle="false" multipleopen="false" firstopen="false">
+        <alef_section xlink:label="{temp[4]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+        <alef_column xlink:label="{temp[5]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1" />
         </alef_section>
         {launchPage_img}
         """,
