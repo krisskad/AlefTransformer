@@ -12,6 +12,7 @@ import os
 import zipfile
 from lxml import etree
 import xml.etree.ElementTree as ET
+import re
 
 
 def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
@@ -708,5 +709,10 @@ def convert_html_to_strong(html_str):
 
 
 def remove_html_tags(text):
-    soup = BeautifulSoup(text, "html.parser")
-    return soup.get_text()
+    try:
+        soup = BeautifulSoup(text, "html.parser")
+        text = soup.get_text()
+    except Exception as e:
+        text = re.sub(r'<.*?>', '', text)  # Removes anything between < and >
+
+    return text

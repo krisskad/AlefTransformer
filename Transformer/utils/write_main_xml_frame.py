@@ -79,7 +79,7 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
     image_thumb_hashcode = ""
     relative_file = ""
     for key, val in input_other_jsons_data['INPUT_IMAGES_JSON_DATA'].items():
-        if "launchPage.png" in val:
+        if "launchPage" in val:
             image_thumb_hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(image_thumb_hashcode)
             image_thumb_destination_file_path = str(

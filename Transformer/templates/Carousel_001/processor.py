@@ -2,7 +2,8 @@ from Transformer.helpers import (generate_unique_folder_name,
                                  mathml2latex_yarosh,
                                  text_en_html_to_html_text,
                                  get_popup_mlo_from_text,
-                                 convert_html_to_strong)
+                                 convert_html_to_strong,
+                                 remove_html_tags)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -212,6 +213,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             exiting_hashcode.add(hashcode_temp2)
             temp2.append(hashcode_temp2)
 
+        text = remove_html_tags(text=text)
         all_tags.append(
             f"""
                 <alef_section xlink:label="{temp2[0]}" xp:name="alef_section"

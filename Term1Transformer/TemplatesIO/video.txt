@@ -1,0 +1,49 @@
+{
+          "pageID": "module_1",
+          "page_type": "video",
+          "graphics_path": "m01/video",
+          "videoData": {
+            "width": "1918",
+            "height": "1080",
+            "poster": "/images/imageVideo.png",
+            "css": {
+              "margin": "auto",
+              "left": "0",
+              "top": "0",
+              "right": "0",
+              "bottom": "0"
+            }
+          },
+          "showJournal": "true,1",
+          "hasAutoJump": false,
+          "transcript_text": {
+            "id": "0",
+            "text": "<span>Welcome to “Conscious Inclusion.” </span>"
+          },
+          "ost": [
+            {
+              "title": "Dummy Text"
+            }
+          ],
+          "page_text": "",
+          "subtitleQuepoints": "0.3~2.3666666666666667"
+        }
+
+
+
+
+        <alef_section xlink:label="L7TSKMZUG2EQUFCA6CVF4I67LWU" xp:name="alef_section" xp:description=""
+                                  xp:fieldtype="folder" customclass="Normal">
+            <alef_column xlink:label="L4C3XOFCJROOEJI422KGY5EKTIA" xp:name="alef_column" xp:description=""
+                         xp:fieldtype="folder" width="auto" cellspan="1">
+                <alef_advancedvideo xlink:label="LOSARP4JK7VNUNNBJ3YHVE7W23E" xp:name="alef_advancedvideo"
+                                    xp:description="" xp:fieldtype="folder">
+                    <alef_video xlink:label="LNA7CMPD47XYUFIY5DCEJ4Q2ATQ" xp:name="alef_video"
+                                xp:description="" xp:fieldtype="movie">
+                        <xp:mov xp:fieldtype="movie" alt="" xlink:label="LNA7CMPD47XYUFIY5DCEJ4Q2ATQ"
+                                href="../../../LNA7CMPD47XYUFIY5DCEJ4Q2ATQ/p005_video.mp4" xp:description=""
+                                xp:name="alef_video"/>
+                    </alef_video>
+                </alef_advancedvideo>
+            </alef_column>
+        </alef_section>
