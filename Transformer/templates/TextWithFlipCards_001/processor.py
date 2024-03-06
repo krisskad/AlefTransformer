@@ -107,7 +107,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                    src="../../../{resp['relative_path']}"/>
         """
     except Exception as e:
-        raise Exception(f"error: {e} --> in TextWithFlipCards_001")
+        html_question = ""
+        print(f"error: {e} --> in TextWithFlipCards_001")
 
 
     # visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
