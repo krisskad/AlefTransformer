@@ -249,21 +249,31 @@ def mathml2latex_yarosh(html_string: str):
     return output
 
 
-def write_html_mlo(text, exiting_hashcode):
+def write_html_mlo(text, exiting_hashcode, align="center"):
+    text = convert_html_to_strong(html_str=text)
 
-    if "<math" in text:
-        text = mathml2latex_yarosh(html_string=text)
-
-    template = f"""
-    <html>
-    <head>
-        <title></title>
-    </head>
-    <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
-        {text}
-    </body>
-    </html>
-    """
+    if align:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            <div style="text-align:{align}">{text}</div>
+        </body>
+        </html>
+        """
+    else:
+        template = f"""
+        <html>
+        <head>
+            <title></title>
+        </head>
+        <body style="font-family:Helvetica, 'Helvetica Neue', Arial !important; font-size:13px;">
+            {text}
+        </body>
+        </html>
+        """
 
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
@@ -273,7 +283,7 @@ def write_html_mlo(text, exiting_hashcode):
 
     path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
 
-    with open(path_to_html, "w", encoding='utf-8') as file:
+    with open(path_to_html, "w") as file:
         file.write(template.strip())
 
     relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
@@ -554,7 +564,7 @@ def get_popup_mlo_small_from_text(text: str, input_other_jsons_data: dict, all_f
             front_content_list = deck_oj['front']['content']
             front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_])
                                       for front_ in front_content_list])
-            front_text_resp = write_html_mlo(text=front_text, exiting_hashcode=exiting_hashcode)
+            front_text_resp = write_html_mlo(text=front_text, exiting_hashcode=exiting_hashcode, align="center")
             all_files.add(front_text_resp['relative_path'])
             exiting_hashcode.add(front_text_resp['hashcode'])
 
@@ -562,7 +572,7 @@ def get_popup_mlo_small_from_text(text: str, input_other_jsons_data: dict, all_f
             back_content_list = deck_oj['back']['content']
             back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
                                      for back_ in back_content_list])
-            back_text_resp = write_html_mlo(text=back_text, exiting_hashcode=exiting_hashcode)
+            back_text_resp = write_html_mlo(text=back_text, exiting_hashcode=exiting_hashcode, align="center")
             all_files.add(back_text_resp['relative_path'])
             exiting_hashcode.add(back_text_resp['hashcode'])
 
@@ -696,7 +706,7 @@ def convert_html_to_strong(html_str):
     soup = BeautifulSoup(html_str, 'html.parser')
 
     # Find all <span> tags with style attribute containing "font-family: Roboto-Bold;"
-    span_tags = soup.find_all('span', style=lambda value: value and 'font-family: Roboto-Bold;' in value)
+    span_tags = soup.find_all('span', style=lambda value: value and ('font-family: Roboto-Bold;' in value or 'txtBold' in value))
 
     # Replace <span> tags with <strong> tags
     for span_tag in span_tags:
