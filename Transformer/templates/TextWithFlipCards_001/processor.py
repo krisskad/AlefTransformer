@@ -98,6 +98,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     try:
         text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["text"]]
+        resp = write_html(text=text, exiting_hashcode=exiting_hashcode, align=True)
+        exiting_hashcode.add(resp['hashcode'])
+        all_files.add(resp['relative_path'])
+        html_question = f"""
+        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description=""
+                                   xp:fieldtype="html"
+                                   src="../../../{resp['relative_path']}"/>
+        """
     except Exception as e:
         raise Exception(f"error: {e} --> in TextWithFlipCards_001")
 
@@ -114,19 +122,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode_temp)
         temp.append(hashcode_temp)
 
-    resp = write_html(text=text, exiting_hashcode=exiting_hashcode, align=True)
-    exiting_hashcode.add(resp['hashcode'])
-    all_files.add(resp['relative_path'])
-
     all_tags.append(
         f"""
                 <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
                               xp:description="{htmlentities.encode(ques)}" xp:fieldtype="folder" customclass="Normal">
                     <alef_column xlink:label="{temp[5]}" xp:name="alef_column" xp:description=""
                                  xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description=""
-                                   xp:fieldtype="html"
-                                   src="../../../{resp['relative_path']}"/>
+                        {html_question}
                         <alef_flipcards xlink:label="{temp[1]}" xp:name="alef_flipcards"
                                         xp:description="" xp:fieldtype="folder" customtype="Flipcard" height="500"
                                         multipleopen="true" flipdirection="Right">
@@ -161,51 +163,60 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         front_aud = front.get("audio")
         front_tags = []
         if front_text:
-            text1 = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][front_text]
-            resp1 = write_html(text=text1, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp1['hashcode'])
-            all_files.add(resp1['relative_path'])
-            front_tags.append(
-                f"""
-                <alef_html xlink:label="{resp1['hashcode']}" xp:name="alef_html"
-                                       xp:description="" xp:fieldtype="html"
-                                       src="../../../{resp1['relative_path']}"/>
-                """
-            )
+            try:
+                text1 = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][front_text]
+                resp1 = write_html(text=text1, exiting_hashcode=exiting_hashcode)
+                exiting_hashcode.add(resp1['hashcode'])
+                all_files.add(resp1['relative_path'])
+                front_tags.append(
+                    f"""
+                    <alef_html xlink:label="{resp1['hashcode']}" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../{resp1['relative_path']}"/>
+                    """
+                )
+            except Exception as e:
+                print(f"error: {e} --> in TextWithFlipCards_001")
 
         if front_img:
-            img1 = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][front_img]
-            resp2 = copy_to_hashcode_dir(src_path=img1, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp2['hashcode'])
-            all_files.add(resp2['relative_path'])
-            front_tags.append(
-                f"""
-                <alef_image xlink:label="{resp2['hashcode']}" xp:name="alef_image"
-                                        xp:description="" xp:fieldtype="image" alt="">
-                                <xp:img href="../../../{resp2['relative_path']}"
-                                        width="696" height="890"/>
-                            </alef_image>
-                """
-            )
+            try:
+                img1 = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][front_img]
+                resp2 = copy_to_hashcode_dir(src_path=img1, exiting_hashcode=exiting_hashcode)
+                exiting_hashcode.add(resp2['hashcode'])
+                all_files.add(resp2['relative_path'])
+                front_tags.append(
+                    f"""
+                    <alef_image xlink:label="{resp2['hashcode']}" xp:name="alef_image"
+                                            xp:description="" xp:fieldtype="image" alt="">
+                                    <xp:img href="../../../{resp2['relative_path']}"
+                                            width="696" height="890"/>
+                                </alef_image>
+                    """
+                )
+            except Exception as e:
+                print(f"error: {e} --> in TextWithFlipCards_001")
 
         if front_aud:
-            aud1 = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][front_aud]
-            resp3 = copy_to_hashcode_dir(src_path=aud1, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp3['hashcode'])
-            all_files.add(resp3['relative_path'])
+            try:
+                aud1 = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][front_aud]
+                resp3 = copy_to_hashcode_dir(src_path=aud1, exiting_hashcode=exiting_hashcode)
+                exiting_hashcode.add(resp3['hashcode'])
+                all_files.add(resp3['relative_path'])
 
-            front_tags.append(
-                f"""
-                            <alef_audionew xlink:label="{temp1[0]}"
-                                           xp:name="alef_audionew" xp:description=""
-                                           xp:fieldtype="folder">
-                                <alef_audiofile xlink:label="{resp3['hashcode']}"
-                                                xp:name="alef_audiofile" xp:description=""
-                                                audiocontrols="No" xp:fieldtype="file"
-                                                src="../../../{resp3['relative_path']}"/>
-                            </alef_audionew>
-                """
-            )
+                front_tags.append(
+                    f"""
+                                <alef_audionew xlink:label="{temp1[0]}"
+                                               xp:name="alef_audionew" xp:description=""
+                                               xp:fieldtype="folder">
+                                    <alef_audiofile xlink:label="{resp3['hashcode']}"
+                                                    xp:name="alef_audiofile" xp:description=""
+                                                    audiocontrols="No" xp:fieldtype="file"
+                                                    src="../../../{resp3['relative_path']}"/>
+                                </alef_audionew>
+                    """
+                )
+            except Exception as e:
+                print(f"error: {e} --> in TextWithFlipCards_001")
 
         back_text = back.get("content")
         back_img = back.get("img")
@@ -213,51 +224,60 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         back_tags = []
         if back_text:
-            text1 = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][back_text]
-            resp4 = write_html(text=text1, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp4['hashcode'])
-            all_files.add(resp4['relative_path'])
-            back_tags.append(
-                f"""
-                <alef_html xlink:label="{resp4['hashcode']}" xp:name="alef_html"
-                                       xp:description="" xp:fieldtype="html"
-                                       src="../../../{resp4['relative_path']}"/>
-                """
-            )
+            try:
+                text1 = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][back_text]
+                resp4 = write_html(text=text1, exiting_hashcode=exiting_hashcode)
+                exiting_hashcode.add(resp4['hashcode'])
+                all_files.add(resp4['relative_path'])
+                back_tags.append(
+                    f"""
+                    <alef_html xlink:label="{resp4['hashcode']}" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../{resp4['relative_path']}"/>
+                    """
+                )
+            except Exception as e:
+                print(f"error: {e} --> in TextWithFlipCards_001")
 
         if back_img:
-            img1 = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][back_img]
-            resp5 = copy_to_hashcode_dir(src_path=img1, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp5['hashcode'])
-            all_files.add(resp5['relative_path'])
-            back_tags.append(
-                f"""
-                <alef_image xlink:label="{resp5['hashcode']}" xp:name="alef_image"
-                                        xp:description="" xp:fieldtype="image" alt="">
-                                <xp:img href="../../../{resp5['relative_path']}"
-                                        width="696" height="890"/>
-                            </alef_image>
-                """
-            )
+            try:
+                img1 = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][back_img]
+                resp5 = copy_to_hashcode_dir(src_path=img1, exiting_hashcode=exiting_hashcode)
+                exiting_hashcode.add(resp5['hashcode'])
+                all_files.add(resp5['relative_path'])
+                back_tags.append(
+                    f"""
+                    <alef_image xlink:label="{resp5['hashcode']}" xp:name="alef_image"
+                                            xp:description="" xp:fieldtype="image" alt="">
+                                    <xp:img href="../../../{resp5['relative_path']}"
+                                            width="696" height="890"/>
+                                </alef_image>
+                    """
+                )
+            except Exception as e:
+                print(f"error: {e} --> in TextWithFlipCards_001")
 
         if back_aud:
-            aud1 = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][back_aud]
-            resp6 = copy_to_hashcode_dir(src_path=aud1, exiting_hashcode=exiting_hashcode)
-            exiting_hashcode.add(resp6['hashcode'])
-            all_files.add(resp6['relative_path'])
+            try:
+                aud1 = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][back_aud]
+                resp6 = copy_to_hashcode_dir(src_path=aud1, exiting_hashcode=exiting_hashcode)
+                exiting_hashcode.add(resp6['hashcode'])
+                all_files.add(resp6['relative_path'])
 
-            back_tags.append(
-                f"""
-                            <alef_audionew xlink:label="{temp1[2]}"
-                                           xp:name="alef_audionew" xp:description=""
-                                           xp:fieldtype="folder">
-                                <alef_audiofile xlink:label="{resp6['hashcode']}"
-                                                xp:name="alef_audiofile" xp:description=""
-                                                audiocontrols="No" xp:fieldtype="file"
-                                                src="../../../{resp6['relative_path']}"/>
-                            </alef_audionew>
-                """
-            )
+                back_tags.append(
+                    f"""
+                                <alef_audionew xlink:label="{temp1[2]}"
+                                               xp:name="alef_audionew" xp:description=""
+                                               xp:fieldtype="folder">
+                                    <alef_audiofile xlink:label="{resp6['hashcode']}"
+                                                    xp:name="alef_audiofile" xp:description=""
+                                                    audiocontrols="No" xp:fieldtype="file"
+                                                    src="../../../{resp6['relative_path']}"/>
+                                </alef_audionew>
+                    """
+                )
+            except Exception as e:
+                print(f"error: {e} --> in TextWithFlipCards_001")
 
         all_front_tags = "\n".join(front_tags)
         all_back_tags = "\n".join(back_tags)
