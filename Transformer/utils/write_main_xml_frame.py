@@ -83,45 +83,34 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
     else:
         lesson_objective_param = ""
 
-    image_thumb_hashcode = ""
-    relative_file = ""
-    for key, val in input_other_jsons_data['INPUT_IMAGES_JSON_DATA'].items():
-        if "launchPage" in val:
-            image_thumb_hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(image_thumb_hashcode)
-            image_thumb_destination_file_path = str(
-                os.path.join(settings.OUTPUT_DIR, image_thumb_hashcode, os.path.basename(val)))
-
-            image_thumb_src_file_path = str(os.path.join(settings.INPUT_APP_DIR, 'images', os.path.basename(val)))
-
-            # Create the unique folder if it doesn't exist
-            relative_file = os.path.join(image_thumb_hashcode, os.path.basename(val))
-            all_files.add(relative_file)
-
-            # create folder
-            path_to_hashcode = os.path.join(settings.OUTPUT_DIR, image_thumb_hashcode)
-            os.makedirs(path_to_hashcode, exist_ok=True)
-
-            shutil.copy2(image_thumb_src_file_path, image_thumb_destination_file_path)
-            break
-    if not image_thumb_hashcode:
-        all_images = glob.glob(os.path.join(settings.INPUT_APP_DIR, "images", "*"))
-        for each_img in all_images:
-            if "launchPage" in each_img:
-                resp = copy_to_hashcode_dir(src_path=os.path.join("images", os.path.basename(each_img)), exiting_hashcode=exiting_hashcode)
-                image_thumb_hashcode = resp['hashcode']
-                relative_file = resp['relative_path']
-                break
-
-    if relative_file:
-        launchPage_img = f"""
-        <alef_image xlink:label="{image_thumb_hashcode}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
-            <xp:img href="../../../{relative_file}" width="1920" height="1080" />
-        </alef_image>
-        """
-    else:
-        print("launchPage.png is not anywhere in images.json")
-        launchPage_img = ""
+    launchPage_img = ""
+    # for key, val in input_other_jsons_data['INPUT_IMAGES_JSON_DATA'].items():
+    #     if "launchPage" in val:
+    #         resp = copy_to_hashcode_dir(exiting_hashcode=exiting_hashcode, src_path=val)
+    #         all_files.add(resp['relative_path'])
+    #         exiting_hashcode.add(resp['hashcode'])
+    #         launchPage_img = f"""
+    #                 <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
+    #                     <xp:img href="../../../{resp['relative_path']}" width="1920" height="1080" />
+    #                 </alef_image>
+    #                 """
+    #         break
+    try:
+        if not launchPage_img:
+            all_images = glob.glob(os.path.join(settings.INPUT_APP_DIR, "images", "*"))
+            for each_img in all_images:
+                if "launchPage" in each_img:
+                    resp = copy_to_hashcode_dir(src_path=os.path.join("images", os.path.basename(each_img)), exiting_hashcode=exiting_hashcode)
+                    all_files.add(resp['relative_path'])
+                    exiting_hashcode.add(resp['hashcode'])
+                    launchPage_img = f"""
+                            <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
+                                <xp:img href="../../../{resp['relative_path']}" width="1920" height="1080" />
+                            </alef_image>
+                            """
+                    break
+    except Exception as e:
+        raise Exception(f"Error: launchPage image --> {e}")
 
     temp = []
     for _ in range(7):
@@ -160,7 +149,6 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
 
     # create folder
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-    exiting_hashcode.add(image_thumb_hashcode)
 
     path_to_hashcode = str(os.path.join(settings.OUTPUT_DIR, "1", "mlo", hashcode))
     os.makedirs(path_to_hashcode, exist_ok=True)

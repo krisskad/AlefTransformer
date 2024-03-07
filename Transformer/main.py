@@ -188,7 +188,7 @@ def iterative_process_data(all_dir_objs):
         STATUS = []
         for item in input_pages:
             template_id = item['pageData']['templateID']
-            # if template_id != "TabToRevealWithAudio_002":
+            # if template_id != "Carousel_002":
             #     continue
 
             response = call_package(
@@ -249,6 +249,7 @@ def iterative_process_data(all_dir_objs):
         print(f"Removing temporary output {settings.OUTPUT_DIR}")
         shutil.rmtree(settings.OUTPUT_DIR)
 
+        print(STATUS)
         if STATUS:
             status_msg = "\n\n".join(STATUS)
             log_file_path = str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'], f"{course_obj_dir_dict['COURSE_ID']}.txt"))

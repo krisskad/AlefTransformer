@@ -239,7 +239,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             try:
                 src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
             except Exception as e:
-                print("Error: TextwithImage_001 --> image")
+                print("Warning: TextwithImage_001 --> image")
                 continue
             resp = copy_to_hashcode_dir(
                 src_path=src_image_path,
@@ -252,7 +252,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 src_en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_img['label']]
                 src_en_text = remove_html_tags(src_en_text)
             except:
-                print("Error: TextwithImage_001 --> label not found")
+                print(f"Warning: TextwithImage_001 --> label not found")
                 src_en_text = ""
             hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode1)
@@ -283,7 +283,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             try:
                 src_image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
             except Exception as e:
-                print(f"Error: TextwithImage_001 --> image not found")
+                print(f"Warning: TextwithImage_001 --> image not found")
                 continue
             resp = copy_to_hashcode_dir(
                 src_path=src_image_path,
@@ -296,7 +296,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 src_en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_img['label']]
                 src_en_text = remove_html_tags(src_en_text)
             except:
-                print(f"Error: TextwithImage_001 --> label not found")
+                print(f"Warning: TextwithImage_001 --> label not found")
+                src_en_text = ""
             hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode1)
 
