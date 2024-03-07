@@ -228,7 +228,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 text = remove_html_tags(text)
             except:
                 text = ""
-                print('Error: DragAndDrop_003 --> text not found in dragItems')
+                print('Warning: DragAndDrop_003 --> text not found in dragItems')
 
             if "<math" in text:
                 text = mathml2latex_yarosh(html_string=text)

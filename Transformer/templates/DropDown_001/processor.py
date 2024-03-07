@@ -177,7 +177,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             drop_Down_Text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][dropDownText]
         except:
             drop_Down_Text = ""
-            print('Error: DragAndDrop_003 --> dropDown text not found')
+            print('Warning: DropDown_001 --> dropDown text not found')
 
         html_drop_down = []
         for i, obj in enumerate(dropDowns):
@@ -192,7 +192,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             except Exception as e:
                 title = ""
-                print(f"DropDown_001 title not present in DropDown list {e}")
+                print(f"Warning: DropDown_001 title not present in DropDown list {e}")
 
             image = obj.get('image', None)
             answer = obj.get('answer')
@@ -225,7 +225,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         """
                     )
             except Exception as e:
-                print(f"DropDown_001 image key not present in args {e}")
+                print(f"Warning: DropDown_001 image key not present in args {e}")
 
             try:
                 if options:
@@ -237,7 +237,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         try:
                             oText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][optiontext]
                         except Exception as e:
-                            print(f"DropDown_001 oText key not present in args {e}")
+                            print(f"Warning: DropDown_001 oText key not present in args {e}")
                             continue
 
                         if "<math" in oText:
@@ -282,9 +282,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         "</alef_options>"
                     )
                 else:
-                    print("DropDown_001 : option key not found")
+                    print("Warning: DropDown_001 : option key not found")
             except Exception as e:
-                print(f"DropDown_001 options not present in args {e}")
+                print(f"Warning: DropDown_001 options not present in args {e}")
 
         # write html
         manual_html_opt = "".join(html_drop_down)
@@ -314,7 +314,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     try:
                         feedbacktext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
                     except Exception as e:
-                        print(f"DropDown_001 feedback text not present in args {e}")
+                        print(f"Warning: DropDown_001 feedback text not present in args {e}")
                         continue
 
                     feedbackresp = write_html(
@@ -350,9 +350,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     )
                     count = count + 1
             else:
-                print("DropDown_001 : feedback is not found")
+                print("Warning: DropDown_001 : feedback is not found")
         except Exception as e:
-            print(f"DropDown_001 feedback key not present in args {e}")
+            print(f"Warning: DropDown_001 feedback key not present in args {e}")
 
         try:
             if hint:
@@ -380,9 +380,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         """
                 )
             else:
-                print("DropDown_001 : hint is not found")
+                print("Warning: DropDown_001 : hint is not found")
         except Exception as e:
-            print(f"DropDown_001 hint key not present in args {e}")
+            print(f"Warning: DropDown_001 hint key not present in args {e}")
 
         all_tags.append(
             """
