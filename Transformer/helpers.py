@@ -719,10 +719,12 @@ def convert_html_to_strong(html_str):
 
 
 def remove_html_tags(text):
-    try:
-        soup = BeautifulSoup(text, "html.parser")
-        text = soup.get_text()
-    except Exception as e:
-        text = re.sub(r'<.*?>', '', text)  # Removes anything between < and >
+    if text:
+        try:
+            soup = BeautifulSoup(text, "html.parser")
+            text = soup.get_text()
+        except Exception as e:
+            if "<" in text and ">" in text:
+                text = re.sub(r'<.*?>', '', text)  # Removes anything between < and >
 
     return text
