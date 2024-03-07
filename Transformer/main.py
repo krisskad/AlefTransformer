@@ -16,7 +16,8 @@ def call_package(template_id, page_data, other_json_data, exiting_hashcode):
         print(f"No package found for templateID: {template_id}")
         return None
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: In template id : {template_id} --> {e}")
+        # raise Exception(f"Error: In template id : {template_id} --> {e}")
         return None
 
 

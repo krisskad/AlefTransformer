@@ -418,6 +418,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                     </alef_image>
                     """
                 else:
+                    print("Front image not found in popup values")
                     front_img_tag = ""
 
                 front_section = f"""
@@ -441,6 +442,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 </alef_section>
                 """
             else:
+                print("Front is not present in the popup values")
                 front_text_resp = {"hashcode":"", "front_text_resp":""}
                 front_img_tag = ""
                 front_section = ""
@@ -471,6 +473,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                     </alef_image>
                     """
                 else:
+                    print("Back image is not found in popup vaues")
                     back_img_tag = ""
 
                 back_section = f"""
@@ -494,7 +497,9 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 </alef_section>
                 """
             else:
+                print(f"Back section is not present in popup value Glossary.json --> {text}")
                 back_section = ""
+                raise Exception(f"Error: Back section is not present in popup value Glossary.json --> {deck_oj}")
 
             if not "back" in deck_oj:
                 all_tags.append(

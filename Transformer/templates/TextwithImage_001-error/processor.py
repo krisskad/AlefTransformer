@@ -367,5 +367,5 @@ def process_page_data(page_data, other_json_data, exiting_hashcode):
             exiting_hashcode=exiting_hashcode
         )
     except Exception as e:
-        raise Exception(f"Error: {e} --> {page_data}")
+        raise Exception(f"Error: {e}")
     return xml_output
