@@ -213,7 +213,7 @@ def iterative_process_data(all_dir_objs):
                     print(f"No xml code generated for Section: {template_id}")
             else:
                 STATUS.append(f"No response for: {template_id}")
-                print(f"No response for Section: {template_id}")
+                print(f"No response for Section Template: {template_id}")
 
         all_sections = "\n".join(MLO_TEMPLATES_OUTPUT_LIST)
         mlo_response = write_mlo(
