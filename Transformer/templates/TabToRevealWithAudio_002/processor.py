@@ -170,10 +170,5 @@ def process_page_data(page_data, other_json_data, exiting_hashcode):
             exiting_hashcode=exiting_hashcode
         )
     except Exception as e:
-        xml_output = {
-            "XML_STRING": "",
-            "GENERATED_HASH_CODES": set(),
-            "MANIFEST_FILES": set(),
-            "STATUS": [f"Error : {e}", ]
-        }
+        raise Exception(f"Error: {e} --> {page_data}")
     return xml_output

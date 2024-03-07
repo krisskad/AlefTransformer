@@ -236,7 +236,7 @@ def validate_inputs_dirs(input_dir, output_dir, common_dir):
     return all_input_obj
 
 
-def mathml2latex_yarosh(html_string: str):
+def mathml2latex_yarosh_old(html_string: str):
     """ MathML to LaTeX conversion with XSLT from krishna kadam"""
     xslt_file = os.path.join(settings.BASE_DIR, 'Transformer', 'assets', 'LaTex', 'mmltex.xsl')
     dom = etree.fromstring(html_string)
@@ -247,6 +247,29 @@ def mathml2latex_yarosh(html_string: str):
     newdom = f"\({newdom}\)"
     output = f"""<span class="math-tex">{str(newdom)}</span>"""
     return output
+
+
+def mathml2latex_yarosh(html_string: str):
+    """ MathML to LaTeX conversion with XSLT from krishna kadam"""
+    xslt_file = os.path.join(settings.BASE_DIR, 'Transformer', 'assets', 'LaTex', 'mmltex.xsl')
+
+    # Extract MathML elements from HTML string
+    soup = BeautifulSoup(html_string, 'html.parser')
+    mathml_elements = soup.find_all('math')
+
+    # Convert MathML elements to LaTeX one by one
+    for mathml_element in mathml_elements:
+        dom = etree.fromstring(str(mathml_element))
+        xslt = etree.parse(xslt_file)
+        transform = etree.XSLT(xslt)
+        newdom = transform(dom)
+        newdom = str(newdom).replace("$", "")
+        newdom = f"\({newdom}\)"
+        latex_output = f"""<span class="math-tex">{str(newdom)}</span>"""
+
+        html_string = html_string.replace(str(mathml_element), latex_output)
+
+    return html_string
 
 
 def write_html_mlo(text, exiting_hashcode, align="center"):
@@ -725,6 +748,8 @@ def remove_html_tags(text):
             text = soup.get_text()
         except Exception as e:
             if "<" in text and ">" in text:
-                text = re.sub(r'<.*?>', '', text)  # Removes anything between < and >
-
+                try:
+                    text = re.sub(r'<.*?>', '', text)  # Removes anything between < and >
+                except Exception as e:
+                    print("Error: unable to remove html tag because of ", e)
     return text
