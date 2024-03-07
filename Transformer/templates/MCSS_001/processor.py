@@ -69,10 +69,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         raise Exception("Error: MCSS_001 --> src not found")
 
     image_check = input_json_data["pageData"]["args"].get("image", None)
-    if image_check:
-        nofcolumns = 1
-    else:
-        nofcolumns = 2
+    # if image_check:
+    #     nofcolumns = 1
+    # else:
+    #     nofcolumns = 2
 
     # submit = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["submit"]]
     # showAnswer = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"].get("showAnswer", None)]
@@ -86,6 +86,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     feedback = input_json_data["pageData"]["args"].get("feedback", None)
     # hint = input_json_data["pageData"]["args"].get("hint", None)
     options = input_json_data["pageData"]["args"].get("options", None)
+    if options:
+        if len(options)>4:
+            nofcolumns = 1
+        else:
+            nofcolumns = 2
+    else:
+        nofcolumns = 1
 
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode)
