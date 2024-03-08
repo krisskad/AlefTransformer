@@ -427,22 +427,27 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                         front_img_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][front_img]
                     else:
                         front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
-                    front_img_path_resp = copy_to_hashcode_dir(src_path=front_img_path,
-                                                               exiting_hashcode=exiting_hashcode)
-                    all_files.add(front_img_path_resp['relative_path'])
-                    exiting_hashcode.add(front_img_path_resp['hashcode'])
-                    front_img_tag = f"""
-                    <alef_image
-                            xlink:label="{front_img_path_resp['hashcode']}"
-                            xp:name="alef_image"
-                            xp:description=""
-                            xp:fieldtype="image" alt="">
-                        <xp:img href="../../../{front_img_path_resp['relative_path']}"
-                                width="1136" height="890"/>
-                    </alef_image>
-                    """
+
+                    try:
+                        front_img_path_resp = copy_to_hashcode_dir(src_path=front_img_path,
+                                                                   exiting_hashcode=exiting_hashcode)
+                        all_files.add(front_img_path_resp['relative_path'])
+                        exiting_hashcode.add(front_img_path_resp['hashcode'])
+                        front_img_tag = f"""
+                        <alef_image
+                                xlink:label="{front_img_path_resp['hashcode']}"
+                                xp:name="alef_image"
+                                xp:description=""
+                                xp:fieldtype="image" alt="">
+                            <xp:img href="../../../{front_img_path_resp['relative_path']}"
+                                    width="1136" height="890"/>
+                        </alef_image>
+                        """
+                    except Exception as e:
+                        print(f"Warning: {e}")
+                        front_img_tag = ""
                 else:
-                    print("Front image not found in popup values")
+                    print(f"Warning: Front image not found in popup values --> {deck_oj.get('front', None)}")
                     front_img_tag = ""
 
                 front_section = f"""
@@ -466,7 +471,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 </alef_section>
                 """
             else:
-                print("Front is not present in the popup values")
+                print("Warning: Front key is not present in glossary.json the popup values")
                 front_text_resp = {"hashcode":"", "front_text_resp":""}
                 front_img_tag = ""
                 front_section = ""
@@ -491,19 +496,24 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                         back_img_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][back_img]
                     else:
                         back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
-                    back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
-                    all_files.add(back_img_path_resp['relative_path'])
-                    exiting_hashcode.add(back_img_path_resp['hashcode'])
-                    back_img_tag = f"""
-                    <alef_image
-                            xlink:label="{back_img_path_resp['hashcode']}"
-                            xp:name="alef_image"
-                            xp:description=""
-                            xp:fieldtype="image" alt="">
-                        <xp:img href="../../../{back_img_path_resp['relative_path']}"
-                                width="1396" height="890"/>
-                    </alef_image>
-                    """
+
+                    try:
+                        back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
+                        all_files.add(back_img_path_resp['relative_path'])
+                        exiting_hashcode.add(back_img_path_resp['hashcode'])
+                        back_img_tag = f"""
+                        <alef_image
+                                xlink:label="{back_img_path_resp['hashcode']}"
+                                xp:name="alef_image"
+                                xp:description=""
+                                xp:fieldtype="image" alt="">
+                            <xp:img href="../../../{back_img_path_resp['relative_path']}"
+                                    width="1396" height="890"/>
+                        </alef_image>
+                        """
+                    except Exception as e:
+                        print(f"Warning: {e}")
+                        back_img_tag = ""
                 else:
                     print("Back image is not found in popup vaues")
                     back_img_tag = ""
@@ -529,20 +539,13 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 </alef_section>
                 """
             else:
-                print(f"Back section is not present in popup value Glossary.json --> {text}")
+                print(f"Warning: Back section is not present in popup value glossary.json")
+                back_text_resp = {"hashcode":"", "front_text_resp":""}
+                back_img_tag = ""
                 back_section = ""
-                raise Exception(f"Error: Back section is not present in popup value Glossary.json --> {deck_oj}")
+                # raise Exception(f"Error: Back section is not present in popup value Glossary.json --> {deck_oj}")
 
             if not "back" in deck_oj:
-                # front_only_card = """
-                # <alef_popupvalue xlink:label="LQ4C2FOQ5VOQPTTCNY0VYPLGVT5" xp:name="alef_popupvalue" xp:description="" xp:fieldtype="folder">
-                #     <alef_section_general xlink:label="LUKGMYC52FETRW0HGPPSKVODQN8" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                #         <alef_column xlink:label="LZD4CF2Q1LOIWAZLLGQ6UGJZZYQ" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
-                #             <alef_html xlink:label="L9EX79AN6TPLTI3BSWVVJZBWJFV" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../L9EX79AN6TPLTI3BSWVVJZBWJFV/emptyHtmlModel.html"/>
-                #         </alef_column>
-                #     </alef_section_general>
-                # </alef_popupvalue>
-                # """
                 all_tags.append(
                     f"""
                     <alef_popupvalue xlink:label="{temp[0]}"
@@ -568,7 +571,31 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                     </alef_popupvalue>
                     """
                 )
+            elif not "front" in deck_oj:
+                all_tags.append(
+                    f"""
+                    <alef_popupvalue xlink:label="{temp[0]}"
+                                     xp:name="alef_popupvalue" xp:description=""
+                                     xp:fieldtype="folder">
+                        <alef_section_general xlink:label="{temp[1]}"
+                                              xp:name="alef_section_general"
+                                              xp:description="" xp:fieldtype="folder">
+                            <alef_column xlink:label="{temp[2]}"
+                                         xp:name="alef_column" xp:description=""
+                                         xp:fieldtype="folder" width="auto">
 
+                                <alef_html
+                                    xlink:label="{back_text_resp['hashcode']}"
+                                    xp:name="alef_html"
+                                    xp:description=""
+                                    xp:fieldtype="html"
+                                    src="../../../{back_text_resp['relative_path']}"/>
+                                {back_img_tag}
+                            </alef_column>
+                        </alef_section_general>
+                    </alef_popupvalue>
+                    """
+                )
             else:
                 all_tags.append(
                     f"""

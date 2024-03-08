@@ -120,6 +120,8 @@ def process_data(template_ids=None):
 def iterative_process_data(all_dir_objs):
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
+        print("#" * 20)
+        print(course_obj_dir_dict['COURSE_ID'])
         settings.INPUT_COMMON_DIR = course_obj_dir_dict['INPUT_COMMON_DIR']
         settings.INPUT_APP_DIR = course_obj_dir_dict['INPUT_APP_DIR']
 
@@ -278,5 +280,6 @@ def iterative_process_data(all_dir_objs):
                 "log_file":log_file_path
             }
         )
+        print("#" * 20)
 
     return resp_list
