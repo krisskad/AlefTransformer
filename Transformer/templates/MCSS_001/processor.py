@@ -119,6 +119,27 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     hashcode6 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
     exiting_hashcode.add(hashcode6)
 
+
+    try:
+        questionfullwidth = "false"
+        image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["image"]]
+        resp = copy_to_hashcode_dir(src_path=image, exiting_hashcode=exiting_hashcode)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+        image_tag = f"""
+            <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
+                        xp:description="" xp:fieldtype="image" alt="">
+                <xp:img href="../../../{resp['relative_path']}" width="301"
+                        height="155"/>
+            </alef_image>
+            """
+
+    except Exception as e:
+        questionfullwidth = "true"
+        image_tag = ""
+        # print(f"MCSS_001 : {e}")
+        print("Warning: MCSS_001 --> image not found")
+
     all_tags.append(
         f"""
                 <alef_section xlink:label="{hashcode1}" xp:name="alef_section" xp:description=""
@@ -127,7 +148,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                  xp:fieldtype="folder" width="auto" cellspan="1">
                         <alef_multiplechoice xlink:label="{hashcode3}" xp:name="alef_multiplechoice"
                                              xp:description="" xp:fieldtype="folder" alef_type="MC Radio Button"
-                                             questionfullwidth="false" questiontitle=" " questionnumber=" "
+                                             questionfullwidth="{questionfullwidth}" questiontitle=" " questionnumber=" "
                                              nofcolumns="{nofcolumns}" submitattempts="{submitCount}" showtitle="false"
                                              alignstatement="center" showbackground="false" shuffleoptions="true"
                                              validation="Yes">
@@ -250,23 +271,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         )
         count = count + 1
 
-    try:
-        image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["image"]]
-        resp = copy_to_hashcode_dir(src_path=image, exiting_hashcode=exiting_hashcode)
-        all_files.add(resp['relative_path'])
-        exiting_hashcode.add(resp['hashcode'])
-        all_tags.append(
-            f"""
-                                <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
-                                            xp:description="" xp:fieldtype="image" alt="">
-                                    <xp:img href="../../../{resp['relative_path']}" width="301"
-                                            height="155"/>
-                                </alef_image>
-            """
-        )
-    except Exception as e:
-        # print(f"MCSS_001 : {e}")
-        print("Warning: MCSS_001 --> image not found")
+    all_tags.append(
+        image_tag
+    )
 
     all_tags.append(
         """
