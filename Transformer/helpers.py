@@ -183,6 +183,7 @@ def get_input_dir_obj(INPUT_DIR, output_dir, INPUT_COMMON_DIR):
         INPUT_VIDEO_JSON = os.path.join(INPUT_APP_DIR, "json", "video.json")
         # common
         INPUT_COMMON_GLOSSARY_JSON = os.path.join(INPUT_COMMON_DIR, "templates", "config", "glossary.json")
+
         INPUT_COMMON_GLOSSARY_IMAGES_JSON = os.path.join(INPUT_COMMON_DIR, "templates", "config",
                                                          "glossaryImages.json")
         INPUT_COMMON_TEMPLATE_IMAGES_JSON = os.path.join(INPUT_COMMON_DIR, "templates", "config",
@@ -199,8 +200,8 @@ def get_input_dir_obj(INPUT_DIR, output_dir, INPUT_COMMON_DIR):
         if paths_exist is False:
             print("Path does not exist")
             break
-        all_input_objects.append(
-            {
+
+        path_obj = {
                 "INPUT_APP_DIR": INPUT_APP_DIR,
                 "INPUT_COMMON_DIR": INPUT_COMMON_DIR,
                 "INPUT_STRUCTURE_JSON": INPUT_STRUCTURE_JSON,
@@ -216,6 +217,14 @@ def get_input_dir_obj(INPUT_DIR, output_dir, INPUT_COMMON_DIR):
                 "COMMON_APP_DIR": INPUT_COMMON_DIR,
                 "OUTPUT_DIR": output_dir
             }
+
+        INPUT_APP_GLOSSARY_JSON = os.path.join(INPUT_APP_DIR, "json", "glossary.json")
+
+        if os.path.exists(INPUT_APP_GLOSSARY_JSON):
+            path_obj["INPUT_APP_GLOSSARY_JSON"] = INPUT_APP_GLOSSARY_JSON
+
+        all_input_objects.append(
+            path_obj
         )
 
     return all_input_objects
@@ -390,19 +399,34 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             data_ref = span_attr_obj["data-ref"]
             if data_ref is None:
                 continue
-            deck_oj = input_other_jsons_data["INPUT_COMMON_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
+
+            try:
+                look_into_app = False
+                deck_oj = input_other_jsons_data["INPUT_COMMON_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
+            except Exception as e:
+                look_into_app = True
+                print(f"While creating popup card {data_ref} not found in INPUT_COMMON_GLOSSARY_JSON_DATA")
+                print("Looking into INPUT_APP_GLOSSARY_JSON_DATA")
+                deck_oj = input_other_jsons_data["INPUT_APP_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
 
             if "front" in deck_oj:
                 front_content_list = deck_oj['front'].get('content', None)
-                front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_])
-                                          for front_ in front_content_list])
+                if look_into_app:
+                    front_text = "<hr>".join([str(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][front_])
+                                              for front_ in front_content_list])
+                else:
+                    front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_])
+                                              for front_ in front_content_list])
                 front_text_resp = write_html_mlo(text=front_text, exiting_hashcode=exiting_hashcode)
                 all_files.add(front_text_resp['relative_path'])
                 exiting_hashcode.add(front_text_resp['hashcode'])
 
                 front_img = deck_oj.get('front', None).get('img', None)
                 if front_img:
-                    front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
+                    if look_into_app:
+                        front_img_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][front_img]
+                    else:
+                        front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
                     front_img_path_resp = copy_to_hashcode_dir(src_path=front_img_path,
                                                                exiting_hashcode=exiting_hashcode)
                     all_files.add(front_img_path_resp['relative_path'])
@@ -450,15 +474,23 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             if "back" in deck_oj:
 
                 back_content_list = deck_oj['back']['content']
-                back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
-                                         for back_ in back_content_list])
+
+                if look_into_app:
+                    back_text = "<hr>".join([str(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][back_])
+                                             for back_ in back_content_list])
+                else:
+                    back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
+                                             for back_ in back_content_list])
                 back_text_resp = write_html_mlo(text=back_text, exiting_hashcode=exiting_hashcode)
                 all_files.add(back_text_resp['relative_path'])
                 exiting_hashcode.add(back_text_resp['hashcode'])
 
                 back_img = deck_oj.get('back', None).get('img', None)
                 if back_img:
-                    back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
+                    if look_into_app:
+                        back_img_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][back_img]
+                    else:
+                        back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
                     back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
                     all_files.add(back_img_path_resp['relative_path'])
                     exiting_hashcode.add(back_img_path_resp['hashcode'])
@@ -502,6 +534,15 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 raise Exception(f"Error: Back section is not present in popup value Glossary.json --> {deck_oj}")
 
             if not "back" in deck_oj:
+                # front_only_card = """
+                # <alef_popupvalue xlink:label="LQ4C2FOQ5VOQPTTCNY0VYPLGVT5" xp:name="alef_popupvalue" xp:description="" xp:fieldtype="folder">
+                #     <alef_section_general xlink:label="LUKGMYC52FETRW0HGPPSKVODQN8" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
+                #         <alef_column xlink:label="LZD4CF2Q1LOIWAZLLGQ6UGJZZYQ" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
+                #             <alef_html xlink:label="L9EX79AN6TPLTI3BSWVVJZBWJFV" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../L9EX79AN6TPLTI3BSWVVJZBWJFV/emptyHtmlModel.html"/>
+                #         </alef_column>
+                #     </alef_section_general>
+                # </alef_popupvalue>
+                # """
                 all_tags.append(
                     f"""
                     <alef_popupvalue xlink:label="{temp[0]}"
@@ -564,7 +605,6 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             "all_files":all_files
         }
     return {}
-
 
 
 def get_popup_mlo_small_from_text(text: str, input_other_jsons_data: dict, all_files: set, exiting_hashcode: set,

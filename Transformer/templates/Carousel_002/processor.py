@@ -181,8 +181,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         )
         all_files.add(resp_desc['relative_path'])
         exiting_hashcode.add(resp_desc['hashcode'])
-        if "stain" in description:
-            print(description)
+        # if "stain" in description:
+        #     print(description)
 
         popup_response = get_popup_mlo_from_text(
             text=description,

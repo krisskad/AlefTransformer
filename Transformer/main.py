@@ -76,8 +76,8 @@ def process_data(template_ids=None):
     MLO_TEMPLATES_OUTPUT_LIST = []
     for item in input_pages:
         template_id = item['pageData']['templateID']
-        # if template_id != "VideowithInputBox_001":
-        #     continue
+        if template_id != "TextwithImage_001":
+            continue
 
         if template_ids:
             if isinstance(template_ids, list):
@@ -156,11 +156,13 @@ def iterative_process_data(all_dir_objs):
 
         # Iterate through the dictionary and replace 'non ansi' with 'ansi' in all values
         for key, value in INPUT_EN_TEXT_JSON_DATA.items():
-            INPUT_EN_TEXT_JSON_DATA[key] = value.encode('ascii', 'ignore').decode('ascii')
+            INPUT_EN_TEXT_JSON_DATA[key] = value.replace("’", "'") #
+            # INPUT_EN_TEXT_JSON_DATA[key] = value.encode('ascii', 'ignore').decode('ascii')
 
         # Iterate through the dictionary and replace 'non ansi' with 'ansi' in all values
         for key, value in INPUT_COMMON_TEXT_JSON_DATA.items():
-            INPUT_COMMON_TEXT_JSON_DATA[key] = value.encode('ascii', 'ignore').decode('ascii')
+            INPUT_COMMON_TEXT_JSON_DATA[key] = value.replace("’", "'")
+            # INPUT_COMMON_TEXT_JSON_DATA[key] = value.encode('ascii', 'ignore').decode('ascii')
 
         OTHER_JSON_DATA = {
             "INPUT_STRUCTURE_JSON_DATA": INPUT_STRUCTURE_JSON_DATA,
@@ -176,6 +178,13 @@ def iterative_process_data(all_dir_objs):
             "COURSE_ID":course_obj_dir_dict['COURSE_ID']
         }
 
+        if "INPUT_APP_GLOSSARY_JSON" in course_obj_dir_dict:
+            INPUT_APP_GLOSSARY_JSON_DATA = read_json(
+                file_path=course_obj_dir_dict["INPUT_APP_GLOSSARY_JSON"]
+            )
+
+            OTHER_JSON_DATA["INPUT_APP_GLOSSARY_JSON_DATA"] = INPUT_APP_GLOSSARY_JSON_DATA
+
         # storing all hash strings
         GENERATED_HASH_CODES = set()
 
@@ -189,7 +198,7 @@ def iterative_process_data(all_dir_objs):
         STATUS = []
         for item in input_pages:
             template_id = item['pageData']['templateID']
-            # if template_id != "Carousel_002":
+            # if template_id != "TextwithImage_001":
             #     continue
 
             response = call_package(
