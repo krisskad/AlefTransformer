@@ -314,6 +314,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 """
             )
 
+        all_tags.append(
+            """
+            </alef_section>
+            """
+        )
     if len(imageContent_list) > 1:
         try:
             src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]

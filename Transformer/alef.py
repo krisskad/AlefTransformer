@@ -9,7 +9,10 @@ class CustomMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        df = pd.read_csv("https://raw.githubusercontent.com/krisskad/ProjectController/main/controller.csv")
+        try:
+            df = pd.read_csv("https://raw.githubusercontent.com/krisskad/ProjectController/main/controller.csv")
+        except Exception as e:
+            raise Exception("Unable to fetch resources from internet. Please turn on your internet connection")
         # print(df)
         project_name = "AlefTransformer"
         df.columns = df.columns.str.strip()
