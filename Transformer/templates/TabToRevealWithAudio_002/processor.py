@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 
 def write_html(text, exiting_hashcode):
+    text = convert_html_to_strong(html_str=text)
 
     template = f"""
     <html>

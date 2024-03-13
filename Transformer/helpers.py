@@ -801,7 +801,10 @@ def convert_html_to_strong(html_str):
     soup = BeautifulSoup(html_str, 'html.parser')
 
     # Find all <span> tags with style attribute containing "font-family: Roboto-Bold;"
-    span_tags = soup.find_all('span', style=lambda value: value and ('font-family: Roboto-Bold;' in value or 'txtBold' in value))
+    span_tags = soup.find_all(lambda tag:
+                              (tag.name == 'span' and
+                               'font-family: Roboto-Bold;' in tag.get('style', '') or
+                               'textBold' in tag.get('class', [])))
 
     # Replace <span> tags with <strong> tags
     for span_tag in span_tags:
