@@ -86,6 +86,7 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
+    STATUS = []
     all_files = set()
     all_tags = [
         """
@@ -98,7 +99,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     try:
         textFieldData = input_json_data["pageData"]["args"]["textFieldData"]
     except:
-        raise Exception(f"Error: AudiowithInputBox_001 --> textFieldData not found in input structure")
+        msg = f"Error: AudiowithInputBox_001 --> textFieldData not found in input structure"
+        STATUS.append(msg)
+        raise Exception(msg)
 
     mediaBoxData = input_json_data["pageData"]["args"].get("mediaBoxData", None)
 
@@ -110,9 +113,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
             qHtmlText = text_en_html_to_html_text(html_string=text)
         except:
-            raise Exception(f"Error: AudiowithInputBox_001 --> {qText} not found in en text")
+            msg = f"Error: AudiowithInputBox_001 --> {qText} not found in en text"
+            STATUS.append(msg)
+            raise Exception(msg)
     else:
-        raise Exception(f"Error: AudiowithInputBox_001 --> qText not found in structure.json")
+        msg = f"Error: AudiowithInputBox_001 --> qText not found in structure.json"
+        STATUS.append(msg)
+        raise Exception(msg)
     resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode, align=None)
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
@@ -178,7 +185,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     try:
         src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
     except:
-        raise Exception("Error: AudiowithInputBox_001 --> src not found for audio")
+        msg = "Error: AudiowithInputBox_001 --> src not found for audio"
+        STATUS.append(msg)
+        raise Exception(msg)
     resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
@@ -202,7 +211,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             img_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][
                 input_json_data["pageData"]["args"]['mediaBoxData']["src"]]
         except:
-            raise Exception("Error: AudiowithInputBox_001 --> src not found within mediaBoxData")
+            msg = "Error: AudiowithInputBox_001 --> src not found within mediaBoxData"
+            STATUS.append(msg)
+            raise Exception(msg)
 
         resp = copy_to_hashcode_dir(src_path=img_src, exiting_hashcode=exiting_hashcode)
         all_files.add(resp['relative_path'])
@@ -225,7 +236,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             img_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][
                 input_json_data["pageData"]["args"]['background']["src"]]
         except:
-            raise Exception("Error: AudiowithInputBox_001 --> background src not found")
+            msg = "Error: AudiowithInputBox_001 --> background src not found"
+            STATUS.append(msg)
+            raise Exception(msg)
 
         resp = copy_to_hashcode_dir(src_path=img_src, exiting_hashcode=exiting_hashcode)
         all_files.add(resp['relative_path'])
@@ -250,7 +263,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,
-        "MANIFEST_FILES": all_files
+        "MANIFEST_FILES": all_files,
+        "STATUS":STATUS
     }
 
     return response

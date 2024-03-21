@@ -125,7 +125,7 @@ def iterative_process_data(all_dir_objs):
         settings.INPUT_COMMON_DIR = course_obj_dir_dict['INPUT_COMMON_DIR']
         settings.INPUT_APP_DIR = course_obj_dir_dict['INPUT_APP_DIR']
 
-        print("Reading all input files")
+        # print("Reading all input files")
         INPUT_STRUCTURE_JSON_DATA = read_json(
             file_path=course_obj_dir_dict["INPUT_STRUCTURE_JSON"]
         )
@@ -269,7 +269,7 @@ def iterative_process_data(all_dir_objs):
         print(f"Removing temporary output {settings.OUTPUT_DIR}")
         shutil.rmtree(settings.OUTPUT_DIR)
 
-        print(STATUS)
+        # print(STATUS)
         if STATUS:
             status_msg = "\n\n".join(STATUS)
             log_file_path = str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'], f"{course_obj_dir_dict['COURSE_ID']}.txt"))

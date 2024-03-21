@@ -24,6 +24,7 @@ def write_html(text, destination_file_path):
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
+    STATUS = []
     all_tags = [
         """
         <!-- ClicktoRevealwithSubmit_001 -->
@@ -35,25 +36,34 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     try:
         text_en_id = input_json_data['pageData']['args']['ques']
-    except:
-        raise Exception('Error: ClicktoRevealwithSubmit_001 --> ques not found')
+
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
 
     try:
         submitCount = input_json_data['pageData']['args']['submitCount']
-    except:
-        raise Exception('Error: ClicktoRevealwithSubmit_001 --> submitCount not found')
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
 
     # multiAnswer = input_json_data['pageData']['args']['multiAnswer']
     try:
         thumbs = input_json_data['pageData']['args']['thumbs']
         nofcolumns = len(thumbs)
-    except:
-        raise Exception('Error: ClicktoRevealwithSubmit_001 --> thumbs not found')
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
 
     try:
         text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][text_en_id]
-    except:
-        raise Exception('Error: ClicktoRevealwithSubmit_001 --> text not found')
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
 
     destination_file_path = os.path.join(settings.OUTPUT_DIR, hashcode, "emptyHtmlModel.html")
     html_file_path = str(os.path.join(hashcode, "emptyHtmlModel.html"))
@@ -102,8 +112,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         try:
             image_thumb_relative_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][each_thumb['image']]
-        except:
-            raise Exception('Error: ClicktoRevealwithSubmit_001 --> image not found')
+        except Exception as e:
+            msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+            STATUS.append(msg)
+            raise Exception(msg)
 
         image_thumb_hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(image_thumb_hashcode)
@@ -235,8 +247,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     """)
 
             feedback_added.add(key)
-    except:
-        raise print('Warning: ClicktoRevealwithSubmit_001 --> feedback not found')
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
 
     try:
         hint = input_json_data['pageData']['args']['hint']
@@ -335,7 +349,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES":exiting_hashcode,
-        "MANIFEST_FILES":all_files
+        "MANIFEST_FILES":all_files,
+        "STATUS": STATUS
     }
 
     return response

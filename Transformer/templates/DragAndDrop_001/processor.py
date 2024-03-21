@@ -82,7 +82,7 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
-    all_tags = []
+    STATUS = []
 
     all_tags = [
         """
@@ -93,26 +93,30 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # Extracting variables
     try:
         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
-    except:
-        raise Exception('Error: DragAndDrop_001 --> title not found')
-
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
     try:
         src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    except:
-        raise Exception('Error: DragAndDrop_001 --> src not found')
-
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
     # visibleElements = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
     #     input_json_data["pageData"]["args"]["visibleElements"]]
     try:
         dropItems = input_json_data["pageData"]["args"]["dropItems"]
-    except:
-        raise Exception('Error: DragAndDrop_001 --> dropItems not found')
-
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
     try:
         dragItems = input_json_data["pageData"]["args"]["dragItems"]
-    except:
-        raise Exception('Error: DragAndDrop_001 --> dragItems not found')
-
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
     if "<math" in title:
         title = mathml2latex_yarosh(html_string=title)
 
@@ -196,9 +200,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             if each_option['dropId'] == each_cat['dropId']:
                 try:
                     image = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_option['image']]
-                except:
-                    raise Exception('Error: DragAndDrop_001 --> image not found inside dragItems')
-
+                except Exception as e:
+                    msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+                    STATUS.append(msg)
+                    raise Exception(msg)
                 resp = copy_to_hashcode_dir(src_path=image, exiting_hashcode=exiting_hashcode)
                 all_files.add(resp['relative_path'])
                 exiting_hashcode.add(resp['hashcode'])
@@ -279,7 +284,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,
-        "MANIFEST_FILES": all_files
+        "MANIFEST_FILES": all_files,
+        "STATUS":STATUS
     }
 
     return response

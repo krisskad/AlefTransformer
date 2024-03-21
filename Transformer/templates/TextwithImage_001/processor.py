@@ -14,7 +14,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 input_json_data, input_other_jsons_data, exiting_hashcode
             )
         else:
-            print("Text- Left")
+            # print("Text- Left")
             return get_text_left_xml(
                 input_json_data, input_other_jsons_data, exiting_hashcode
             )

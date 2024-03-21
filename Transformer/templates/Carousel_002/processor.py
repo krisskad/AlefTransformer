@@ -87,7 +87,7 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
-
+    STATUS = []
     all_tags = [
         """
         <!-- Carousel_002 -->
@@ -102,8 +102,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     try:
         slides = input_json_data["pageData"]["args"]["slides"]
-    except:
-        raise Exception('Error: Carousel_002 --> slides not found')
+    except Exception as e:
+        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+        STATUS.append(msg)
+        raise Exception(msg)
 
     temp = []
     for _ in range(10):
@@ -132,8 +134,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         try:
             audio = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][audio_id]
-        except:
-            raise Exception('Error: Carousel_002 --> audio not found inside slide')
+        except Exception as e:
+            msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+            STATUS.append(msg)
+            raise Exception(msg)
 
         try:
             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
@@ -158,13 +162,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         try:
             description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][description]
-        except:
-            raise Exception('Error: Carousel_002 --> description not found inside slide')
+        except Exception as e:
+            msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+            STATUS.append(msg)
+            raise Exception(msg)
 
         try:
             image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image_id]
-        except:
-            raise Exception('Error: Carousel_002 --> image not found inside slide')
+        except Exception as e:
+            msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
+            STATUS.append(msg)
+            raise Exception(msg)
 
         if "<math" in text:
             text = mathml2latex_yarosh(html_string=text)
@@ -287,7 +295,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,
-        "MANIFEST_FILES": all_files
+        "MANIFEST_FILES": all_files,
+        "STATUS": STATUS
     }
 
     return response

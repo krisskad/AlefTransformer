@@ -85,6 +85,7 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
+    STATUS = []
     all_files = set()
     all_tags = []
 
@@ -99,17 +100,23 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     try:
         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
     except:
-        raise Exception('Error: Carousel_001 --> title not found')
+        msg = 'Error: Carousel_001 --> title not found'
+        STATUS.append(msg)
+        raise Exception(msg)
     # src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
     try:
         description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["description"]]
     except:
-        raise Exception('Error: Carousel_001 --> description not found')
+        msg = 'Error: Carousel_001 --> description not found'
+        STATUS.append(msg)
+        raise Exception(msg)
 
     try:
         slides = input_json_data["pageData"]["args"]["slides"]
     except:
-        raise Exception('Error: Carousel_001 --> slides not found')
+        msg = 'Error: Carousel_001 --> slides not found'
+        STATUS.append(msg)
+        raise Exception(msg)
 
     if "<math" in title:
         title = mathml2latex_yarosh(html_string=title)
@@ -190,12 +197,16 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         try:
             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
         except:
-            raise Exception('Error: Carousel_001 --> text not found inside slide')
+            msg = 'Error: Carousel_001 --> slides not found'
+            STATUS.append(msg)
+            raise Exception(msg)
 
         try:
             image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image_id]
         except:
-            raise Exception('Error: Carousel_001 --> image not found inside slide')
+            msg = 'Error: Carousel_001 --> image not found inside slide'
+            STATUS.append(msg)
+            raise Exception(msg)
 
         if "<math" in text:
             text = mathml2latex_yarosh(html_string=text)
@@ -245,7 +256,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,
-        "MANIFEST_FILES": all_files
+        "MANIFEST_FILES": all_files,
+        "STATUS": STATUS
     }
 
     return response
