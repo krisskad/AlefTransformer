@@ -135,6 +135,9 @@ def iterative_process_data(all_dir_objs):
         INPUT_VIDEO_JSON_DATA = read_json(
             file_path=course_obj_dir_dict["INPUT_VIDEO_JSON"]
         )
+        INPUT_VIEW_JSON_DATA = read_json(
+            file_path=course_obj_dir_dict["INPUT_VIEW_JSON"]
+        )
         INPUT_IMAGES_JSON_DATA = read_json(
             file_path=course_obj_dir_dict["INPUT_IMAGES_JSON"]
         )
@@ -170,6 +173,7 @@ def iterative_process_data(all_dir_objs):
             "INPUT_STRUCTURE_JSON_DATA": INPUT_STRUCTURE_JSON_DATA,
             "INPUT_AUDIO_JSON_DATA":INPUT_AUDIO_JSON_DATA,
             "INPUT_VIDEO_JSON_DATA":INPUT_VIDEO_JSON_DATA,
+            "INPUT_VIEW_JSON_DATA":INPUT_VIEW_JSON_DATA,
             "INPUT_IMAGES_JSON_DATA":INPUT_IMAGES_JSON_DATA,
             "INPUT_EN_TEXT_JSON_DATA":INPUT_EN_TEXT_JSON_DATA,
             "INPUT_COMMON_GLOSSARY_JSON_DATA":INPUT_COMMON_GLOSSARY_JSON_DATA,

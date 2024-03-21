@@ -181,6 +181,8 @@ def get_input_dir_obj(INPUT_DIR, output_dir, INPUT_COMMON_DIR):
         INPUT_EN_TEXT_JSON = os.path.join(INPUT_APP_DIR, "json", "en_text.json")
         INPUT_IMAGES_JSON = os.path.join(INPUT_APP_DIR, "json", "images.json")
         INPUT_VIDEO_JSON = os.path.join(INPUT_APP_DIR, "json", "video.json")
+        INPUT_VIEW_JSON = os.path.join(INPUT_APP_DIR, "json", "view.json")
+
         # common
         INPUT_COMMON_GLOSSARY_JSON = os.path.join(INPUT_COMMON_DIR, "templates", "config", "glossary.json")
 
@@ -193,6 +195,7 @@ def get_input_dir_obj(INPUT_DIR, output_dir, INPUT_COMMON_DIR):
         # Validate paths
         paths_exist = validate_paths(
             INPUT_STRUCTURE_JSON, INPUT_AUDIO_JSON, INPUT_EN_TEXT_JSON, INPUT_IMAGES_JSON, INPUT_VIDEO_JSON,
+            INPUT_VIEW_JSON,
             INPUT_COMMON_GLOSSARY_JSON, INPUT_COMMON_GLOSSARY_IMAGES_JSON, INPUT_COMMON_TEMPLATE_IMAGES_JSON,
             INPUT_COMMON_TEXT_JSON
         )
@@ -209,6 +212,7 @@ def get_input_dir_obj(INPUT_DIR, output_dir, INPUT_COMMON_DIR):
                 "INPUT_EN_TEXT_JSON": INPUT_EN_TEXT_JSON,
                 "INPUT_IMAGES_JSON": INPUT_IMAGES_JSON,
                 "INPUT_VIDEO_JSON": INPUT_VIDEO_JSON,
+                "INPUT_VIEW_JSON": INPUT_VIEW_JSON,
                 "INPUT_COMMON_GLOSSARY_JSON": INPUT_COMMON_GLOSSARY_JSON,
                 "INPUT_COMMON_GLOSSARY_IMAGES_JSON": INPUT_COMMON_GLOSSARY_IMAGES_JSON,
                 "INPUT_COMMON_TEMPLATE_IMAGES_JSON": INPUT_COMMON_TEMPLATE_IMAGES_JSON,

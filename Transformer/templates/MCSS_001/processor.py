@@ -69,10 +69,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         raise Exception("Error: MCSS_001 --> src not found")
 
     image_check = input_json_data["pageData"]["args"].get("image", None)
-    # if image_check:
-    #     nofcolumns = 1
-    # else:
-    #     nofcolumns = 2
 
     # submit = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["submit"]]
     # showAnswer = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"].get("showAnswer", None)]
@@ -86,12 +82,30 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     feedback = input_json_data["pageData"]["args"].get("feedback", None)
     # hint = input_json_data["pageData"]["args"].get("hint", None)
     options = input_json_data["pageData"]["args"].get("options", None)
-    if options:
-        if len(options)>4:
-            nofcolumns = 1
+
+    """
+    :Number of column logic
+    rightContainer = True (numberOfCol = 2) 
+    rightContainer = False (numberOfCol = 1)
+    
+    If rightContainer key is not present in input then numberOfCol = 1, 
+    If Image is present then its numberOfCol = 1
+    """
+    try:
+        if "rightContainer" in input_json_data["pageData"]["args"]:
+            rightContainer = input_json_data["pageData"]["args"]["rightContainer"]
+            if rightContainer: # True
+                nofcolumns = 2
+            else:
+                nofcolumns = 1
         else:
-            nofcolumns = 2
-    else:
+            nofcolumns = 1
+
+        if image_check:
+            nofcolumns = 1
+    except Exception as e:
+        print(f"Error in MCSS_001 While assigning number of columns for mcq options: --> {e} "
+              f"[We are setting it number of column as 1]")
         nofcolumns = 1
 
     hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
@@ -138,7 +152,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         questionfullwidth = "true"
         image_tag = ""
         # print(f"MCSS_001 : {e}")
-        print("Warning: MCSS_001 --> image not found")
+        print("Warning: MCSS_001 --> image not found so setting up questionfullwidth = true")
 
     all_tags.append(
         f"""
@@ -150,7 +164,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                              xp:description="" xp:fieldtype="folder" alef_type="MC Radio Button"
                                              questionfullwidth="{questionfullwidth}" questiontitle=" " questionnumber=" "
                                              nofcolumns="{nofcolumns}" submitattempts="{submitCount}" showtitle="false"
-                                             alignstatement="center" showbackground="false" shuffleoptions="true"
+                                             alignstatement="left" showbackground="false" shuffleoptions="true"
                                              validation="Yes">
                             <alef_questionstatement xlink:label="{hashcode4}"
                                                     xp:name="alef_questionstatement" xp:description=""
