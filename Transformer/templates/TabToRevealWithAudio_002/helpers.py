@@ -126,27 +126,6 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     )
 
-    imageData = input_json_data.get("imageData", None)
-    if imageData:
-        imageData_src = imageData.get("src", None)
-        if imageData_src:
-            imageData_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][imageData_src]
-            resp_img = copy_to_hashcode_dir(src_path=imageData_src, exiting_hashcode=exiting_hashcode)
-            all_files.add(resp_img['relative_path'])
-            exiting_hashcode.add(resp_img['hashcode'])
-            all_tags.append(
-                f"""
-                    <alef_column xlink:label="{temp[7]}" xp:name="alef_column"
-                                 xp:description="" xp:fieldtype="folder" width="6" cellspan="1">
-                        <alef_image xlink:label="{resp_img['hashcode']}" xp:name="alef_image"
-                                    xp:description="" xp:fieldtype="image" alt="">
-                            <xp:img href="../../../{resp_img['relative_path']}"
-                                    width="1583" height="890"/>
-                        </alef_image>
-                    </alef_column>
-                """
-            )
-
     audio = input_json_data.get("audio", None)
     if audio:
         audio_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][audio]
@@ -237,6 +216,28 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     else:
         print("tabHeaderTxt Is not provided so ignoring tag")
+
+
+    imageData = input_json_data.get("imageData", None)
+    if imageData:
+        imageData_src = imageData.get("src", None)
+        if imageData_src:
+            imageData_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][imageData_src]
+            resp_img = copy_to_hashcode_dir(src_path=imageData_src, exiting_hashcode=exiting_hashcode)
+            all_files.add(resp_img['relative_path'])
+            exiting_hashcode.add(resp_img['hashcode'])
+            all_tags.append(
+                f"""
+                    <alef_column xlink:label="{temp[7]}" xp:name="alef_column"
+                                 xp:description="" xp:fieldtype="folder" width="6" cellspan="1">
+                        <alef_image xlink:label="{resp_img['hashcode']}" xp:name="alef_image"
+                                    xp:description="" xp:fieldtype="image" alt="">
+                            <xp:img href="../../../{resp_img['relative_path']}"
+                                    width="1583" height="890"/>
+                        </alef_image>
+                    </alef_column>
+                """
+            )
 
     bgImage = input_json_data.get("bgImage", None)
     if bgImage:
