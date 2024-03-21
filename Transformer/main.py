@@ -207,6 +207,10 @@ def iterative_process_data(all_dir_objs):
             # if template_id != "TextwithImage_001":
             #     continue
 
+            if template_id == "DragAndDrop_002":
+                print("Found DragAndDrop_002 --> Considering it as DragAndDrop_003")
+                template_id = "DragAndDrop_003"
+
             response = call_package(
                 template_id=template_id,
                 page_data=item,
