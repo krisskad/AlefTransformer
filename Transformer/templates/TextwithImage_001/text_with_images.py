@@ -44,7 +44,7 @@ sample = """
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text,
                                  get_popup_mlo_from_text,
-                                 convert_html_to_strong, remove_html_tags
+                                 convert_html_to_strong, remove_html_tags, mathml2latex_yarosh
                                  )
 from django.conf import settings
 import os, shutil
@@ -149,7 +149,10 @@ def get_text_with_image_xml(input_json_data, input_other_jsons_data, exiting_has
 
     try:
         ques_src = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_id]
-        ques_src = remove_html_tags(ques_src)
+        if "<math" in ques_src:
+            ques_src = mathml2latex_yarosh(html_string=ques_src)
+        else:
+            ques_src = remove_html_tags(ques_src)
 
     except:
         ques_src = ""
@@ -241,7 +244,11 @@ def get_text_with_image_xml(input_json_data, input_other_jsons_data, exiting_has
 
         try:
             src_en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_img['label']]
-            src_en_text = remove_html_tags(src_en_text)
+            if "<math" in src_en_text:
+                src_en_text = mathml2latex_yarosh(html_string=src_en_text)
+            else:
+                src_en_text = remove_html_tags(src_en_text)
+
         except Exception as e:
             print(f"Warning: TextwithImage_001 --> label not found {e}")
             src_en_text = ""

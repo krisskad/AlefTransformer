@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong
+from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, mathml2latex_yarosh, remove_html_tags
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -91,6 +91,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # Extracting variables
     try:
         ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
+
+        if "<math" in ques:
+            ques = mathml2latex_yarosh(html_string=ques)
+        else:
+            ques = remove_html_tags(ques)
+
     except Exception as e:
         print(f"error: {e} --> in TextWithFlipCards_001")
         ques = ""

@@ -213,7 +213,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             exiting_hashcode.add(hashcode_temp2)
             temp2.append(hashcode_temp2)
 
-        text = remove_html_tags(text=text)
+        if "<math" in text:
+            text = mathml2latex_yarosh(html_string=text)
+        else:
+            text = remove_html_tags(text)
+
         all_tags.append(
             f"""
                 <alef_section xlink:label="{temp2[0]}" xp:name="alef_section"

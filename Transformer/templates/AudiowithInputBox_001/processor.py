@@ -113,7 +113,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             raise Exception(f"Error: AudiowithInputBox_001 --> {qText} not found in en text")
     else:
         raise Exception(f"Error: AudiowithInputBox_001 --> qText not found in structure.json")
-    resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode)
+    resp = write_html(text=qHtmlText, exiting_hashcode=exiting_hashcode, align=None)
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
 

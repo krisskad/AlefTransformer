@@ -148,7 +148,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp)
         temp.append(hashcode_temp)
-    clean_title = remove_html_tags(title)
+
+    if "<math" in title:
+        clean_title = mathml2latex_yarosh(html_string=title)
+    else:
+        clean_title = remove_html_tags(title)
 
     all_tags.append(
         f"""
@@ -192,13 +196,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode_temp1)
         try:
             title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_cat['title']]
-            title = remove_html_tags(title)
+            if "<math" in title:
+                title = mathml2latex_yarosh(html_string=title)
+            else:
+                title = remove_html_tags(title)
         except:
             title = ""
             print('Error: DragAndDrop_003 --> title not found in dropItems')
-
-        if "<math" in title:
-            title = mathml2latex_yarosh(html_string=title)
 
         all_tags.append(
             f"""
@@ -225,13 +229,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             try:
                 text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_option['text']]
-                text = remove_html_tags(text)
+                if "<math" in text:
+                    text = mathml2latex_yarosh(html_string=text)
+                else:
+                    text = remove_html_tags(text)
             except:
                 text = ""
                 print('Warning: DragAndDrop_003 --> text not found in dragItems')
-
-            if "<math" in text:
-                text = mathml2latex_yarosh(html_string=text)
 
             if each_option['dropId'] == each_cat['dropId']:
                 all_tags.append(

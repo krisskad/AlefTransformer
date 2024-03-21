@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, remove_html_tags
+from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, remove_html_tags, mathml2latex_yarosh
 from django.conf import settings
 import os, shutil
 
@@ -91,7 +91,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     for each_thumb in thumbs:
         try:
             en_title = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][each_thumb['title']]
-            en_title = remove_html_tags(en_title)
+            if "<math" in en_title:
+                en_title = mathml2latex_yarosh(html_string=en_title)
+            else:
+                en_title = remove_html_tags(en_title)
         except:
             en_title = ""
             print('Error: ClicktoRevealwithSubmit_001 --> title not found')

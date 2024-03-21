@@ -1,6 +1,6 @@
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text,
-                                 extract_span_info, convert_html_to_strong)
+                                 get_popup_mlo_from_text, convert_html_to_strong)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -148,218 +148,101 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
 
-    all_tags.append(
-        f"""
-
-            <alef_interactivesection xlink:label="{temp[3]}"
-                                     xp:name="alef_interactivesection" xp:description=""
-                                     xp:fieldtype="folder" alef_appearingtime="00:00:20">
-                <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
-                              xp:description="" xp:fieldtype="folder" customclass="Normal">
-                    <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
-                                 xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_notebook xlink:label="{temp[6]}"
-                                       xp:name="alef_notebook" xp:description=""
-                                       xp:fieldtype="folder">
-                            <alef_questionstatement xlink:label="{temp[7]}"
-                                                    xp:name="alef_questionstatement"
-                                                    xp:description="" xp:fieldtype="folder">
-                                <alef_section_general xlink:label="{temp[8]}"
-                                                      xp:name="alef_section_general"
-                                                      xp:description="" xp:fieldtype="folder">
-                                    <alef_column xlink:label="{temp[9]}"
-                                                 xp:name="alef_column" xp:description=""
-                                                 xp:fieldtype="folder" width="auto">
-                                        <alef_tooltip xlink:label="{temp[10]}"
-                                                      xp:name="alef_tooltip" xp:description=""
-                                                      xp:fieldtype="folder">
-                                            <alef_html xlink:label="{resp['hashcode']}"
-                                                       xp:name="alef_html" xp:description=""
-                                                       xp:fieldtype="html"
-                                                       src="../../../{resp['relative_path']}"/>
-        """
+    popup_response = get_popup_mlo_from_text(
+        text=text,
+        input_other_jsons_data=input_other_jsons_data,
+        all_files=all_files,
+        exiting_hashcode=exiting_hashcode,
+        enable_question_statement=False
     )
 
-    # get span info
-    span_info = extract_span_info(text=text)
-
-    for span_content, span_attr_obj in span_info.items():
-        data_ref = span_attr_obj["data-ref"]
-        if data_ref is None:
-            continue
-        try:
-            deck_oj = input_other_jsons_data["INPUT_COMMON_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
-        except:
-            raise Exception("Error: VideowithInputBox_001 --> deck not found in glossary")
-
-        try:
-            front_img = deck_oj['front']['img']
-            front_content_list = deck_oj['front']['content']
-
-            front_text_list = []
-
-            for front_ in front_content_list:
-                content = input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_]
-                front_text_list.append(str(content))
-
-            front_text = "<hr>".join(front_text_list)
-
-            front_text_resp = write_html(text=front_text, exiting_hashcode=exiting_hashcode)
-            all_files.add(front_text_resp['relative_path'])
-            exiting_hashcode.add(front_text_resp['hashcode'])
-        except Exception as e:
-            print(f"Error: VideowithInputBox_001 --> front card {e}")
-            continue
-
-        try:
-            back_img = deck_oj['back']['img']
-            back_content_list = deck_oj['back']['content']
-
-            back_text_list = []
-
-            for back_ in back_content_list:
-                content = str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
-                back_text_list.append(content)
-
-            back_text = "<hr>".join(back_text_list)
-
-            back_text_resp = write_html(text=back_text, exiting_hashcode=exiting_hashcode)
-            all_files.add(back_text_resp['relative_path'])
-            exiting_hashcode.add(back_text_resp['hashcode'])
-
-            front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
-            back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
-
-            front_img_path_resp = copy_to_hashcode_dir(src_path=front_img_path, exiting_hashcode=exiting_hashcode)
-            all_files.add(front_img_path_resp['relative_path'])
-            exiting_hashcode.add(front_img_path_resp['hashcode'])
-
-            back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
-            all_files.add(back_img_path_resp['relative_path'])
-            exiting_hashcode.add(back_img_path_resp['hashcode'])
-        except Exception as e:
-            print(f"Error: VideowithInputBox_001 --> back {e}")
-            continue
-
-        temp = []
-        for _ in range(20):
-            hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode_temp)
-            temp.append(hashcode_temp)
+    if popup_response:
+        all_files = popup_response['all_files']
+        exiting_hashcode = popup_response['exiting_hashcode']
+        popup = "\n".join(popup_response['all_tags'])
+        all_tags.append(popup)
 
         all_tags.append(
             f"""
-                <alef_popupvalue
-                        xlink:label="{temp[0]}"
-                        xp:name="alef_popupvalue" xp:description=""
-                        xp:fieldtype="folder">
-                    <alef_section_general
-                            xlink:label="{temp[1]}"
-                            xp:name="alef_section_general"
-                            xp:description="" xp:fieldtype="folder">
-                        <alef_column
-                                xlink:label="{temp[2]}"
-                                xp:name="alef_column" xp:description=""
-                                xp:fieldtype="folder" width="auto">
-                            <alef_flipcards
-                                    xlink:label="{temp[3]}"
-                                    xp:name="alef_flipcards"
-                                    xp:description=""
-                                    xp:fieldtype="folder"
-                                    customtype="Flipcard" height="500"
-                                    multipleopen="false"
-                                    flipdirection="Right">
-                                <alef_flipcard
-                                        xlink:label="{temp[7]}"
-                                        xp:name="alef_flipcard"
-                                        xp:description=""
-                                        xp:fieldtype="folder"
-                                        centered="true">
-                                    <alef_section
-                                            xlink:label="{temp[8]}"
-                                            xp:name="alef_section"
-                                            xp:description=""
-                                            xp:fieldtype="folder"
-                                            customclass="Normal">
-                                        <alef_column
-                                                xlink:label="{temp[9]}"
-                                                xp:name="alef_column"
-                                                xp:description=""
-                                                xp:fieldtype="folder"
-                                                width="auto"
-                                                cellspan="1">
-                                            <alef_html
-                                                    xlink:label="{front_text_resp['hashcode']}"
-                                                    xp:name="alef_html"
-                                                    xp:description=""
-                                                    xp:fieldtype="html"
-                                                    src="../../../{front_text_resp['relative_path']}"/>
-                                            <alef_image
-                                                    xlink:label="{front_img_path_resp['hashcode']}"
-                                                    xp:name="alef_image"
-                                                    xp:description=""
-                                                    xp:fieldtype="image"
-                                                    alt="">
-                                                <xp:img href="../../../{front_img_path_resp['relative_path']}"
-                                                        width="1136"
-                                                        height="890"/>
-                                            </alef_image>
-                                        </alef_column>
-                                    </alef_section>
-                                    <alef_section
-                                            xlink:label="{temp[10]}"
-                                            xp:name="alef_section"
-                                            xp:description=""
-                                            xp:fieldtype="folder"
-                                            customclass="Normal">
-                                        <alef_column
-                                                xlink:label="{temp[11]}"
-                                                xp:name="alef_column"
-                                                xp:description=""
-                                                xp:fieldtype="folder"
-                                                width="auto"
-                                                cellspan="1">
-                                            <alef_html
-                                                    xlink:label="{back_text_resp['hashcode']}"
-                                                    xp:name="alef_html"
-                                                    xp:description=""
-                                                    xp:fieldtype="html"
-                                                    src="../../../{back_text_resp['relative_path']}"/>
-                                            <alef_image
-                                                    xlink:label="{back_img_path_resp['hashcode']}"
-                                                    xp:name="alef_image"
-                                                    xp:description=""
-                                                    xp:fieldtype="image"
-                                                    alt="">
-                                                <xp:img href="../../../{back_img_path_resp['relative_path']}"
-                                                        width="1396"
-                                                        height="890"/>
-                                            </alef_image>
-                                        </alef_column>
-                                    </alef_section>
-                                </alef_flipcard>
-                            </alef_flipcards>
-                        </alef_column>
-                    </alef_section_general>
-                </alef_popupvalue>
+                        <alef_interactivesection xlink:label="{temp[3]}"
+                                                 xp:name="alef_interactivesection" xp:description=""
+                                                 xp:fieldtype="folder" alef_appearingtime="00:00:20">
+                            <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
+                                          xp:description="" xp:fieldtype="folder" customclass="Normal">
+                                <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+                                    <alef_notebook xlink:label="{temp[6]}"
+                                                   xp:name="alef_notebook" xp:description=""
+                                                   xp:fieldtype="folder">
+                                        <alef_questionstatement xlink:label="{temp[7]}"
+                                                                xp:name="alef_questionstatement"
+                                                                xp:description="" xp:fieldtype="folder">
+                                            <alef_section_general xlink:label="{temp[8]}"
+                                                                  xp:name="alef_section_general"
+                                                                  xp:description="" xp:fieldtype="folder">
+                                                <alef_column xlink:label="{temp[9]}"
+                                                             xp:name="alef_column" xp:description=""
+                                                             xp:fieldtype="folder" width="auto">
+                                                    <alef_tooltip xlink:label="{temp[10]}"
+                                                                  xp:name="alef_tooltip" xp:description=""
+                                                                  xp:fieldtype="folder">
+                                                        <alef_html xlink:label="{resp['hashcode']}"
+                                                                   xp:name="alef_html" xp:description=""
+                                                                   xp:fieldtype="html"
+                                                                   src="../../../{resp['relative_path']}"/>
+                                                        {popup}
+                                                    </alef_tooltip>
+                                                </alef_column>
+                                            </alef_section_general>
+                                        </alef_questionstatement>
+                                    </alef_notebook>
+                                </alef_column>
+                            </alef_section>
+                        </alef_interactivesection>
+                    </alef_advancedvideo>
+                </alef_column>
+            </alef_section>
             """
         )
+    else:
+        all_tags.append(
+            f"""
+                                <alef_interactivesection xlink:label="{temp[3]}"
+                                                         xp:name="alef_interactivesection" xp:description=""
+                                                         xp:fieldtype="folder" alef_appearingtime="00:00:20">
+                                    <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
+                                                  xp:description="" xp:fieldtype="folder" customclass="Normal">
+                                        <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
+                                                     xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+                                            <alef_notebook xlink:label="{temp[6]}"
+                                                           xp:name="alef_notebook" xp:description=""
+                                                           xp:fieldtype="folder">
+                                                <alef_questionstatement xlink:label="{temp[7]}"
+                                                                        xp:name="alef_questionstatement"
+                                                                        xp:description="" xp:fieldtype="folder">
+                                                    <alef_section_general xlink:label="{temp[8]}"
+                                                                          xp:name="alef_section_general"
+                                                                          xp:description="" xp:fieldtype="folder">
+                                                        <alef_column xlink:label="{temp[9]}"
+                                                                     xp:name="alef_column" xp:description=""
+                                                                     xp:fieldtype="folder" width="auto">
+                                                            <alef_html xlink:label="{resp['hashcode']}"
+                                                                       xp:name="alef_html" xp:description=""
+                                                                       xp:fieldtype="html"
+                                                                       src="../../../{resp['relative_path']}"/>
+                                                        </alef_column>
+                                                    </alef_section_general>
+                                                </alef_questionstatement>
+                                            </alef_notebook>
+                                        </alef_column>
+                                    </alef_section>
+                                </alef_interactivesection>
+                            </alef_advancedvideo>
+                        </alef_column>
+                    </alef_section>
+                    """
+        )
 
-    all_tags.append(
-        """
-                                                    </alef_tooltip>
-                                            </alef_column>
-                                        </alef_section_general>
-                                    </alef_questionstatement>
-                                </alef_notebook>
-                            </alef_column>
-                        </alef_section>
-                    </alef_interactivesection>
-                </alef_advancedvideo>
-            </alef_column>
-        </alef_section>
-        """
-    )
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,

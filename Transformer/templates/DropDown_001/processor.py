@@ -175,6 +175,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         try:
             drop_Down_Text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][dropDownText]
+            if "<math" in drop_Down_Text:
+                drop_Down_Text = mathml2latex_yarosh(html_string=drop_Down_Text)
+            else:
+                drop_Down_Text = remove_html_tags(drop_Down_Text)
+
         except:
             drop_Down_Text = ""
             print('Warning: DropDown_001 --> dropDown text not found')
@@ -188,7 +193,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             )
             try:
                 title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][obj['title']]
-                title = remove_html_tags(title)
+                if "<math" in title:
+                    title = mathml2latex_yarosh(html_string=title)
+                else:
+                    title = remove_html_tags(title)
 
             except Exception as e:
                 title = ""

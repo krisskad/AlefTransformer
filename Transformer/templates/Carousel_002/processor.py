@@ -147,7 +147,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         try:
             title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title_id]
-            title = remove_html_tags(title)
+            if "<math" in title:
+                title = mathml2latex_yarosh(html_string=title)
+            else:
+                title = remove_html_tags(title)
         except:
             # raise Exception('Error: Carousel_002 --> title not found inside slide')
             print('Warning: Carousel_002 --> title not found inside slide')
@@ -162,9 +165,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             image_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][image_id]
         except:
             raise Exception('Error: Carousel_002 --> image not found inside slide')
-
-        if "<math" in title:
-            title = mathml2latex_yarosh(html_string=title)
 
         if "<math" in text:
             text = mathml2latex_yarosh(html_string=text)

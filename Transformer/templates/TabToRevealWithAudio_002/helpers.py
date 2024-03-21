@@ -1,7 +1,7 @@
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text,
                                  get_popup_mlo_from_text,
-                                 extract_span_info, convert_html_to_strong)
+                                 extract_span_info, convert_html_to_strong, mathml2latex_yarosh, remove_html_tags)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -73,6 +73,7 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 
     return response
 
+
 def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     """
     :param input_json_data: {
@@ -107,7 +108,11 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     tabHeaderTxt = input_json_data.get("tabHeaderTxt", None)
     if tabHeaderTxt:
         tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
-        tabHeaderTxt_text = BeautifulSoup(tabHeaderTxt_text, "lxml").text
+
+        if "<math" in tabHeaderTxt_text:
+            tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
+        else:
+            tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
 
     else:
         print("tabHeaderTxt Is not provided")
@@ -508,6 +513,11 @@ def button_with_popup(input_json_data, input_other_jsons_data, exiting_hashcode)
     tabHeaderTxt = input_json_data.get("tabHeaderTxt", None)
     if tabHeaderTxt:
         tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
+
+        if "<math" in tabHeaderTxt_text:
+            tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
+        else:
+            tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
     else:
         print("tabHeaderTxt Is not provided")
         tabHeaderTxt_text = ""
@@ -749,6 +759,11 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
     tabHeaderTxt = input_json_data.get("tabHeaderTxt", None)
     if tabHeaderTxt:
         tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
+        if "<math" in tabHeaderTxt_text:
+            tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
+        else:
+            tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
+
     else:
         print("tabHeaderTxt Is not provided")
         tabHeaderTxt_text = ""

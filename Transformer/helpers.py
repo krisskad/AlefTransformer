@@ -797,6 +797,7 @@ def write_to_file(file_path, content):
 
 
 def convert_html_to_strong(html_str):
+    html_str = html_str.replace("<br/>", "<br>").replace("<br>", "#####")
     # Parse the HTML string
     soup = BeautifulSoup(html_str, 'html.parser')
 
@@ -808,12 +809,20 @@ def convert_html_to_strong(html_str):
 
     # Replace <span> tags with <strong> tags
     for span_tag in span_tags:
-        strong_tag = soup.new_tag('strong')
-        strong_tag.string = span_tag.string
-        span_tag.replace_with(strong_tag)
+        if span_tag:
+            try:
+                strong_tag = soup.new_tag('strong')
+                # Join all string contents within the <span> tag
+                strong_tag.string = ''.join(span_tag.stripped_strings)
+                span_tag.replace_with(strong_tag)
+            except Exception as e:
+                print(f'Error in span tag to strong tag conversion --> {e}')
 
     # Return the modified HTML
-    return str(soup)
+    resp = str(soup)
+    resp = resp.replace("#####", "<br>")
+
+    return resp
 
 
 def remove_html_tags(text):

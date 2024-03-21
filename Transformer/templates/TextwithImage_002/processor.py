@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, remove_html_tags
+from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, remove_html_tags, mathml2latex_yarosh
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -96,7 +96,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     try:
         ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
-        ques = remove_html_tags(ques)
+        if "<math" in ques:
+            ques = mathml2latex_yarosh(html_string=ques)
+        else:
+            ques = remove_html_tags(ques)
+
     except:
         ques = ""
         print('Error: TextwithImage_002 --> ques not found')
