@@ -841,3 +841,78 @@ def remove_html_tags(text):
                 except Exception as e:
                     print("Error: unable to remove html tag because of ", e)
     return text
+
+
+
+def get_teachers_note_id(html_string):
+    # Parse the HTML content
+    soup = BeautifulSoup(html_string, 'html.parser')
+
+    # Find the span tag with class 'teacherNotes'
+    teacher_notes_span = soup.find('span', class_='teacherNotes')
+
+    if teacher_notes_span:
+        teacher_notes_id = teacher_notes_span['id']
+        teacher_notes_text = teacher_notes_span.text
+
+        # Remove the span tag
+        teacher_notes_span.extract()
+        # Get the remaining string
+        context = {
+            "html_string": str(soup),
+            "teacher_notes_id": teacher_notes_id,
+            "teacher_notes_text": teacher_notes_text
+        }
+        return context
+    else:
+        return {}
+
+
+def get_teacher_note(text: str, exiting_hashcode: set,
+                     all_files: set, input_other_jsons_data):
+
+    if not "teacherNotes" in text:
+        return {}
+
+    teacher_note = get_teachers_note_id(html_string=text)
+
+    if teacher_note:
+        remaining_text = teacher_note.get("html_string")
+        teacher_notes_id = teacher_note.get("teacher_notes_id")
+        teacher_notes_text = teacher_note.get("teacher_notes_text")
+
+        teacher_note_html_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][teacher_notes_id]
+
+        resp = write_html_mlo(
+            text=teacher_note_html_text,
+            exiting_hashcode=exiting_hashcode,
+            align=""
+        )
+
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+
+        temp = []
+        for _ in range(3):
+            hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode_temp)
+            temp.append(hashcode_temp)
+
+        xml = f"""
+            <alef_popup xlink:label="{temp[0]}" xp:name="alef_popup" xp:description="" xp:fieldtype="folder" icon="define" popupTitle="{teacher_notes_text}" full_screen="false" icon_text="{teacher_notes_text}">
+                <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+                    <alef_column xlink:label="{temp[0]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}"/>
+                    </alef_column>
+                </alef_section>
+            </alef_popup>
+        """
+
+        return {
+            "remaining_text":remaining_text,
+            "teachers_note_xml": xml,
+            "exiting_hashcode": exiting_hashcode,
+            "all_files": all_files
+        }
+    else:
+        return {}

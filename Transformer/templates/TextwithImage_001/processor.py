@@ -9,7 +9,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         imageContent_list = input_json_data["pageData"]["args"]["textFieldData"].get("imageContent")
 
         if len(imageContent_list)>1:
-            print("Text with Images")
+            # print("Text with Images")
             return get_text_with_image_xml(
                 input_json_data, input_other_jsons_data, exiting_hashcode
             )

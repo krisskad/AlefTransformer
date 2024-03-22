@@ -43,7 +43,7 @@ sample = """
 
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text,
-                                 get_popup_mlo_from_text,
+                                 get_popup_mlo_from_text, get_teacher_note,
                                  convert_html_to_strong, remove_html_tags, mathml2latex_yarosh
                                  )
 from django.conf import settings
@@ -171,6 +171,24 @@ def get_text_with_image_xml(input_json_data, input_other_jsons_data, exiting_has
     except:
         raise Exception(f"Error: TextwithImage_001 --> {text_id} question not exist in en_text")
 
+    try:
+        teachers_note_xml = ""
+        teacher_resp = get_teacher_note(
+            text=text, all_files=all_files,
+            exiting_hashcode=exiting_hashcode,
+            input_other_jsons_data=input_other_jsons_data
+        )
+
+        if teacher_resp:
+            text = teacher_resp["remaining_text"]
+            teachers_note_xml = teacher_resp["teachers_note_xml"]
+            exiting_hashcode.update(teacher_resp["exiting_hashcode"])
+            all_files.update(teacher_resp["all_files"])
+
+    except Exception as e:
+        teachers_note_xml = ""
+        print(f"Error: TextwithImage_001 --> While creating teachers note --> {e}")
+
     popup_response = get_popup_mlo_from_text(
         text=text,
         input_other_jsons_data=input_other_jsons_data,
@@ -204,6 +222,7 @@ def get_text_with_image_xml(input_json_data, input_other_jsons_data, exiting_has
                                                src="../../../{resp['relative_path']}"/>
                         {popup}
                     </alef_tooltip>
+                    {teachers_note_xml}
             """
         )
 
@@ -218,6 +237,7 @@ def get_text_with_image_xml(input_json_data, input_other_jsons_data, exiting_has
                     <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description=""
                                            xp:fieldtype="html"
                                            src="../../../{resp['relative_path']}"/>
+                    {teachers_note_xml}
             """
         )
 

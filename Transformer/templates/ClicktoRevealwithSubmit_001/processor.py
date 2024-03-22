@@ -1,4 +1,5 @@
-from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, remove_html_tags, mathml2latex_yarosh
+from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong,
+                                 remove_html_tags, mathml2latex_yarosh, get_teacher_note)
 from django.conf import settings
 import os, shutil
 
@@ -65,6 +66,24 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         STATUS.append(msg)
         raise Exception(msg)
 
+    try:
+        teachers_note_xml = ""
+        teacher_resp = get_teacher_note(
+            text=text_en_data, all_files=all_files,
+            exiting_hashcode=exiting_hashcode,
+            input_other_jsons_data=input_other_jsons_data
+        )
+
+        if teacher_resp:
+            text_en_data = teacher_resp["remaining_text"]
+            teachers_note_xml = teacher_resp["teachers_note_xml"]
+            exiting_hashcode.update(teacher_resp["exiting_hashcode"])
+            all_files.update(teacher_resp["all_files"])
+
+    except Exception as e:
+        teachers_note_xml = ""
+        print(f"Error: TextwithImage_001 --> While creating teachers note --> {e}")
+
     destination_file_path = os.path.join(settings.OUTPUT_DIR, hashcode, "emptyHtmlModel.html")
     html_file_path = str(os.path.join(hashcode, "emptyHtmlModel.html"))
 
@@ -92,6 +111,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 <alef_section_general xlink:label="{temp[4]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
                     <alef_column xlink:label="{temp[5]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
                         <alef_html xlink:label="{hashcode}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
+                        {teachers_note_xml}
                     </alef_column>
                 </alef_section_general>
             </alef_questionstatement>

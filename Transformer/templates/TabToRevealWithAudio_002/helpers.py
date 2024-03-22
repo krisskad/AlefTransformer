@@ -1,6 +1,6 @@
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text,
-                                 get_popup_mlo_from_text,
+                                 get_popup_mlo_from_text,get_teacher_note,
                                  extract_span_info, convert_html_to_strong, mathml2latex_yarosh, remove_html_tags)
 from django.conf import settings
 import os, shutil
@@ -155,6 +155,24 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     if TabContentText:
         TabContentText_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][TabContentText]
 
+        try:
+            teachers_note_xml = ""
+            teacher_resp = get_teacher_note(
+                text=TabContentText_text, all_files=all_files,
+                exiting_hashcode=exiting_hashcode,
+                input_other_jsons_data=input_other_jsons_data
+            )
+
+            if teacher_resp:
+                TabContentText_text = teacher_resp["remaining_text"]
+                teachers_note_xml = teacher_resp["teachers_note_xml"]
+                exiting_hashcode.update(teacher_resp["exiting_hashcode"])
+                all_files.update(teacher_resp["all_files"])
+
+        except Exception as e:
+            teachers_note_xml = ""
+            print(f"Error: TextwithImage_001 --> While creating teachers note --> {e}")
+
         popup_response = get_popup_mlo_from_text(
             text=TabContentText_text,
             input_other_jsons_data=input_other_jsons_data,
@@ -190,6 +208,7 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
                                        src="../../../{resp_text['relative_path']}"/>
                             {popup}
                         </alef_tooltip>
+                        {teachers_note_xml}
                     </alef_column>
                 """
             )
@@ -210,6 +229,7 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
                             <alef_html xlink:label="{resp_text['hashcode']}" xp:name="alef_html"
                                        xp:description="" xp:fieldtype="html"
                                        src="../../../{resp_text['relative_path']}"/>
+                            {teachers_note_xml}
                     </alef_column>
                 """
             )

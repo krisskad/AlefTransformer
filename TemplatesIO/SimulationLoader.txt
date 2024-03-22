@@ -49,3 +49,18 @@ LATEST
         </simulation>
     </alef_column>
 </alef_section>
+
+
+
+WITH TEACHERS NOTE
+<alef_section xlink:label="LE5ITICGJLRYU5FB67YMMUTBNKA" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+    <alef_column xlink:label="L5EZGO5ASOLOU3D2D43WAFIDCXY" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+        <alef_popup xlink:label="L6GQKVN4XIPIEJLRVYNZHH2X2IA" xp:name="alef_popup" xp:description="" xp:fieldtype="folder" icon="define" popupTitle=" Teacher Notes popup title" full_screen="false" icon_text=" Teacher Notes button label">
+            <alef_section xlink:label="LEXCEMNSFGHTEXGST47MR6GXIRI" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+                <alef_column xlink:label="LKKP2NGCXEADU3PLMNI5MJI447Q" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+                    <alef_html xlink:label="LA75EWXAMEBWE5DCXBFO2ZSM5PM" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../LA75EWXAMEBWE5DCXBFO2ZSM5PM/emptyHtmlModel.html"/>
+                </alef_column>
+            </alef_section>
+        </alef_popup>
+    </alef_column>
+</alef_section>
