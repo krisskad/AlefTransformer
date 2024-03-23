@@ -104,7 +104,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
 
     try:
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["text"]]
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["text"]]
+        except Exception as e:
+            print(f"error No text found: {e} --> in TextWithFlipCards_001")
+            text = ""
 
 
         try:
@@ -125,16 +129,18 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             teachers_note_xml = ""
             print(f"Error: TextwithImage_001 --> While creating teachers note --> {e}")
 
-
-        resp = write_html(text=text, exiting_hashcode=exiting_hashcode, align=True)
-        exiting_hashcode.add(resp['hashcode'])
-        all_files.add(resp['relative_path'])
-        html_question = f"""
-        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description=""
-                                   xp:fieldtype="html"
-                                   src="../../../{resp['relative_path']}"/>
-        {teachers_note_xml}
-        """
+        if text:
+            resp = write_html(text=text, exiting_hashcode=exiting_hashcode, align=True)
+            exiting_hashcode.add(resp['hashcode'])
+            all_files.add(resp['relative_path'])
+            html_question = f"""
+            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description=""
+                                       xp:fieldtype="html"
+                                       src="../../../{resp['relative_path']}"/>
+            {teachers_note_xml}
+            """
+        else:
+            html_question = ""
     except Exception as e:
         html_question = ""
         print(f"error: {e} --> in TextWithFlipCards_001")

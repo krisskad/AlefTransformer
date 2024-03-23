@@ -151,6 +151,8 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
     aud_id = input_json_data["pageData"]["args"].get("src")
     ques_id = input_json_data["pageData"]["args"].get("ques")
     text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"].get("text")
+    title_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"].get("title")
+
     imageContent_list = input_json_data["pageData"]["args"]["textFieldData"].get("imageContent")
 
     try:
@@ -166,6 +168,15 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
 
     try:
         text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+    except Exception as e:
+        print(f"Error: TextwithImage_001 --> {text_id} question not exist in en_text we will use title if present")
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title_id]
+        except Exception as e:
+            print(f"Error: TextwithImage_001 --> {title_id} not exist in en_text assigned as blanked")
+            text = ""
+
+    try:
         HtmlText = text_en_html_to_html_text(html_string=text)
         resp = write_html(
             text=HtmlText,
