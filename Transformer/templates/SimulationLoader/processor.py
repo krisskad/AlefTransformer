@@ -91,14 +91,35 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     ]
 
-    type = input_json_data["pageData"]["args"]["type"]
-    src = input_json_data["pageData"]["args"]["src"]
+    type = input_json_data["pageData"]["args"].get("type")
+    src = input_json_data["pageData"]["args"].get("src")
+    bookPopUpButton = input_json_data["pageData"].get("bookPopUpButton")
 
     temp = []
     for _ in range(5):
         hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp2)
         temp.append(hashcode_temp2)
+
+    bookpop_up = ""
+    try:
+        if bookPopUpButton:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get("bookPopUpText")
+            if text:
+                resp = write_html(
+                    text=text,
+                    exiting_hashcode=exiting_hashcode
+                )
+                exiting_hashcode.add(resp['hashcode'])
+                all_files.add(resp['relative_path'])
+
+                bookpop_up = f"""
+                <alef_simulationreader xlink:label="{temp[4]}" xp:name="alef_simulationreader" xp:description="" xp:locked="" xp:class="" xp:fieldtype="folder">
+                    <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:locked="" xp:internalChunksRelations="" xp:class="" xp:fieldtype="html" src="../../../{resp['relative_path']}"/>
+                </alef_simulationreader>
+                """
+    except Exception as e:
+        print(e)
 
     if type == "url":
         all_tags.append(
@@ -112,6 +133,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         <alef_iframefile xlink:label="{temp[3]}" xp:name="alef_iframefile"
                                          xp:description="" xp:fieldtype="file"
                                          src="{src}"/>
+                        {bookpop_up}
                     </simulation>
                 </alef_column>
             </alef_section>
