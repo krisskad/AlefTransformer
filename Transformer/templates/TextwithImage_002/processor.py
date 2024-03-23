@@ -108,9 +108,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     try:
         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
-    except:
-        raise Exception('Error: TextwithImage_002 --> title not found')
-
+    except Exception as e:
+        print('Error: Unable to find the title in English text data. Trying to find the title in text content...')
+        try:
+            text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"][0].get("text")
+            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+        except Exception as e:
+            title = ""
+            print('Error: The text content is also not found. The title will be left blank.')
 
     try:
         teachers_note_xml = ""

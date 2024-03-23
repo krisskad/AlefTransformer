@@ -144,8 +144,23 @@ def get_text_with_image_xml(input_json_data, input_other_jsons_data, exiting_has
     # Assigning values to variables
     aud_id = input_json_data["pageData"]["args"].get("src")
     ques_id = input_json_data["pageData"]["args"].get("ques")
-    text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"].get("text")
-    title_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"].get("title")
+    try:
+        text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"].get("text")
+    except Exception as e:
+        print(e)
+        try:
+            text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"][0].get("text")
+        except Exception as e:
+            print(e)
+    try:
+        title_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"].get("title")
+    except Exception as e:
+        print(e)
+        try:
+            title_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"][0].get("title")
+        except Exception as e:
+            print(e)
+
     imageContent_list = input_json_data["pageData"]["args"]["textFieldData"].get("imageContent")
 
     try:
