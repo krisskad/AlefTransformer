@@ -22,6 +22,37 @@ def write_html(text, destination_file_path):
         file.write(template.strip())
 
 
+def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
+    """
+    :param src_path: example images/01.png
+    :param exiting_hashcode: example
+    :return:
+    """
+
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    if "templates" in src_path:
+        asset_abs_path = os.path.join(settings.INPUT_COMMON_DIR, src_path)
+    else:
+        asset_abs_path = os.path.join(settings.INPUT_APP_DIR, src_path)
+
+    destination_src_path = os.path.join(str(path_to_hashcode), str(os.path.basename(src_path)))
+    shutil.copy2(str(asset_abs_path), str(destination_src_path))
+
+    relative_path = os.path.join(hashcode, str(os.path.basename(src_path)))
+
+    response = {
+        "relative_path": relative_path,
+        "hashcode": hashcode,
+    }
+
+    return response
+
+
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
@@ -321,7 +352,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         for key, val in feedBackAudio.items():
 
             temp = []
-            for _ in range(4):
+            for _ in range(5):
                 hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
                 exiting_hashcode.add(hashcode)
                 temp.append(hashcode)
@@ -357,6 +388,34 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 break
     except:
         print('warning: ClicktoRevealwithSubmit_001 --> feedbackAudio not found')
+
+
+    try:
+        temp = []
+        for _ in range(2):
+            hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode)
+            temp.append(hashcode)
+
+        aud_id = input_json_data['pageData']['args']['src']
+        src_audio_path = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][aud_id]
+
+        resp = copy_to_hashcode_dir(
+            src_path=src_audio_path,
+            exiting_hashcode=exiting_hashcode
+        )
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+
+        all_tags.append(
+            f"""
+                <alef_audionew xlink:label="{temp[0]}" xp:name="alef_audionew" xp:description="" xp:fieldtype="folder">
+                    <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile" xp:description="" audiocontrols="Yes" xp:fieldtype="file" src="../../../{resp['relative_path']}" />
+                </alef_audionew>
+                """
+        )
+    except:
+        print('warning: ClicktoRevealwithSubmit_001 --> src audio not found')
 
     all_tags.append(
         """

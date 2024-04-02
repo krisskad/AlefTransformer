@@ -75,7 +75,7 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
 
     if "goalText" in input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']:
         goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText'], None)
-        goalText = remove_html_tags(goalText)
+        # goalText = remove_html_tags(goalText)
         if goalText:
             lesson_objective_param = f'lessonObjective="{htmlentities.encode(goalText)}"'
         else:
@@ -113,14 +113,14 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
         raise Exception(f"Error: launchPage image --> {e}")
 
     temp = []
-    for _ in range(7):
+    for _ in range(9):
         hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp2)
         temp.append(hashcode_temp2)
 
     all_tags.append(
         f"""
-        <alef_page xlink:label="{temp[0]}" xp:name="alef_page" xp:description="{htmlentities.encode(head)}" xp:fieldtype="folder" unittitle="{htmlentities.encode(title)} | {htmlentities.encode(subtitle)}" view="Normal" direction="LTR" allowautoplay="false" style="Style 1" customizationid="Custom_R&amp;I" width="1440" height="810" fixeddimension="No" includetoolkit="No" sequence="000">
+        <alef_page xlink:label="{temp[0]}" xp:name="alef_page" xp:description="{htmlentities.encode(head)}" xp:fieldtype="folder" unittitle="{htmlentities.encode(title)} | {htmlentities.encode(subtitle)}" view="Normal" direction="LTR" allowautoplay="false" style="Style 1" customizationid="R_n_I_custom" width="1440" height="810" fixeddimension="No" includetoolkit="No" sequence="000">
         <alef_section xlink:label="{temp[1]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
         <alef_column xlink:label="{temp[2]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
         <alef_presentation xlink:label="{temp[3]}" xp:name="alef_presentation" xp:description="" xp:fieldtype="folder" type="Carousel" ela_title1="{htmlentities.encode(title)}" ela_title2="{htmlentities.encode(subtitle)}" {lesson_objective_param} showtitle="false" multipleopen="false" firstopen="false">
@@ -141,8 +141,30 @@ def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
         </alef_column>
         </alef_section>
         </alef_page>
-        </alef_mlo>
         """
+    )
+
+    body = """
+    <body>   <html>{"fixed_dimension":true,"width":1920,"height":1080,"show_toc":false,"skin":"reveal_inspire","padding":{"top":"0px","bottom":"0px","right":"0px","left":"0px"},"content_padding":{"top":"0px","bottom":"0px","right":"0px","left":"0px"},"primary_color":"","interactive_color":"","sequence":"free","icon":"","full_screen":"none","show_unit_title":false,"show_lesson_title":false,"summary_screen":false,"feedback_popup":true,"show_how_to":true,"background_image":"","background_repeat":"cover","font_path":"","fonts":{"content":null,"buttons":null,"icons":null},"localization":{}}</html>
+    </body>
+    """
+    all_tags.append(
+        f"""
+        <customization xlink:label="{temp[6]}" xp:name="customization" xp:description="R_n_I_custom" xp:locked="" xp:globalchunckid="_QTPE575ZBSVU7KQCLZ623JKD5I_2_LNW5NP5L7FL3EDD2SRKZMNIXWUU" xp:chunkid="LNW5NP5L7FL3EDD2SRKZMNIXWUU" xp:packageid="_QTPE575ZBSVU7KQCLZ623JKD5I" xp:packageversion="2" xp:autoupdate="True" xp:lobstername="alef02" xp:linktype="link" xp:class="" xp:fieldtype="folder" xp:templateversion="1.0" xp:derivedItemClass="" fixed_dimension="False" width="1440" height="810" full_screen="None" show_toc="False" skin="Default" padding_top="0px" padding_bottom="0px" padding_left="0px" padding_right="0px" sequence="Free" show_unit_title="False" show_lesson_title="False" content_fontsize="22px" button_fontsize="20px" icon_fontsize="24px" summary_screen="False" primary_color="hsla(215, 17%, 34%)" interactive_color="hsla(178, 70%, 43%)" content_padding_top="0px" content_padding_bottom="0px" content_padding_left="0px" content_padding_right="0px" background_repeat="Extend">
+
+            <alef_customcontent xlink:label="{temp[7]}" xp:name="alef_customcontent" xp:description="" xp:locked="" xp:class="" xp:fieldtype="text">
+                
+            {body}
+            
+            </alef_customcontent>
+
+        </customization>
+
+        """
+    )
+
+    all_tags.append(
+        "</alef_mlo>"
     )
 
     xml_content = "\n".join(all_tags)

@@ -281,20 +281,23 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append("</alef_categorization>")
 
-    resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
-    all_files.add(resp['relative_path'])
-    exiting_hashcode.add(resp['hashcode'])
+    try:
+        resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
 
-    all_tags.append(
-        f"""
-        <alef_audionew xlink:label="{temp[8]}" xp:name="alef_audionew"
-                       xp:description="" xp:fieldtype="folder">
-            <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                            xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                            src="../../../{resp['relative_path']}"/>
-        </alef_audionew>
-        """
-    )
+        all_tags.append(
+            f"""
+            <alef_audionew xlink:label="{temp[8]}" xp:name="alef_audionew"
+                           xp:description="" xp:fieldtype="folder">
+                <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                src="../../../{resp['relative_path']}"/>
+            </alef_audionew>
+            """
+        )
+    except Exception as e:
+        print(f"Warning: No Audio found {e}")
 
     all_tags.append(
         """

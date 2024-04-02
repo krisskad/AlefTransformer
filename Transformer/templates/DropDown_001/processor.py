@@ -98,7 +98,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         # Extracting variables
         # poster = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["poster"]]
         title = input_json_data["pageData"]["args"].get("title")
-        # src = input_json_data["pageData"]["args"].get("src")
+        src = input_json_data["pageData"]["args"].get("src")
         showAnswer = input_json_data["pageData"]["args"].get("showAnswer", None)
         # iButtonAlt = input_json_data["pageData"]["args"].get("iButtonAlt", None)
         dropDownText = input_json_data["pageData"]["args"].get("dropDownText")
@@ -417,7 +417,34 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         all_tags.append(
             """
-                    </alef_selectablank>
+            </alef_selectablank>
+            """
+        )
+
+        try:
+            if src:
+                resp = copy_to_hashcode_dir(
+                    src_path=input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][src],
+                    exiting_hashcode=exiting_hashcode
+                )
+                all_files.add(resp['relative_path'])
+                exiting_hashcode.add(resp['hashcode'])
+
+                all_tags.append(
+                    f"""
+                    <alef_audionew xlink:label="{temp[22]}" xp:name="alef_audionew"
+                                   xp:description="" xp:fieldtype="folder">
+                        <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                        xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                        src="../../../{resp['relative_path']}"/>
+                    </alef_audionew>
+                    """
+                )
+        except Exception as e:
+            print(f"Warning: DropDown_001 src key not present in args {e}")
+
+        all_tags.append(
+            """
                 </alef_column>
             </alef_section>
             """
