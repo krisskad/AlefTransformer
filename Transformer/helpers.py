@@ -363,6 +363,16 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
     return response
 
 
+def remove_br(html_string):
+    # Define the regular expression pattern
+    pattern = re.compile(r'(?<![.:])\s*<br>')  # Match <br> not preceded by period or colon, allowing spaces
+
+    # Replace <br> with an empty string
+    cleaned_html = re.sub(pattern, '', html_string)
+
+    return cleaned_html
+
+
 def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: set, exiting_hashcode: set,
                             enable_question_statement=None):
     if text:
@@ -421,6 +431,8 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 else:
                     front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_])
                                               for front_ in front_content_list])
+
+                front_text = assign_class_html(html_str=front_text, search_term="color", class_id='orangeText')
                 front_text_resp = write_html_mlo(text=front_text, exiting_hashcode=exiting_hashcode)
                 all_files.add(front_text_resp['relative_path'])
                 exiting_hashcode.add(front_text_resp['hashcode'])
@@ -490,6 +502,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 else:
                     back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
                                              for back_ in back_content_list])
+                back_text = assign_class_html(html_str=back_text, search_term="color", class_id='orangeText')
                 back_text_resp = write_html_mlo(text=back_text, exiting_hashcode=exiting_hashcode)
                 all_files.add(back_text_resp['relative_path'])
                 exiting_hashcode.add(back_text_resp['hashcode'])
@@ -823,6 +836,27 @@ def convert_html_to_strong(html_str):
                 print(f'Error in span tag to strong tag conversion --> {e}')
 
     # Return the modified HTML
+    resp = str(soup)
+    resp = resp.replace("#####", "<br>")
+
+    return resp
+
+
+def assign_class_html(html_str, search_term, class_id):
+    html_str = html_str.replace("<br/>", "<br>").replace("<br>", "#####")
+    # Parse the HTML string
+    soup = BeautifulSoup(html_str, 'html.parser')
+
+    # Find all <span> tags with style attribute containing "font-family: Roboto-Bold;"
+    span_tags = soup.find_all(lambda tag:
+                              (tag.name == 'span' and
+                               search_term in tag.get('style', '')))
+
+    for tag in span_tags:
+        # Assign class as orangeText
+        tag['class'] = [class_id]
+
+    # Return modified HTML
     resp = str(soup)
     resp = resp.replace("#####", "<br>")
 

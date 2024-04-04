@@ -179,6 +179,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         os.makedirs(path_to_hashcode, exist_ok=True)
 
         path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+        try:
+            from Transformer.helpers import remove_br
+            text = remove_br(text)
+        except Exception as e:
+            pass
         write_html(text=text, destination_file_path=path_to_html)
 
         relative_path = os.path.join(hashcode, "emptyHtmlModel.html")

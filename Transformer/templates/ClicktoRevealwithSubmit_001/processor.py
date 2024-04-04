@@ -238,6 +238,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
                 os.makedirs(path_to_hashcode, exist_ok=True)
 
+                try:
+                    from Transformer.helpers import remove_br
+                    text_en_data = remove_br(text_en_data)
+                except Exception as e:
+                    pass
                 write_html(text=text_en_data, destination_file_path=destination_file_path)
                 all_tags.append(f"""
                         <alef_correctfeedback xlink:label="{temp[1]}" xp:name="alef_correctfeedback" xp:description="" xp:fieldtype="folder">
@@ -262,6 +267,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
                 os.makedirs(path_to_hashcode, exist_ok=True)
 
+                try:
+                    from Transformer.helpers import remove_br
+                    text_en_data = remove_br(text_en_data)
+                except Exception as e:
+                    pass
+
                 write_html(text=text_en_data, destination_file_path=destination_file_path)
                 all_tags.append(f"""
                     <alef_incorrectfeedback xlink:label="{temp[1]}" xp:name="alef_incorrectfeedback" xp:description="" xp:fieldtype="folder">
@@ -285,6 +296,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 # create folder
                 path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
                 os.makedirs(path_to_hashcode, exist_ok=True)
+
+                try:
+                    from Transformer.helpers import remove_br
+                    text_en_data = remove_br(text_en_data)
+                except Exception as e:
+                    pass
 
                 write_html(text=text_en_data, destination_file_path=destination_file_path)
                 all_tags.append(f"""
@@ -328,6 +345,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 # create folder
                 path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
                 os.makedirs(path_to_hashcode, exist_ok=True)
+
+                try:
+                    from Transformer.helpers import remove_br
+                    text_en_data = remove_br(text_en_data)
+                except Exception as e:
+                    pass
 
                 write_html(text=text_en_data, destination_file_path=destination_file_path)
                 all_tags.append(f"""

@@ -1,4 +1,4 @@
-from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, get_teacher_note
+from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, get_teacher_note, write_html_mlo
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -99,7 +99,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # rightContainer = input_json_data["pageData"]["args"].get("rightContainer", None)
     feedback = input_json_data["pageData"]["args"].get("feedback", None)
-    # hint = input_json_data["pageData"]["args"].get("hint", None)
+    hint = input_json_data["pageData"]["args"].get("hint", None)
     options = input_json_data["pageData"]["args"].get("options", None)
 
     """
@@ -273,6 +273,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         os.makedirs(path_to_hashcode, exist_ok=True)
 
         path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+
+        try:
+            from Transformer.helpers import remove_br
+            text = remove_br(text)
+        except Exception as e:
+            pass
+
         write_html(text=text, destination_file_path=path_to_html)
 
         relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
@@ -304,6 +311,44 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
         count = count + 1
+
+    try:
+        if hint:
+            hinttext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][hint['text']]
+            hintresp = write_html_mlo(
+                text=hinttext, exiting_hashcode=exiting_hashcode
+            )
+            all_files.add(hintresp['relative_path'])
+            exiting_hashcode.add(hintresp['hashcode'])
+
+            hashcode11 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode11)
+            hashcode12 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode12)
+            hashcode13 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode13)
+
+            all_tags.append(
+                f"""
+                        <alef_hint xlink:label="{hashcode11}" xp:name="alef_hint"
+                                   xp:description="" xp:fieldtype="folder">
+                            <alef_section_general xlink:label="{hashcode12}"
+                                                  xp:name="alef_section_general" xp:description=""
+                                                  xp:fieldtype="folder">
+                                <alef_column xlink:label="{hashcode13}" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto">
+                                    <alef_html xlink:label="{hintresp['hashcode']}" xp:name="alef_html"
+                                               xp:description="" xp:fieldtype="html"
+                                               src="../../../{hintresp['relative_path']}"/>
+                                </alef_column>
+                            </alef_section_general>
+                        </alef_hint>
+                    """
+            )
+        else:
+            print("Warning: DropDown_001 : hint is not found")
+    except Exception as e:
+        print(f"Warning: DropDown_001 hint key not present in args {e}")
 
     all_tags.append(
         image_tag
