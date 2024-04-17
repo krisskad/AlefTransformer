@@ -108,10 +108,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     try:
         from Transformer.helpers import calculate_video_duration
-        seconds = calculate_video_duration(src)
+        asset_abs_path = os.path.join(settings.INPUT_APP_DIR, src)
+        seconds = calculate_video_duration(asset_abs_path)
+        # print(asset_abs_path)
+        seconds = seconds - 1
         seconds = f"00:00:{seconds}"
-    except:
-        pass
+    except Exception as e:
+        print("Error: ", e)
         seconds = "00:00:20"
 
     resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
