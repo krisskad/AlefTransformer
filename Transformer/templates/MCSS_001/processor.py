@@ -275,8 +275,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
 
         try:
-            from Transformer.helpers import remove_br
+            from Transformer.helpers import remove_br, add_space_after_span
             text = remove_br(text)
+            text = add_space_after_span(text)
         except Exception as e:
             pass
 

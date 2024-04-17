@@ -300,6 +300,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         base_key = key.split("_")[0]
         try:
             text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+            from Transformer.helpers import remove_br, add_space_after_span
+            text_val = remove_br(text_val)
+            text_val = add_space_after_span(text_val)
         except:
             print('warning: DragAndDrop_003 --> text missing in feedback')
             continue

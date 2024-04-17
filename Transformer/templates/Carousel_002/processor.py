@@ -162,6 +162,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         try:
             description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][description]
+            print(description)
+            if not text:
+                text = description
         except Exception as e:
             msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
             STATUS.append(msg)

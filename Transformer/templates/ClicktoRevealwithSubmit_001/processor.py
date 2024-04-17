@@ -239,8 +239,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 os.makedirs(path_to_hashcode, exist_ok=True)
 
                 try:
-                    from Transformer.helpers import remove_br
+                    from Transformer.helpers import remove_br, add_space_after_span
                     text_en_data = remove_br(text_en_data)
+                    text_en_data = add_space_after_span(text_en_data)
                 except Exception as e:
                     pass
                 write_html(text=text_en_data, destination_file_path=destination_file_path)
@@ -268,8 +269,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 os.makedirs(path_to_hashcode, exist_ok=True)
 
                 try:
-                    from Transformer.helpers import remove_br
+                    from Transformer.helpers import remove_br, add_space_after_span
                     text_en_data = remove_br(text_en_data)
+                    text_en_data = add_space_after_span(text_en_data)
                 except Exception as e:
                     pass
 
@@ -298,8 +300,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 os.makedirs(path_to_hashcode, exist_ok=True)
 
                 try:
-                    from Transformer.helpers import remove_br
+                    from Transformer.helpers import remove_br, add_space_after_span
                     text_en_data = remove_br(text_en_data)
+                    text_en_data = add_space_after_span(text_en_data)
                 except Exception as e:
                     pass
 
@@ -347,8 +350,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 os.makedirs(path_to_hashcode, exist_ok=True)
 
                 try:
-                    from Transformer.helpers import remove_br
+                    from Transformer.helpers import remove_br, add_space_after_span
                     text_en_data = remove_br(text_en_data)
+                    text_en_data = add_space_after_span(text_en_data)
                 except Exception as e:
                     pass
 

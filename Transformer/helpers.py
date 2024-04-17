@@ -332,6 +332,15 @@ def write_html_mlo(text, exiting_hashcode, align="center"):
     return response
 
 
+
+def add_space_after_span(html_string):
+    soup = BeautifulSoup(html_string, 'html.parser')
+    for span_tag in soup.find_all('span'):
+        # Add a space after each span tag
+        span_tag.insert_after(' ')
+    return str(soup)
+
+
 def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
     """
     :param src_path: example images/01.png

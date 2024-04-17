@@ -344,6 +344,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                     try:
                         feedbacktext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+                        from Transformer.helpers import remove_br, add_space_after_span
+                        feedbacktext = remove_br(feedbacktext)
+                        feedbacktext = add_space_after_span(feedbacktext)
                     except Exception as e:
                         print(f"Warning: DropDown_001 feedback text not present in args {e}")
                         continue
