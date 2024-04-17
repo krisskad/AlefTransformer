@@ -341,6 +341,23 @@ def add_space_after_span(html_string):
     return str(soup)
 
 
+def calculate_video_duration(video_path):
+    # import module
+    import cv2
+
+    # create video capture object
+    data = cv2.VideoCapture(video_path)
+
+    # count the number of frames
+    frames = data.get(cv2.CAP_PROP_FRAME_COUNT)
+    fps = data.get(cv2.CAP_PROP_FPS)
+
+    # calculate duration of the video
+    seconds = round(frames / fps)
+
+    return seconds
+
+
 def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
     """
     :param src_path: example images/01.png

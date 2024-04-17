@@ -106,6 +106,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     except:
         raise Exception("Error: VideowithInputBox_001 --> textFieldData not found")
 
+    try:
+        from Transformer.helpers import calculate_video_duration
+        seconds = calculate_video_duration(src)
+        seconds = f"00:00:{seconds}"
+    except:
+        pass
+        seconds = "00:00:20"
+
     resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
@@ -187,7 +195,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             f"""
                         <alef_interactivesection xlink:label="{temp[3]}"
                                                  xp:name="alef_interactivesection" xp:description=""
-                                                 xp:fieldtype="folder" alef_appearingtime="00:00:20">
+                                                 xp:fieldtype="folder" alef_appearingtime="{seconds}">
                             <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
                                           xp:description="" xp:fieldtype="folder" customclass="Normal">
                                 <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
@@ -231,7 +239,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             f"""
                                 <alef_interactivesection xlink:label="{temp[3]}"
                                                          xp:name="alef_interactivesection" xp:description=""
-                                                         xp:fieldtype="folder" alef_appearingtime="00:00:20">
+                                                         xp:fieldtype="folder" alef_appearingtime="{seconds}">
                                     <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
                                                   xp:description="" xp:fieldtype="folder" customclass="Normal">
                                         <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
