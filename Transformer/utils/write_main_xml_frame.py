@@ -47,11 +47,11 @@ MLO_HTML_TEMPLATE = """
 """
 
 
-def write_mlo(sections, input_other_jsons_data, exiting_hashcode):
+def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
     all_files = set()
     all_tags = [
         """<?xml version="1.0" encoding="utf-8"?>""",
-        """<alef_mlo xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xp="http://www.giuntilabs.com/exact/xp_v1d0" xlink:label="LT7KP3OIZ2WREPBI2GM7LDEXRZU" xp:name="mlo" xp:description="Test" href="mlo.html" xp:version="3.1" xp:editortype="webeditor" xml:space="preserve" xml:class="" webeditorsafe="true" xp:deliverytype="SCORM" direction="LTR" sequence="000" xp:templateversion="1.0" xp:derivedItemClass="">"""
+        f"""<alef_mlo xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xp="http://www.giuntilabs.com/exact/xp_v1d0" xlink:label="LT7KP3OIZ2WREPBI2GM7LDEXRZU" xp:name="mlo" xp:description="{lo_id}" href="mlo.html" xp:version="3.1" xp:editortype="webeditor" xml:space="preserve" xml:class="" webeditorsafe="true" xp:deliverytype="SCORM" direction="LTR" sequence="000" xp:templateversion="1.0" xp:derivedItemClass="">"""
     ]
 
     if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('head', None):

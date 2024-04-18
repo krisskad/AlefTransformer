@@ -394,7 +394,7 @@ def remove_br(html_string):
     pattern = re.compile(r'(?<![.:])\s*<br>')  # Match <br> not preceded by period or colon, allowing spaces
 
     # Replace <br> with an empty string
-    cleaned_html = re.sub(pattern, '', html_string)
+    cleaned_html = re.sub(pattern, ' ', html_string)
 
     return cleaned_html
 

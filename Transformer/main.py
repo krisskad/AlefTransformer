@@ -74,7 +74,12 @@ def process_data(template_ids=None):
     input_pages = INPUT_STRUCTURE_JSON_DATA.get('pages', [])
 
     MLO_TEMPLATES_OUTPUT_LIST = []
+
+    screen_number = 0
     for item in input_pages:
+        screen_number = screen_number+1
+        print(f"Screen Number: --> {screen_number}")
+
         template_id = item['pageData']['templateID']
         if template_id != "TextwithImage_001":
             continue
@@ -202,7 +207,10 @@ def iterative_process_data(all_dir_objs):
         MLO_TEMPLATES_OUTPUT_LIST = []
 
         STATUS = []
+        screen_number = 0
         for item in input_pages:
+            screen_number = screen_number + 1
+            print(f"Screen Number: --> {screen_number}")
             template_id = item['pageData']['templateID']
             # if template_id != "TextwithImage_001":
             #     continue
@@ -223,20 +231,21 @@ def iterative_process_data(all_dir_objs):
                 manifest_files = response.get('MANIFEST_FILES')
                 if response.get('STATUS', None):
                     STATUS = STATUS + response.get('STATUS', None)
-
+                    STATUS.append(f"##### screen_number --> {screen_number} #########")
                 if section:
                     MLO_TEMPLATES_OUTPUT_LIST.append(section)
                     GENERATED_HASH_CODES.update(hash_codes)
                     ALL_MANIFEST_FILES.update(manifest_files)
                 else:
-                    STATUS.append(f"Note: No XML generated for: {template_id}")
+                    STATUS.append(f"Note: No XML generated for screen_number {screen_number}: {template_id}")
                     print(f"Note: No xml code generated for Section: {template_id}")
             else:
-                STATUS.append(f"Note: No response for: {template_id}")
-                print(f"Note: No response for Section Template: {template_id}")
+                STATUS.append(f"Note: No response for screen_number {screen_number}: {template_id}")
+                print(f"Note: No response for Section Template screen_number {screen_number}: {template_id}")
 
         all_sections = "\n".join(MLO_TEMPLATES_OUTPUT_LIST)
         mlo_response = write_mlo(
+            lo_id=course_obj_dir_dict['COURSE_ID'],
             sections=all_sections,
             input_other_jsons_data=OTHER_JSON_DATA,
             exiting_hashcode=GENERATED_HASH_CODES
