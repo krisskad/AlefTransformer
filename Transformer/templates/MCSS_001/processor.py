@@ -173,6 +173,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         # print(f"MCSS_001 : {e}")
         print("Warning: MCSS_001 --> image not found so setting up questionfullwidth = true")
 
+    try:
+        view_css = input_other_jsons_data['INPUT_VIEW_JSON_DATA'][input_json_data['pageData']["viewRef"]]["pageData"]["args"]["quesCss"]
+        ques_align = view_css['textAlign']
+        # ques_width = view_css['width']
+    except Exception as e:
+        ques_align = "left"
+        # ques_width = "100%"
+        print("Error: ", e)
+
     all_tags.append(
         f"""
                 <alef_section xlink:label="{hashcode1}" xp:name="alef_section" xp:description=""
@@ -183,7 +192,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                              xp:description="" xp:fieldtype="folder" alef_type="MC Radio Button"
                                              questionfullwidth="{questionfullwidth}" questiontitle=" " questionnumber=" "
                                              nofcolumns="{nofcolumns}" submitattempts="{submitCount}" showtitle="false"
-                                             alignstatement="left" showbackground="false" shuffleoptions="true"
+                                             alignstatement="{ques_align}" showbackground="false" shuffleoptions="true"
                                              validation="Yes">
                             <alef_questionstatement xlink:label="{hashcode4}"
                                                     xp:name="alef_questionstatement" xp:description=""
@@ -293,25 +302,47 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         hashcode3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode3)
 
-        all_tags.append(
-            f"""
-                            <alef_{main_key}feedback xlink:label="{hashcode1}"
-                                                  xp:name="alef_{main_key}feedback" xp:description=""
-                                                  xp:fieldtype="folder">
-                                <alef_section_general xlink:label="{hashcode2}"
-                                                      xp:name="alef_section_general" xp:description=""
-                                                      xp:fieldtype="folder">
-                                    <alef_column xlink:label="{hashcode3}" xp:name="alef_column"
-                                                 xp:description="" xp:fieldtype="folder" width="auto">
-                                        <alef_html xlink:label="{hashcode}" xp:name="alef_html"
-                                                   xp:description="" xp:fieldtype="html"
-                                                   src="../../../{relative_path}"/>
-                                    </alef_column>
-                                </alef_section_general>
-                            </alef_{main_key}feedback>
+        if "incorrect_1" in key:
+            all_tags.append(
+                f"""
+                <alef_partialfeedback xlink:label="{hashcode1}"
+                                      xp:name="alef_{main_key}feedback" xp:description=""
+                                      xp:fieldtype="folder">
+                    <alef_section_general xlink:label="{hashcode2}"
+                                          xp:name="alef_section_general" xp:description=""
+                                          xp:fieldtype="folder">
+                        <alef_column xlink:label="{hashcode3}" xp:name="alef_column"
+                                     xp:description="" xp:fieldtype="folder" width="auto">
+                            <alef_html xlink:label="{hashcode}" xp:name="alef_html"
+                                       xp:description="" xp:fieldtype="html"
+                                       src="../../../{relative_path}"/>
+                        </alef_column>
+                    </alef_section_general>
+                </alef_partialfeedback>
             """
-        )
-        count = count + 1
+            )
+            count = count + 1
+        else:
+
+            all_tags.append(
+                f"""
+                <alef_{main_key}feedback xlink:label="{hashcode1}"
+                                      xp:name="alef_{main_key}feedback" xp:description=""
+                                      xp:fieldtype="folder">
+                    <alef_section_general xlink:label="{hashcode2}"
+                                          xp:name="alef_section_general" xp:description=""
+                                          xp:fieldtype="folder">
+                        <alef_column xlink:label="{hashcode3}" xp:name="alef_column"
+                                     xp:description="" xp:fieldtype="folder" width="auto">
+                            <alef_html xlink:label="{hashcode}" xp:name="alef_html"
+                                       xp:description="" xp:fieldtype="html"
+                                       src="../../../{relative_path}"/>
+                        </alef_column>
+                    </alef_section_general>
+                </alef_{main_key}feedback>
+                """
+            )
+            count = count + 1
 
     try:
         if hint:
