@@ -295,8 +295,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # add all hint, feedback, etc
     count = 1
     for key, val in feedback.items():
-        # if count > 2:
-        #     break
+        if count > 2:
+            break
         base_key = key.split("_")[0]
         try:
             text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
