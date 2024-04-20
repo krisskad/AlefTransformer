@@ -181,7 +181,30 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     )
 
+
+    try:
+        viewRef = input_json_data['pageData']["viewRef"]
+        INPUT_VIEW_JSON_DATA = input_other_jsons_data['INPUT_VIEW_JSON_DATA']["pages"]
+        viewRefPage = INPUT_VIEW_JSON_DATA[viewRef]
+        view_css_list = viewRefPage["pageData"]["args"][
+            "dimensions"]
+    except Exception as e:
+        view_css_list = []
+        # ques_width = "100%"
+        print("Error: ", e)
+
+    contianer_id = 0
+
     for each_cat in container:
+
+        try:
+            img_width = view_css_list[contianer_id]["width"]
+            img_height = view_css_list[contianer_id]["height"]
+        except:
+            img_width = "696"
+            img_height = "890"
+
+        contianer_id = contianer_id + 1
 
         temp1 = []
         for _ in range(20):
@@ -225,8 +248,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     <alef_image xlink:label="{resp2['hashcode']}" xp:name="alef_image"
                                             xp:description="" xp:fieldtype="image" alt="">
                                     <xp:img href="../../../{resp2['relative_path']}"
-                                            width="696" height="890"/>
-                                </alef_image>
+                                            width="{img_width}" height="{img_height}"/>
+                    </alef_image>
                     """
                 )
             except Exception as e:
@@ -286,8 +309,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     <alef_image xlink:label="{resp5['hashcode']}" xp:name="alef_image"
                                             xp:description="" xp:fieldtype="image" alt="">
                                     <xp:img href="../../../{resp5['relative_path']}"
-                                            width="696" height="890"/>
-                                </alef_image>
+                                            width="{img_width}" height="{img_height}"/>
+                    </alef_image>
                     """
                 )
             except Exception as e:
@@ -354,7 +377,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     }
 
     return response
-
 
 
 def process_page_data(page_data, other_json_data, exiting_hashcode):

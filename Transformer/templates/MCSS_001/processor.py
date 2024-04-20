@@ -174,7 +174,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         print("Warning: MCSS_001 --> image not found so setting up questionfullwidth = true")
 
     try:
-        view_css = input_other_jsons_data['INPUT_VIEW_JSON_DATA'][input_json_data['pageData']["viewRef"]]["pageData"]["args"]["quesCss"]
+        view_css = input_other_jsons_data['INPUT_VIEW_JSON_DATA']["pages"][input_json_data['pageData']["viewRef"]]["pageData"]["args"]["quesCss"]
         ques_align = view_css['textAlign']
         # ques_width = view_css['width']
     except Exception as e:
