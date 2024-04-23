@@ -197,12 +197,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     for each_cat in container:
 
-        try:
-            img_width = view_css_list[contianer_id]["width"]
-            img_height = view_css_list[contianer_id]["height"]
-        except:
-            img_width = "696"
-            img_height = "890"
+        # try:
+        #     img_width = view_css_list[contianer_id]["width"]
+        #     img_height = view_css_list[contianer_id]["height"]
+        # except:
+
+        img_width = "696"
+        img_height = "890"
 
         contianer_id = contianer_id + 1
 

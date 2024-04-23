@@ -143,6 +143,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
             text = remove_html_tags(text)
 
+            if not text:
+                text = " "
+
         except:
             text = " "
             print('Warning: Carousel_002 --> text not found inside slide')
@@ -162,7 +165,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         try:
             description = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][description]
-            print(description)
+            # print(description)
             # if not text:
             #     text = description
         except Exception as e:

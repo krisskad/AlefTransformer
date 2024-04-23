@@ -109,11 +109,14 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     if tabHeaderTxt:
         tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
 
-        if "<math" in tabHeaderTxt_text:
-            tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
-        else:
-            tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
+        # if "<math" in tabHeaderTxt_text:
+        #     tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
+        # else:
+        tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
 
+        if "<math" in tabHeaderTxt_text:
+            print("Warning: MathML string found in the Tab header - Tab header only supports plain text. We are removing all tags and adding mathml as plain text")
+            # print("")
     else:
         print("tabHeaderTxt Is not provided")
         tabHeaderTxt_text = ""
