@@ -99,6 +99,8 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files = set()
     all_tags = []
 
+    STATUS = []
+
     temp = []
     for _ in range(10):
         hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
@@ -109,14 +111,17 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     if tabHeaderTxt:
         tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
 
+        if "<math" in tabHeaderTxt_text:
+            warning = f"""Warning Note: TabToRevealWithAudio_002 --> \n We found MathML in TabHeader - Please check below string :\n{tabHeaderTxt_text}.We are converting above string into plain string to avoid errors in LCMS."""
+            print(warning)
+            STATUS.append(warning)
+
         # if "<math" in tabHeaderTxt_text:
         #     tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
         # else:
         tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
 
-        if "<math" in tabHeaderTxt_text:
-            print("Warning: MathML string found in the Tab header - Tab header only supports plain text. We are removing all tags and adding mathml as plain text")
-            # print("")
+
     else:
         print("tabHeaderTxt Is not provided")
         tabHeaderTxt_text = ""
@@ -290,7 +295,8 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,
-        "MANIFEST_FILES": all_files
+        "MANIFEST_FILES": all_files,
+        "STATUS":[str(x) for x in STATUS]
     }
 
     return response
@@ -773,6 +779,7 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_files = set()
     all_tags = []
+    STATUS = []
 
     temp = []
     for _ in range(20):
@@ -783,10 +790,16 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
     tabHeaderTxt = input_json_data.get("tabHeaderTxt", None)
     if tabHeaderTxt:
         tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
+
         if "<math" in tabHeaderTxt_text:
-            tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
-        else:
-            tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
+            warning = f"""Warning Note: TabToRevealWithAudio_002 --> \n We found MathML in TabHeader - Please check below string :\n{tabHeaderTxt_text}.We are converting above string into plain string to avoid errors in LCMS."""
+            print(warning)
+            STATUS.append(warning)
+
+        # if "<math" in tabHeaderTxt_text:
+        #     tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
+        # else:
+        tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
 
     else:
         print("tabHeaderTxt Is not provided")
@@ -1149,7 +1162,9 @@ def flipcards(input_json_data, input_other_jsons_data, exiting_hashcode):
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,
-        "MANIFEST_FILES": all_files
+        "MANIFEST_FILES": all_files,
+        "STATUS": list(set([str(x) for x in STATUS]))
+
     }
 
     return response

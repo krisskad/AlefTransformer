@@ -211,6 +211,7 @@ def iterative_process_data(all_dir_objs):
         for item in input_pages:
             screen_number = screen_number + 1
             print(f"Screen Number: --> {screen_number}")
+
             template_id = item['pageData']['templateID']
             # if template_id == "TabToRevealWithAudio_002":
             #     continue
@@ -233,16 +234,18 @@ def iterative_process_data(all_dir_objs):
                 hash_codes = response.get('GENERATED_HASH_CODES')
                 manifest_files = response.get('MANIFEST_FILES')
                 if response.get('STATUS', None):
-                    STATUS = STATUS + response.get('STATUS', None)
                     STATUS.append(f"##### screen_number --> {screen_number} #########")
+                    STATUS = STATUS + response.get('STATUS', None)
                 if section:
                     MLO_TEMPLATES_OUTPUT_LIST.append(section)
                     GENERATED_HASH_CODES.update(hash_codes)
                     ALL_MANIFEST_FILES.update(manifest_files)
                 else:
+                    STATUS.append(f"##### screen_number --> {screen_number} #########")
                     STATUS.append(f"Note: No XML generated for screen_number {screen_number}: {template_id}")
                     print(f"Note: No xml code generated for Section: {template_id}")
             else:
+                STATUS.append(f"##### screen_number --> {screen_number} #########")
                 STATUS.append(f"Note: No response for screen_number {screen_number}: {template_id}")
                 print(f"Note: No response for Section Template screen_number {screen_number}: {template_id}")
 
@@ -283,6 +286,7 @@ def iterative_process_data(all_dir_objs):
 
         # print(STATUS)
         if STATUS:
+            STATUS = list(set(STATUS))
             status_msg = "\n\n".join(STATUS)
             log_file_path = str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'], f"{course_obj_dir_dict['COURSE_ID']}.txt"))
             write_to_file(file_path=log_file_path, content=status_msg)

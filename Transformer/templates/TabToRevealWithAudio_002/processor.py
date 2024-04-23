@@ -75,7 +75,7 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
-
+    STATUS = []
     all_tags = [
         """
         <!-- TabToRevealWithAudio_002 -->
@@ -126,6 +126,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 all_files.update(img_xml['MANIFEST_FILES'])
                 exiting_hashcode.update(img_xml['GENERATED_HASH_CODES'])
                 all_tags.append(img_xml['XML_STRING'])
+                STATUS = STATUS + img_xml["STATUS"]
 
             # if each_obj["tabType"] == "buttonWithPopup":
             #     button_with_popup_xml = button_with_popup(each_obj, input_other_jsons_data, exiting_hashcode)
@@ -155,7 +156,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     response = {
         "XML_STRING": "".join(all_tags),
         "GENERATED_HASH_CODES": exiting_hashcode,
-        "MANIFEST_FILES": all_files
+        "MANIFEST_FILES": all_files,
+        "STATUS":list(set([str(x) for x in STATUS]))
     }
 
     return response
