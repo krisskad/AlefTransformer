@@ -100,7 +100,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     except Exception as e:
         print(f"error: {e} --> in TextWithFlipCards_001")
-        ques = ""
+        ques = " "
     # src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
 
     try:
@@ -182,16 +182,16 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     )
 
 
-    try:
-        viewRef = input_json_data['pageData']["viewRef"]
-        INPUT_VIEW_JSON_DATA = input_other_jsons_data['INPUT_VIEW_JSON_DATA']["pages"]
-        viewRefPage = INPUT_VIEW_JSON_DATA[viewRef]
-        view_css_list = viewRefPage["pageData"]["args"][
-            "dimensions"]
-    except Exception as e:
-        view_css_list = []
-        # ques_width = "100%"
-        print("Error: ", e)
+    # try:
+    #     viewRef = input_json_data['pageData']["viewRef"]
+    #     INPUT_VIEW_JSON_DATA = input_other_jsons_data['INPUT_VIEW_JSON_DATA']["pages"]
+    #     viewRefPage = INPUT_VIEW_JSON_DATA[viewRef]
+    #     view_css_list = viewRefPage["pageData"]["args"][
+    #         "dimensions"]
+    # except Exception as e:
+    #     view_css_list = []
+    #     # ques_width = "100%"
+    #     print("Error: ", e)
 
     contianer_id = 0
 
