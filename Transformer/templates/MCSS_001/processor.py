@@ -1,4 +1,5 @@
-from Transformer.helpers import generate_unique_folder_name, convert_html_to_strong, get_teacher_note, write_html_mlo
+from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong, get_teacher_note,
+                                 write_html_mlo, mathml2latex_yarosh)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -134,6 +135,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     os.makedirs(path_to_hashcode, exist_ok=True)
 
     path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+
+    if "<math" in ques:
+        ques = mathml2latex_yarosh(html_string=ques)
+
     write_html(text=ques, destination_file_path=path_to_html)
 
     relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
@@ -226,6 +231,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         os.makedirs(path_to_hashcode, exist_ok=True)
 
         path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
+
+        if "<math" in text:
+            text = mathml2latex_yarosh(html_string=text)
+
         write_html(text=text, destination_file_path=path_to_html)
 
         relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
