@@ -292,100 +292,36 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     )
 
-    # add all hint, feedback, etc
-    count = 1
-    for key, val in feedback.items():
-        if count > 2:
-            break
-        base_key = key.split("_")[0]
-        try:
-            text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
-            from Transformer.helpers import remove_br, add_space_after_span
-            text_val = remove_br(text_val)
-            text_val = add_space_after_span(text_val)
-        except:
-            print('warning: DragAndDrop_003 --> text missing in feedback')
-            continue
-
-        if "<math" in text_val:
-            text_val = mathml2latex_yarosh(html_string=text_val)
-
-        resp = write_html(
-            text=text_val,
-            exiting_hashcode=exiting_hashcode
+    from Transformer.helpers import get_xml_feedback, get_xml_hint
+    try:
+        feedback = input_json_data["pageData"]["args"].get("feedback", None)
+        # get feedback xml
+        feedback_resp = get_xml_feedback(
+            feedback=feedback,
+            exiting_hashcode=exiting_hashcode,
+            all_files=all_files,
+            input_other_jsons_data=input_other_jsons_data
         )
-        all_files.add(resp['relative_path'])
-        exiting_hashcode.add(resp['hashcode'])
+        all_tags.append(feedback_resp["XML_STRING"])
+        exiting_hashcode.add(feedback_resp["GENERATED_HASH_CODES"])
+        all_files.add(feedback_resp["MANIFEST_FILES"])
+    except:
+        pass
 
-        temp2 = []
-        for _ in range(4):
-            hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode_temp2)
-            temp2.append(hashcode_temp2)
-
-        all_tags.append(
-            f"""
-                            <alef_{base_key}feedback xlink:label="{temp2[0]}"
-                                                  xp:name="alef_{base_key}feedback" xp:description=""
-                                                  xp:fieldtype="folder">
-                                <alef_section_general xlink:label="{temp2[1]}"
-                                                      xp:name="alef_section_general" xp:description=""
-                                                      xp:fieldtype="folder">
-                                    <alef_column xlink:label="{temp2[2]}" xp:name="alef_column"
-                                                 xp:description="" xp:fieldtype="folder" width="auto">
-                                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
-                                                   xp:description="" xp:fieldtype="html"
-                                                   src="../../../{resp['relative_path']}"/>
-                                    </alef_column>
-                                </alef_section_general>
-                            </alef_{base_key}feedback>
-            
-            """
+    try:
+        hint = input_json_data["pageData"]["args"].get("hint", None)
+        # get feedback xml
+        hint_resp = get_xml_hint(
+            hint=hint,
+            exiting_hashcode=exiting_hashcode,
+            all_files=all_files,
+            input_other_jsons_data=input_other_jsons_data
         )
-        count = count + 1
-
-    # add all hint, feedback, etc
-    for key, val in hint.items():
-        try:
-            text_val = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
-        except:
-            print('warning: DragAndDrop_003 --> text missing in hint')
-            continue
-
-        if "<math" in text_val:
-            text_val = mathml2latex_yarosh(html_string=text_val)
-
-        resp = write_html(
-            text=text_val,
-            exiting_hashcode=exiting_hashcode
-        )
-        all_files.add(resp['relative_path'])
-        exiting_hashcode.add(resp['hashcode'])
-
-        temp3 = []
-        for _ in range(4):
-            hashcode_temp3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-            exiting_hashcode.add(hashcode_temp3)
-            temp3.append(hashcode_temp3)
-
-        all_tags.append(
-            f"""
-                            <alef_hint xlink:label="{temp3[0]}" xp:name="alef_hint"
-                                       xp:description="" xp:fieldtype="folder">
-                                <alef_section_general xlink:label="{temp3[1]}"
-                                                      xp:name="alef_section_general" xp:description=""
-                                                      xp:fieldtype="folder">
-                                    <alef_column xlink:label="{temp3[2]}" xp:name="alef_column"
-                                                 xp:description="" xp:fieldtype="folder" width="auto">
-                                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
-                                                   xp:description="" xp:fieldtype="html"
-                                                   src="../../../{resp['relative_path']}"/>
-                                    </alef_column>
-                                </alef_section_general>
-                            </alef_hint>
-
-            """
-        )
+        all_tags.append(hint_resp["XML_STRING"])
+        exiting_hashcode.add(hint_resp["GENERATED_HASH_CODES"])
+        all_files.add(hint_resp["MANIFEST_FILES"])
+    except:
+        pass
 
     all_tags.append("</alef_categorization>")
 
@@ -408,6 +344,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         )
     except:
         print('warning: DragAndDrop_003 --> audio missing')
+
 
     all_tags.append(
         """

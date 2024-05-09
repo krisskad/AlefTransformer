@@ -92,6 +92,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     try:
         text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][text_en_id]
+
+        if "<math" in text_en_data:
+            text_en_data = mathml2latex_yarosh(html_string=text_en_data)
+
     except Exception as e:
         msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
         STATUS.append(msg)
@@ -210,165 +214,36 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         </alef_choice>
                     """)
 
+    from Transformer.helpers import get_xml_feedback, get_xml_hint
     try:
-        feedback = input_json_data['pageData']['args']['feedback']
-
-        feedback_added = set()
-        for key, val in feedback.items():
-            if key in feedback_added:
-                continue
-
-            temp = []
-            for _ in range(4):
-                # Generate a unique folder name for each file
-                hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                exiting_hashcode.add(hashcode)
-                temp.append(hashcode)
-
-            if "correct" == key:
-                text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
-                destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
-                html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
-
-                # Create the unique folder if it doesn't exist
-                relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
-                all_files.add(relative_file)
-
-                # create folder
-                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
-                os.makedirs(path_to_hashcode, exist_ok=True)
-
-                try:
-                    from Transformer.helpers import remove_br, add_space_after_span
-                    text_en_data = remove_br(text_en_data)
-                    text_en_data = add_space_after_span(text_en_data)
-                except Exception as e:
-                    pass
-                write_html(text=text_en_data, destination_file_path=destination_file_path)
-                all_tags.append(f"""
-                        <alef_correctfeedback xlink:label="{temp[1]}" xp:name="alef_correctfeedback" xp:description="" xp:fieldtype="folder">
-                            <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                                <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
-                                    <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
-                                </alef_column>
-                            </alef_section_general>
-                        </alef_correctfeedback>
-                    """)
-
-            if "incorrect_2" in key:
-                text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
-                destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
-                html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
-
-                # Create the unique folder if it doesn't exist
-                relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
-                all_files.add(relative_file)
-
-                # create folder
-                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
-                os.makedirs(path_to_hashcode, exist_ok=True)
-
-                try:
-                    from Transformer.helpers import remove_br, add_space_after_span
-                    text_en_data = remove_br(text_en_data)
-                    text_en_data = add_space_after_span(text_en_data)
-                except Exception as e:
-                    pass
-
-                write_html(text=text_en_data, destination_file_path=destination_file_path)
-                all_tags.append(f"""
-                    <alef_incorrectfeedback xlink:label="{temp[1]}" xp:name="alef_incorrectfeedback" xp:description="" xp:fieldtype="folder">
-                        <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                            <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
-                                <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
-                            </alef_column>
-                        </alef_section_general>
-                    </alef_incorrectfeedback>
-                    """)
-
-            if "incorrect_1" in key:
-                text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
-                destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
-                html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
-
-                # Create the unique folder if it doesn't exist
-                relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
-                all_files.add(relative_file)
-
-                # create folder
-                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
-                os.makedirs(path_to_hashcode, exist_ok=True)
-
-                try:
-                    from Transformer.helpers import remove_br, add_space_after_span
-                    text_en_data = remove_br(text_en_data)
-                    text_en_data = add_space_after_span(text_en_data)
-                except Exception as e:
-                    pass
-
-                write_html(text=text_en_data, destination_file_path=destination_file_path)
-                all_tags.append(f"""
-                    <alef_partialfeedback xlink:label="{temp[1]}" xp:name="alef_partialfeedback" xp:description="" xp:fieldtype="folder">
-                        <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                            <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
-                                <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
-                            </alef_column>
-                        </alef_section_general>
-                    </alef_partialfeedback>
-                    """)
-
-            feedback_added.add(key)
-    except Exception as e:
-        msg = f'Error: {input_json_data["pageData"]["templateID"]} --> {e}'
-        STATUS.append(msg)
-        raise Exception(msg)
-
-    try:
-        hint = input_json_data['pageData']['args']['hint']
-        hint_added = set()
-        for key, val in hint.items():
-            if key in hint_added:
-                continue
-
-            temp = []
-            for _ in range(4):
-                hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-                exiting_hashcode.add(hashcode)
-                temp.append(hashcode)
-
-            if "text" in key:
-                text_en_data = input_other_jsons_data["INPUT_EN_TEXT_JSON_DATA"][val]
-                destination_file_path = os.path.join(settings.OUTPUT_DIR, temp[0], "emptyHtmlModel.html")
-                html_file_path = str(os.path.join(temp[0], "emptyHtmlModel.html"))
-
-                # Create the unique folder if it doesn't exist
-                relative_file = os.path.join(temp[0], "emptyHtmlModel.html")
-                all_files.add(relative_file)
-
-                # create folder
-                path_to_hashcode = os.path.join(settings.OUTPUT_DIR, temp[0])
-                os.makedirs(path_to_hashcode, exist_ok=True)
-
-                try:
-                    from Transformer.helpers import remove_br, add_space_after_span
-                    text_en_data = remove_br(text_en_data)
-                    text_en_data = add_space_after_span(text_en_data)
-                except Exception as e:
-                    pass
-
-                write_html(text=text_en_data, destination_file_path=destination_file_path)
-                all_tags.append(f"""
-                <alef_hint xlink:label="{temp[1]}" xp:name="alef_hint" xp:description="" xp:fieldtype="folder">
-                    <alef_section_general xlink:label="{temp[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                        <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
-                            <alef_html xlink:label="{temp[0]}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{html_file_path}" />
-                        </alef_column>
-                    </alef_section_general>
-                </alef_hint>
-                """)
-            hint_added.add(key)
+        feedback = input_json_data["pageData"]["args"].get("feedback", None)
+        # get feedback xml
+        feedback_resp = get_xml_feedback(
+            feedback=feedback,
+            exiting_hashcode=exiting_hashcode,
+            all_files=all_files,
+            input_other_jsons_data=input_other_jsons_data
+        )
+        all_tags.append(feedback_resp["XML_STRING"])
+        exiting_hashcode.add(feedback_resp["GENERATED_HASH_CODES"])
+        all_files.add(feedback_resp["MANIFEST_FILES"])
     except:
-        print('Warning: ClicktoRevealwithSubmit_001 --> hint not found')
+        pass
+
+    try:
+        hint = input_json_data["pageData"]["args"].get("hint", None)
+        # get feedback xml
+        hint_resp = get_xml_hint(
+            hint=hint,
+            exiting_hashcode=exiting_hashcode,
+            all_files=all_files,
+            input_other_jsons_data=input_other_jsons_data
+        )
+        all_tags.append(hint_resp["XML_STRING"])
+        exiting_hashcode.add(hint_resp["GENERATED_HASH_CODES"])
+        all_files.add(hint_resp["MANIFEST_FILES"])
+    except:
+        pass
 
     all_tags.append("""</alef_multiplechoice>""")
 

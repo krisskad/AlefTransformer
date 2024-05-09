@@ -1,6 +1,7 @@
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text, get_teacher_note,
-                                 get_popup_mlo_from_text, convert_html_to_strong)
+                                 get_popup_mlo_from_text, convert_html_to_strong, get_xml_hint,
+                                 get_xml_feedback)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -277,6 +278,38 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             </alef_column>
             """
         )
+
+
+
+    try:
+        feedback = input_json_data["pageData"]["args"].get("feedback", None)
+        # get feedback xml
+        feedback_resp = get_xml_feedback(
+            feedback=feedback,
+            exiting_hashcode=exiting_hashcode,
+            all_files=all_files,
+            input_other_jsons_data=input_other_jsons_data
+        )
+        all_tags.append(feedback_resp["XML_STRING"])
+        exiting_hashcode.add(feedback_resp["GENERATED_HASH_CODES"])
+        all_files.add(feedback_resp["MANIFEST_FILES"])
+    except:
+        pass
+
+    try:
+        hint = input_json_data["pageData"]["args"].get("hint", None)
+        # get feedback xml
+        hint_resp = get_xml_hint(
+            hint=hint,
+            exiting_hashcode=exiting_hashcode,
+            all_files=all_files,
+            input_other_jsons_data=input_other_jsons_data
+        )
+        all_tags.append(hint_resp["XML_STRING"])
+        exiting_hashcode.add(hint_resp["GENERATED_HASH_CODES"])
+        all_files.add(hint_resp["MANIFEST_FILES"])
+    except:
+        pass
 
     all_tags.append(
         "</alef_section>"

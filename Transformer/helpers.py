@@ -976,3 +976,143 @@ def get_teacher_note(text: str, exiting_hashcode: set,
         }
     else:
         return {}
+
+
+def get_xml_feedback(feedback: dict, input_other_jsons_data: dict,
+                     exiting_hashcode: set, all_files: set):
+    all_tags = []
+
+    count = 1
+    for key, val in feedback.items():
+
+        main_key = key.split("_")[0]
+
+        try:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+        except:
+            print("Error: text not found inside feedback")
+            continue
+
+        if "<math" in text:
+            text = mathml2latex_yarosh(html_string=text)
+        try:
+            text = remove_br(text)
+            text = add_space_after_span(text)
+        except Exception as e:
+            pass
+
+        resp = write_html_mlo(text=text, exiting_hashcode=exiting_hashcode)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+
+        hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode1)
+        hashcode2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode2)
+        hashcode3 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode3)
+
+        if "incorrect_1" in key:
+            all_tags.append(
+                f"""
+                <alef_partialfeedback xlink:label="{hashcode1}"
+                                      xp:name="alef_partialfeedback" xp:description=""
+                                      xp:fieldtype="folder">
+                    <alef_section_general xlink:label="{hashcode2}"
+                                          xp:name="alef_section_general" xp:description=""
+                                          xp:fieldtype="folder">
+                        <alef_column xlink:label="{hashcode3}" xp:name="alef_column"
+                                     xp:description="" xp:fieldtype="folder" width="auto">
+                            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                                       xp:description="" xp:fieldtype="html"
+                                       src="../../../{resp['relative_path']}"/>
+                        </alef_column>
+                    </alef_section_general>
+                </alef_partialfeedback>
+            """
+            )
+            count = count + 1
+        else:
+
+            all_tags.append(
+                f"""
+                <alef_{main_key}feedback xlink:label="{hashcode1}"
+                                      xp:name="alef_{main_key}feedback" xp:description=""
+                                      xp:fieldtype="folder">
+                    <alef_section_general xlink:label="{hashcode2}"
+                                          xp:name="alef_section_general" xp:description=""
+                                          xp:fieldtype="folder">
+                        <alef_column xlink:label="{hashcode3}" xp:name="alef_column"
+                                     xp:description="" xp:fieldtype="folder" width="auto">
+                            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                                       xp:description="" xp:fieldtype="html"
+                                       src="../../../{resp['relative_path']}"/>
+                        </alef_column>
+                    </alef_section_general>
+                </alef_{main_key}feedback>
+                """
+            )
+            count = count + 1
+
+    response = {
+        "XML_STRING": "".join(all_tags),
+        "GENERATED_HASH_CODES": exiting_hashcode,
+        "MANIFEST_FILES": all_files
+    }
+
+    return response
+
+
+def get_xml_hint(hint: dict, input_other_jsons_data: dict,
+                     exiting_hashcode: set, all_files: set):
+    all_tags = []
+
+    try:
+        if hint:
+            hinttext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][hint['text']]
+
+            if "<math" in hinttext:
+                hinttext = mathml2latex_yarosh(html_string=hinttext)
+
+            hintresp = write_html_mlo(
+                text=hinttext, exiting_hashcode=exiting_hashcode
+            )
+            all_files.add(hintresp['relative_path'])
+            exiting_hashcode.add(hintresp['hashcode'])
+
+            hashcode11 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode11)
+            hashcode12 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode12)
+            hashcode13 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode13)
+
+            all_tags.append(
+                f"""
+                        <alef_hint xlink:label="{hashcode11}" xp:name="alef_hint"
+                                   xp:description="" xp:fieldtype="folder">
+                            <alef_section_general xlink:label="{hashcode12}"
+                                                  xp:name="alef_section_general" xp:description=""
+                                                  xp:fieldtype="folder">
+                                <alef_column xlink:label="{hashcode13}" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto">
+                                    <alef_html xlink:label="{hintresp['hashcode']}" xp:name="alef_html"
+                                               xp:description="" xp:fieldtype="html"
+                                               src="../../../{hintresp['relative_path']}"/>
+                                </alef_column>
+                            </alef_section_general>
+                        </alef_hint>
+                    """
+            )
+        else:
+            print("Warning: hint is not found")
+    except Exception as e:
+        print(f"Warning: hint key not present in args {e}")
+
+    response = {
+        "XML_STRING": "".join(all_tags),
+        "GENERATED_HASH_CODES": exiting_hashcode,
+        "MANIFEST_FILES": all_files
+    }
+
+    return response

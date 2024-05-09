@@ -332,91 +332,36 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                        src="../../../{op_resp['relative_path']}"/>
             """
         )
+        from Transformer.helpers import get_xml_feedback, get_xml_hint
+        try:
+            feedback = input_json_data["pageData"]["args"].get("feedback", None)
+            # get feedback xml
+            feedback_resp = get_xml_feedback(
+                feedback=feedback,
+                exiting_hashcode=exiting_hashcode,
+                all_files=all_files,
+                input_other_jsons_data=input_other_jsons_data
+            )
+            all_tags.append(feedback_resp["XML_STRING"])
+            exiting_hashcode.add(feedback_resp["GENERATED_HASH_CODES"])
+            all_files.add(feedback_resp["MANIFEST_FILES"])
+        except:
+            pass
 
         try:
-            if feedback:
-                count = 1
-                for key, val in feedback.items():
-                    if count > 2:
-                        break
-
-                    main_key = key.split("_")[0]
-
-                    try:
-                        feedbacktext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
-                        from Transformer.helpers import remove_br, add_space_after_span
-                        feedbacktext = remove_br(feedbacktext)
-                        feedbacktext = add_space_after_span(feedbacktext)
-                    except Exception as e:
-                        print(f"Warning: DropDown_001 feedback text not present in args {e}")
-                        continue
-
-                    feedbackresp = write_html(
-                        text=feedbacktext, exiting_hashcode=exiting_hashcode
-                    )
-                    all_files.add(feedbackresp['relative_path'])
-                    exiting_hashcode.add(feedbackresp['hashcode'])
-
-                    temp2 = []
-                    for _ in range(10):
-                        hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L",
-                                                                    k=27)
-                        exiting_hashcode.add(hashcode_temp)
-                        temp2.append(hashcode_temp)
-
-                    all_tags.append(
-                        f"""
-                                <alef_{main_key}feedback xlink:label="{temp2[0]}"
-                                                      xp:name="alef_{main_key}feedback" xp:description=""
-                                                      xp:fieldtype="folder">
-                                    <alef_section_general xlink:label="{temp2[1]}"
-                                                          xp:name="alef_section_general" xp:description=""
-                                                          xp:fieldtype="folder">
-                                        <alef_column xlink:label="{temp2[2]}" xp:name="alef_column"
-                                                     xp:description="" xp:fieldtype="folder" width="auto">
-                                            <alef_html xlink:label="{feedbackresp['hashcode']}" xp:name="alef_html"
-                                                       xp:description="" xp:fieldtype="html"
-                                                       src="../../../{feedbackresp['relative_path']}"/>
-                                        </alef_column>
-                                    </alef_section_general>
-                                </alef_{main_key}feedback>
-                            """
-                    )
-                    count = count + 1
-            else:
-                print("Warning: DropDown_001 : feedback is not found")
-        except Exception as e:
-            print(f"Warning: DropDown_001 feedback key not present in args {e}")
-
-        try:
-            if hint:
-                hinttext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][hint['text']]
-                hintresp = write_html(
-                    text=hinttext, exiting_hashcode=exiting_hashcode
-                )
-                all_files.add(hintresp['relative_path'])
-                exiting_hashcode.add(hintresp['hashcode'])
-                all_tags.append(
-                    f"""
-                            <alef_hint xlink:label="{temp[15]}" xp:name="alef_hint"
-                                       xp:description="" xp:fieldtype="folder">
-                                <alef_section_general xlink:label="{temp[16]}"
-                                                      xp:name="alef_section_general" xp:description=""
-                                                      xp:fieldtype="folder">
-                                    <alef_column xlink:label="{temp[17]}" xp:name="alef_column"
-                                                 xp:description="" xp:fieldtype="folder" width="auto">
-                                        <alef_html xlink:label="{hintresp['hashcode']}" xp:name="alef_html"
-                                                   xp:description="" xp:fieldtype="html"
-                                                   src="../../../{hintresp['relative_path']}"/>
-                                    </alef_column>
-                                </alef_section_general>
-                            </alef_hint>
-                        """
-                )
-            else:
-                print("Warning: DropDown_001 : hint is not found")
-        except Exception as e:
-            print(f"Warning: DropDown_001 hint key not present in args {e}")
+            hint = input_json_data["pageData"]["args"].get("hint", None)
+            # get feedback xml
+            hint_resp = get_xml_hint(
+                hint=hint,
+                exiting_hashcode=exiting_hashcode,
+                all_files=all_files,
+                input_other_jsons_data=input_other_jsons_data
+            )
+            all_tags.append(hint_resp["XML_STRING"])
+            exiting_hashcode.add(hint_resp["GENERATED_HASH_CODES"])
+            all_files.add(hint_resp["MANIFEST_FILES"])
+        except:
+            pass
 
         all_tags.append(
             """

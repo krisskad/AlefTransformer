@@ -213,7 +213,8 @@ def iterative_process_data(all_dir_objs):
             print(f"Screen Number: --> {screen_number}")
 
             template_id = item['pageData']['templateID']
-            # if template_id == "TabToRevealWithAudio_002":
+            item['screen_number'] = screen_number
+            # if template_id != "CustomDragAndDrop_001":
             #     continue
 
             # if screen_number == 7:
