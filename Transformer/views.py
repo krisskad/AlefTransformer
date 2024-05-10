@@ -133,11 +133,11 @@ class LocalFileProcessViewSet(viewsets.ViewSet):
             return Response(data=all_dir_list)
 
         # replace all with '
-        for each in all_dir_list:
-            for key, each_file in each.items():
-                print(each_file)
-                if os.path.isfile(each_file) and ".json" in each_file:
-                    replace_chars_in_json(json_path=each_file)
+        # for each in all_dir_list:
+        #     for key, each_file in each.items():
+        #         print(each_file)
+        #         if os.path.isfile(each_file) and ".json" in each_file:
+        #             replace_chars_in_json(json_path=each_file)
 
         # Call the function to process the zip content
         resp = iterative_process_data(all_dir_objs=all_dir_list)

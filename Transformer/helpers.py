@@ -1141,7 +1141,6 @@ def remove_char_from_keys(data, char):
     else:
         return data
 
-import json
 
 def replace_chars_in_json(json_path):
     # Open the JSON file for reading

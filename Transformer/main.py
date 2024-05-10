@@ -1,6 +1,6 @@
 import importlib
 from django.conf import settings
-from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file
+from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file, remove_char_from_keys
 from Transformer.utils.write_main_xml_frame import write_mlo
 from Transformer.utils.write_manifest_xml import write_imsmanifest_xml
 import os, shutil
@@ -81,8 +81,8 @@ def process_data(template_ids=None):
         print(f"Screen Number: --> {screen_number}")
 
         template_id = item['pageData']['templateID']
-        if template_id != "TextwithImage_001":
-            continue
+        # if template_id != "TextwithImage_001":
+        #     continue
 
         if template_ids:
             if isinstance(template_ids, list):
@@ -126,7 +126,7 @@ def iterative_process_data(all_dir_objs):
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         print("#" * 20)
-        # if course_obj_dir_dict["COURSE_ID"] != "MA6_L030_Explore":
+        # if course_obj_dir_dict["COURSE_ID"] != "CS_SC6_L021_Learn_2":
         #     continue
         print(course_obj_dir_dict['COURSE_ID'])
 
@@ -217,10 +217,10 @@ def iterative_process_data(all_dir_objs):
 
             template_id = item['pageData']['templateID']
             item['screen_number'] = screen_number
-            # if template_id != "CustomDragAndDrop_001":
+            # if template_id != "Carousel_002":
             #     continue
-
-            # if screen_number == 7:
+            #
+            # if screen_number != 2:
             #     continue
             if template_id == "DragAndDrop_002":
                 print("Found DragAndDrop_002 --> Considering it as DragAndDrop_003")
