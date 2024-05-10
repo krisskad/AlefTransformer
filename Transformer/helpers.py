@@ -1131,3 +1131,43 @@ def get_xml_hint(hint: dict, input_other_jsons_data: dict,
     }
 
     return response
+
+
+def remove_char_from_keys(data, char):
+    if isinstance(data, dict):
+        return {key.replace(char, ''): remove_char_from_keys(value, char) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [remove_char_from_keys(item, char) for item in data]
+    else:
+        return data
+
+import json
+
+def replace_chars_in_json(json_path):
+    # Open the JSON file for reading
+    with open(json_path, 'r') as file:
+        # Read the file content and decode using unicode_escape
+        data = file.read()
+
+    try:
+        # Parse the JSON data
+        parsed_data = json.loads(data)
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", e)
+        print("Problematic location in the JSON file:", data[max(0, e.pos - 10):e.pos + 10])
+        return
+
+    # Replace ’ with ' in the JSON data
+
+    modified_data = json.dumps(parsed_data, indent=4, ensure_ascii=False)
+    modified_data = modified_data.replace("’", "'")
+    modified_data = html.unescape(modified_data)
+
+    # Write the modified JSON back to the file
+    with open(json_path, 'w') as file:
+        file.write(modified_data)
+
+    print("Replacement done and JSON file updated.")
+
+# Example usage:
+# replace_chars_in_json('your_file.json')
