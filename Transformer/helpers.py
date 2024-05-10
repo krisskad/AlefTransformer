@@ -282,6 +282,7 @@ def mathml2latex_yarosh(html_string: str):
         newdom = f"\({newdom}\)"
         latex_output = f"""<span class="math-tex">{str(newdom)}</span>"""
 
+        mathml_element = html.unescape(str(mathml_element))
         html_string = html_string.replace(str(mathml_element), latex_output)
 
     return html_string
