@@ -1,6 +1,6 @@
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text,get_teacher_note,
-                                 get_popup_mlo_from_text, convert_html_to_strong)
+                                 get_popup_mlo_from_text, convert_html_to_strong, mathml2latex_yarosh)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -150,6 +150,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     if qText:
         try:
             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
+
+            if "<math" in text:
+                text = mathml2latex_yarosh(html_string=text)
+
         except:
             raise Exception("Error: VideowithInputBox_001 --> qText not found")
 

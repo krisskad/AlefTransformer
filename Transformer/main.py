@@ -126,7 +126,10 @@ def iterative_process_data(all_dir_objs):
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         print("#" * 20)
+        # if course_obj_dir_dict["COURSE_ID"] != "CS_SC6_L021_Learn_2":
+        #     continue
         print(course_obj_dir_dict['COURSE_ID'])
+
         settings.INPUT_COMMON_DIR = course_obj_dir_dict['INPUT_COMMON_DIR']
         settings.INPUT_APP_DIR = course_obj_dir_dict['INPUT_APP_DIR']
 
@@ -219,7 +222,6 @@ def iterative_process_data(all_dir_objs):
 
             # if screen_number == 7:
             #     continue
-
             if template_id == "DragAndDrop_002":
                 print("Found DragAndDrop_002 --> Considering it as DragAndDrop_003")
                 template_id = "DragAndDrop_003"

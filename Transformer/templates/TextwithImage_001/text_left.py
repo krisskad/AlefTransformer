@@ -191,6 +191,10 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
             text = ""
 
     try:
+
+        if "<math" in text:
+            text = mathml2latex_yarosh(html_string=text)
+
         HtmlText = text_en_html_to_html_text(html_string=text)
         resp = write_html(
             text=HtmlText,

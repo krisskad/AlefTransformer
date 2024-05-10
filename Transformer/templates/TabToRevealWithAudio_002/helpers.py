@@ -163,6 +163,9 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     if TabContentText:
         TabContentText_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][TabContentText]
 
+        if "<math" in TabContentText_text:
+            TabContentText_text = mathml2latex_yarosh(html_string=TabContentText_text)
+
         try:
             teachers_note_xml = ""
             teacher_resp = get_teacher_note(

@@ -13,6 +13,7 @@ import zipfile
 from lxml import etree
 import xml.etree.ElementTree as ET
 import re
+import html
 
 
 def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
@@ -264,6 +265,7 @@ def mathml2latex_yarosh_old(html_string: str):
 
 def mathml2latex_yarosh(html_string: str):
     """ MathML to LaTeX conversion with XSLT from krishna kadam"""
+    html_string = html.unescape(html_string)
     xslt_file = os.path.join(settings.BASE_DIR, 'Transformer', 'assets', 'LaTex', 'mmltex.xsl')
 
     # Extract MathML elements from HTML string
@@ -993,13 +995,15 @@ def get_xml_feedback(feedback: dict, input_other_jsons_data: dict,
             print("Error: text not found inside feedback")
             continue
 
-        if "<math" in text:
-            text = mathml2latex_yarosh(html_string=text)
         try:
             text = remove_br(text)
             text = add_space_after_span(text)
         except Exception as e:
+            print(f"Error while removing br : {e}")
             pass
+
+        if "<math" in text:
+            text = mathml2latex_yarosh(html_string=text)
 
         resp = write_html_mlo(text=text, exiting_hashcode=exiting_hashcode)
         all_files.add(resp['relative_path'])

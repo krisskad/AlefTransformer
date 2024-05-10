@@ -118,6 +118,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             print('Error: The text content is also not found. The title will be left blank.')
 
     try:
+
+        if "<math" in title:
+            title = mathml2latex_yarosh(html_string=title)
+
         teachers_note_xml = ""
         teacher_resp = get_teacher_note(
             text=title, all_files=all_files,

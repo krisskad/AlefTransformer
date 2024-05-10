@@ -116,6 +116,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         try:
             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title]
 
+            if "<math" in text:
+                text = mathml2latex_yarosh(html_string=text)
+
             try:
                 teachers_note_xml = ""
                 teacher_resp = get_teacher_note(
@@ -133,7 +136,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             except Exception as e:
                 teachers_note_xml = ""
                 print(f"Error: TextwithImage_001 --> While creating teachers note --> {e}")
-
 
             qHtmlText = text_en_html_to_html_text(html_string=text)
 
