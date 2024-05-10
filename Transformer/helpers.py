@@ -996,6 +996,11 @@ def get_xml_feedback(feedback: dict, input_other_jsons_data: dict,
             continue
 
         try:
+            text = html.unescape(text)
+        except:
+            pass
+
+        try:
             text = remove_br(text)
             text = add_space_after_span(text)
         except Exception as e:
@@ -1074,6 +1079,11 @@ def get_xml_hint(hint: dict, input_other_jsons_data: dict,
     try:
         if hint:
             hinttext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][hint['text']]
+
+            try:
+                hinttext = html.unescape(hinttext)
+            except:
+                pass
 
             if "<math" in hinttext:
                 hinttext = mathml2latex_yarosh(html_string=hinttext)
