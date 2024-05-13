@@ -126,8 +126,8 @@ def iterative_process_data(all_dir_objs):
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         print("#" * 20)
-        if course_obj_dir_dict["COURSE_ID"] != "SC6_L015_Review":
-            continue
+        # if course_obj_dir_dict["COURSE_ID"] != "SC6_L015_Review":
+        #     continue
         print(course_obj_dir_dict['COURSE_ID'])
 
         settings.INPUT_COMMON_DIR = course_obj_dir_dict['INPUT_COMMON_DIR']
