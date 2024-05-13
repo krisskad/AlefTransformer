@@ -170,7 +170,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         map_link_list = []
         for index, each_option in enumerate(dragItems):
             dropId = each_option.get("dropId")
-            dropId = int(dropId)+1
+            dropId = int(dropId)
+            if dropId >= 0:
+                dropId = +1
 
             temp4 = []
             for _ in range(5):
@@ -208,6 +210,23 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 </alef_image>
                 """
 
+            options.append(
+                f"""
+                <alef_option xlink:label="{temp4[0]}" xp:name="alef_option" xp:description="{dropId}" xp:fieldtype="folder">
+                    <alef_optionvalue xlink:label="{temp4[1]}" xp:name="alef_optionvalue" xp:description="" xp:fieldtype="folder">
+                        <alef_section_general xlink:label="{temp4[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
+                            <alef_column xlink:label="{temp4[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
+                                {tag}
+                            </alef_column>
+                        </alef_section_general>
+                    </alef_optionvalue>
+                </alef_option>
+                """
+            )
+
+            if dropId < 0:
+                continue
+
             map_link[dropId] = temp4[0]
             # print(index)
             view_ref = input_json_data["pageData"]['viewRef']
@@ -226,19 +245,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             map_link_list.append(
                 f"""
                  <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{temp4[0]}" ShowMode="" left="{left_pos}" top="{top_pos}"/>
-                """
-            )
-            options.append(
-                f"""
-                <alef_option xlink:label="{temp4[0]}" xp:name="alef_option" xp:description="{dropId}" xp:fieldtype="folder">
-                    <alef_optionvalue xlink:label="{temp4[1]}" xp:name="alef_optionvalue" xp:description="" xp:fieldtype="folder">
-                        <alef_section_general xlink:label="{temp4[2]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                            <alef_column xlink:label="{temp4[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto">
-                                {tag}
-                            </alef_column>
-                        </alef_section_general>
-                    </alef_optionvalue>
-                </alef_option>
                 """
             )
 
