@@ -126,7 +126,7 @@ def iterative_process_data(all_dir_objs):
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         print("#" * 20)
-        # if course_obj_dir_dict["COURSE_ID"] != "SC5_L010_Investigate_1":
+        # if course_obj_dir_dict["COURSE_ID"] != "SC8_L018_Learn_1":
         #     continue
         print(course_obj_dir_dict['COURSE_ID'])
 
@@ -212,12 +212,13 @@ def iterative_process_data(all_dir_objs):
         STATUS = []
         screen_number = 0
         for item in input_pages:
+            print("*"*10)
             screen_number = screen_number + 1
             print(f"Screen Number: --> {screen_number}")
 
             template_id = item['pageData']['templateID']
             item['screen_number'] = screen_number
-            # if template_id != "Carousel_002":
+            # if template_id != "CustomDragAndDrop_002":
             #     continue
             #
             # if screen_number != 2:
