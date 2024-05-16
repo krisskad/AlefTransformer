@@ -1011,7 +1011,7 @@ def get_xml_feedback(feedback: dict, input_other_jsons_data: dict,
         if "<math" in text:
             text = mathml2latex_yarosh(html_string=text)
 
-        resp = write_html_mlo(text=text, exiting_hashcode=exiting_hashcode)
+        resp = write_html_mlo(text=text, exiting_hashcode=exiting_hashcode, align="left")
         all_files.add(resp['relative_path'])
         exiting_hashcode.add(resp['hashcode'])
 
@@ -1090,7 +1090,7 @@ def get_xml_hint(hint: dict, input_other_jsons_data: dict,
                 hinttext = mathml2latex_yarosh(html_string=hinttext)
 
             hintresp = write_html_mlo(
-                text=hinttext, exiting_hashcode=exiting_hashcode
+                text=hinttext, exiting_hashcode=exiting_hashcode, align="left"
             )
             all_files.add(hintresp['relative_path'])
             exiting_hashcode.add(hintresp['hashcode'])

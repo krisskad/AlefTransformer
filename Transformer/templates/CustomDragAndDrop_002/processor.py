@@ -1,5 +1,5 @@
 from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong, get_teacher_note,
-                                 write_html_mlo, mathml2latex_yarosh, get_xml_feedback, get_xml_hint)
+                                 write_html_mlo, mathml2latex_yarosh, get_xml_feedback, get_xml_hint, remove_html_tags)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -89,17 +89,18 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags = [
         """
-        <!-- CustomDragAndDrop_001 -->
+        <!-- CustomDragAndDrop_002 -->
 
         """
     ]
 
     # Extracting variables
-    src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+
     submitCount = input_json_data["pageData"]["args"].get("submitCount", 2)
-    shuffle = input_json_data["pageData"]["args"]["shuffle"]
+    # shuffle = input_json_data["pageData"]["args"]["shuffle"]
     dragItems = input_json_data["pageData"]["args"]["dragItems"]
-    dropItems = input_json_data["pageData"]["args"]["dropItems"]
+    # dropItems = input_json_data["pageData"]["args"]["dropItems"]
+    view_ref = input_json_data["pageData"]['viewRef']
 
     temp = []
     for _ in range(5):
@@ -107,37 +108,98 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode_temp2)
         temp.append(hashcode_temp2)
 
-    all_tags.append(
-        f"""
-        <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
-            <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-                <alef_draganddrop xlink:label="{temp[2]}" xp:name="alef_draganddrop" xp:description="" xp:fieldtype="folder" submitattempts="{submitCount}" validation="Yes" autowidth="false" optionwidth="No" invertoptions="No" stickyoptions="No">
-                    <alef_draganddropitem xlink:label="{temp[3]}" xp:name="alef_draganddropitem" xp:description="" xp:fieldtype="folder">
-        """
-    )
 
     try:
+
+        """
+        This code tries to extract a title from JSON data. If the desired title is not found directly, it checks for additional text options. It then combines the extra text with corresponding CSS attributes, sorts them by their vertical position, and selects the topmost one as the title. If inconsistencies arise in the JSON structures, it defaults to an empty title.
+        """
         try:
-            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
-                input_json_data["pageData"]["args"]["title"]['text']]
-        except Exception as e:
-            print(f"title text not found --> Now taking extra text as title")
+            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]['text']]
 
             try:
                 extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
                 if len(extra_text_list) == 1:
                     text_id = extra_text_list[0]["text"]
-                    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+                    extra_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
                 else:
-                    extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
-                    all_text = []
-                    for i in extra_text_list:
-                        text_id = i["text"]
-                        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-                        all_text.append(text)
-                    title = " ".join(all_text)
+                    extra_text = ""
+            except:
+                extra_text = ""
+
+        except Exception as e:
+            print(f"title text not found --> Now taking extra text as title by sorting top most text by pixel")
+            try:
+                extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
+                if len(extra_text_list) == 1:
+                    text_id = extra_text_list[0]["text"]
+                    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+                    extra_text = ""
+                else:
+                    view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
+                    extra_text_css_list = view_obj["pageData"]["args"]["extraTexts"]
+
+                    if len(extra_text_css_list) == len(extra_text_list):
+                        combined = []
+                        for css_obj, text_id_obj in zip(extra_text_css_list, extra_text_list):
+                            text_id_ = text_id_obj.get("text", None)
+                            try:
+                                extra_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id_]
+                            except:
+                                print(f"Warning: While checking each extra text - {text_id_} is not present in en_text.")
+                                continue
+
+                            top = css_obj.get("top", 0)
+                            top = float(top.replace("px", ""))
+
+                            combined.append(
+                                {
+                                    "text": extra_text,
+                                    "top": top
+                                }
+                            )
+
+                        sorted_combined = sorted(combined, key=lambda x: x["top"])
+                        title = sorted_combined[0]["text"]
+                        extra_text = sorted_combined[1]["text"]
+                    else:
+                        print("extraTexts in structure.json is not equal to extraTexts in view.json")
+                        title = ""
+                        extra_text = ""
+
             except Exception as e:
-                print(f"Error: text not found --> {e}")
+                print(f"Warning: {e}")
+                title = ""
+                extra_text = ""
+
+        if title:
+            title = remove_html_tags(title)
+
+        all_tags.append(
+            f"""
+            <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description="{title}" xp:fieldtype="folder" customclass="Normal">
+                <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+                    <alef_draganddrop xlink:label="{temp[2]}" xp:name="alef_draganddrop" xp:description="" xp:fieldtype="folder" submitattempts="{submitCount}" validation="Yes" autowidth="false" optionwidth="No" invertoptions="No" stickyoptions="No">
+                        <alef_draganddropitem xlink:label="{temp[3]}" xp:name="alef_draganddropitem" xp:description="" xp:fieldtype="folder">
+            """
+        )
+
+        # try:
+        #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
+        #     if len(extra_text_list) == 1:
+        #         text_id = extra_text_list[0]["text"]
+        #         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+        #     else:
+        #         extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
+        #         all_text = []
+        #         for i in extra_text_list:
+        #             text_id = i["text"]
+        #             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+        #             all_text.append(text)
+        #         title = " ".join(all_text)
+        # except Exception as e:
+        #     print(f"Error: text not found --> {e}")
+        #     raise Exception("")
 
         temp2 = []
         for _ in range(5):
@@ -145,7 +207,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             exiting_hashcode.add(hashcode_temp2)
             temp2.append(hashcode_temp2)
 
-        resp = write_html(text=title, exiting_hashcode=exiting_hashcode, align=None)
+        resp = write_html(text=extra_text, exiting_hashcode=exiting_hashcode, align=None)
         exiting_hashcode.add(resp['hashcode'])
         all_files.add(resp['relative_path'])
         all_tags.append(
@@ -163,7 +225,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         print(f"Warning: CustomDragAndDrop_001 --> question statement not found {e}")
 
 
-
     try:
         map_link = dict()
         options = []
@@ -172,7 +233,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             dropId = each_option.get("dropId")
             dropId = int(dropId)
             if dropId >= 0:
-                dropId = +1
+                dropId = dropId + 1
 
             temp4 = []
             for _ in range(5):
@@ -229,9 +290,16 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             map_link[dropId] = temp4[0]
             # print(index)
-            view_ref = input_json_data["pageData"]['viewRef']
             view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
             dropItem_list = view_obj["pageData"]["args"]["dropItems"][index]
+
+            try:
+                dndProps_width = float(view_obj["pageData"]["args"]["dndProps"]["width"].replace("px", ""))
+                dndProps_height = float(view_obj["pageData"]["args"]["dndProps"]["height"].replace("px", ""))
+            except:
+                dndProps_width = 60
+                dndProps_height = 20
+                pass
 
             top_pos = dropItem_list['top'].replace("px", "")
             left_pos = dropItem_list['left'].replace("px", "")
@@ -242,9 +310,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             minus = 200
             top_pos = top_pos - minus
 
+            buttom_pos = top_pos + dndProps_height
+            right_pos = left_pos + dndProps_width
+
             map_link_list.append(
                 f"""
-                 <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{temp4[0]}" ShowMode="" left="{left_pos}" top="{top_pos}"/>
+                 <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{temp4[0]}" ShowMode="" left="{left_pos}" top="{top_pos}" right="{right_pos}" bottom="{buttom_pos}"/>
                 """
             )
 
@@ -318,6 +389,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         pass
 
     try:
+        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
         if src:
             resp = copy_to_hashcode_dir(
                 src_path=input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][src],
@@ -337,7 +409,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 """
             )
     except Exception as e:
-        pass
+        print(f"Warning: Audio did not found in input structure {e}")
 
     all_tags.append(
         """
