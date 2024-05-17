@@ -117,60 +117,62 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         try:
             title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]['text']]
 
-            try:
-                extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
-                if len(extra_text_list) == 1:
-                    text_id = extra_text_list[0]["text"]
-                    extra_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-                else:
-                    extra_text = ""
-            except:
-                extra_text = ""
+            # try:
+            #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
+            #     # if len(extra_text_list) == 1:
+            #     #     text_id = extra_text_list[0]["text"]
+            #     #     extra_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+            #     # else:
+            #     #     extra_text = ""
+            # except:
+            #     extra_text = ""
 
         except Exception as e:
-            print(f"title text not found --> Now taking extra text as title by sorting top most text by pixel")
-            try:
-                extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
-                if len(extra_text_list) == 1:
-                    text_id = extra_text_list[0]["text"]
-                    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-                    extra_text = ""
-                else:
-                    view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
-                    extra_text_css_list = view_obj["pageData"]["args"]["extraTexts"]
-
-                    if len(extra_text_css_list) == len(extra_text_list):
-                        combined = []
-                        for css_obj, text_id_obj in zip(extra_text_css_list, extra_text_list):
-                            text_id_ = text_id_obj.get("text", None)
-                            try:
-                                extra_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id_]
-                            except:
-                                print(f"Warning: While checking each extra text - {text_id_} is not present in en_text.")
-                                continue
-
-                            top = css_obj.get("top", 0)
-                            top = float(top.replace("px", ""))
-
-                            combined.append(
-                                {
-                                    "text": extra_text,
-                                    "top": top
-                                }
-                            )
-
-                        sorted_combined = sorted(combined, key=lambda x: x["top"])
-                        title = sorted_combined[0]["text"]
-                        extra_text = sorted_combined[1]["text"]
-                    else:
-                        print("extraTexts in structure.json is not equal to extraTexts in view.json")
-                        title = ""
-                        extra_text = ""
-
-            except Exception as e:
-                print(f"Warning: {e}")
-                title = ""
-                extra_text = ""
+            print(f"Title not found {e}")
+            title = ""
+            # print(f"title text not found --> Now taking extra text as title by sorting top most text by pixel")
+            # try:
+            #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
+            #     if len(extra_text_list) == 1:
+            #         text_id = extra_text_list[0]["text"]
+            #         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+            #         extra_text = ""
+            #     else:
+            #         view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
+            #         extra_text_css_list = view_obj["pageData"]["args"]["extraTexts"]
+            #
+            #         if len(extra_text_css_list) == len(extra_text_list):
+            #             combined = []
+            #             for css_obj, text_id_obj in zip(extra_text_css_list, extra_text_list):
+            #                 text_id_ = text_id_obj.get("text", None)
+            #                 try:
+            #                     extra_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id_]
+            #                 except:
+            #                     print(f"Warning: While checking each extra text - {text_id_} is not present in en_text.")
+            #                     continue
+            #
+            #                 top = css_obj.get("top", 0)
+            #                 top = float(top.replace("px", ""))
+            #
+            #                 combined.append(
+            #                     {
+            #                         "text": extra_text,
+            #                         "top": top
+            #                     }
+            #                 )
+            #
+            #             sorted_combined = sorted(combined, key=lambda x: x["top"])
+            #             title = sorted_combined[0]["text"]
+            #             extra_text = sorted_combined[1]["text"]
+            #         else:
+            #             print("extraTexts in structure.json is not equal to extraTexts in view.json")
+            #             title = ""
+            #             extra_text = ""
+            #
+            # except Exception as e:
+            #     print(f"Warning: {e}")
+            #     title = ""
+            #     extra_text = ""
 
         if title:
             title = remove_html_tags(title)
@@ -184,22 +186,20 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
 
-        # try:
-        #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
-        #     if len(extra_text_list) == 1:
-        #         text_id = extra_text_list[0]["text"]
-        #         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-        #     else:
-        #         extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
-        #         all_text = []
-        #         for i in extra_text_list:
-        #             text_id = i["text"]
-        #             text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-        #             all_text.append(text)
-        #         title = " ".join(all_text)
-        # except Exception as e:
-        #     print(f"Error: text not found --> {e}")
-        #     raise Exception("")
+        try:
+            extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
+            all_text = []
+            for i in extra_text_list:
+                try:
+                    text_id = i["text"]
+                    extra = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+                except:
+                    continue
+                all_text.append(extra)
+            all_extra = "<br>".join(all_text)
+        except Exception as e:
+            print(f"Warning: text not found --> {e}")
+            all_extra = ""
 
         temp2 = []
         for _ in range(5):
@@ -207,7 +207,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             exiting_hashcode.add(hashcode_temp2)
             temp2.append(hashcode_temp2)
 
-        resp = write_html(text=extra_text, exiting_hashcode=exiting_hashcode, align=None)
+        resp = write_html(text=all_extra, exiting_hashcode=exiting_hashcode, align=None)
         exiting_hashcode.add(resp['hashcode'])
         all_files.add(resp['relative_path'])
         all_tags.append(
