@@ -14,6 +14,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 import re
 import html
+import htmlentities
 
 
 def generate_unique_folder_name(existing_hashcode, prefix="L", k=27):
@@ -264,6 +265,17 @@ def mathml2latex_yarosh_old(html_string: str):
 
 
 def mathml2latex_yarosh(html_string: str):
+    # html_entities = {
+    #     '<': '&lt;',
+    #     '>': '&gt;',
+    #     '&': '&amp;',
+    #     '"': '&quot;',
+    #     "'": '&apos;',
+    #     '/': '&#47;',
+    #     '#': '&#35;',
+    #     ' ': '&nbsp;'
+    # }
+
     """ MathML to LaTeX conversion with XSLT from krishna kadam"""
     html_string = html.unescape(html_string)
     xslt_file = os.path.join(settings.BASE_DIR, 'Transformer', 'assets', 'LaTex', 'mmltex.xsl')
@@ -279,7 +291,12 @@ def mathml2latex_yarosh(html_string: str):
         transform = etree.XSLT(xslt)
         newdom = transform(dom)
         newdom = str(newdom).replace("$", "")
+        newdom = htmlentities.encode(newdom)
         newdom = f"\({newdom}\)"
+
+        # for char, entity in html_entities.items():
+        #     newdom = newdom.replace(char, entity)
+
         latex_output = f"""<span class="math-tex">{str(newdom)}</span>"""
 
         mathml_element = html.unescape(str(mathml_element))
@@ -455,11 +472,11 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             if "front" in deck_oj:
                 front_content_list = deck_oj['front'].get('content', None)
                 if look_into_app:
-                    front_text = "<hr>".join([str(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][front_])
-                                              for front_ in front_content_list])
+                    front_text = "<hr>".join([str(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(front_, '')).replace("<br>", " ")
+                                              for front_ in front_content_list if front_ is not None and front_ != ''])
                 else:
-                    front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][front_])
-                                              for front_ in front_content_list])
+                    front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'].get(front_, '')).replace("<br>", " ")
+                                              for front_ in front_content_list if front_ is not None and front_ != ''])
 
                 front_text = assign_class_html(html_str=front_text, search_term="color", class_id='orangeText')
                 front_text_resp = write_html_mlo(text=front_text, exiting_hashcode=exiting_hashcode)
@@ -468,12 +485,12 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
 
                 front_img = deck_oj.get('front', None).get('img', None)
                 if front_img:
-                    if look_into_app:
-                        front_img_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][front_img]
-                    else:
-                        front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
-
                     try:
+                        if look_into_app:
+                            front_img_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][front_img]
+                        else:
+                            front_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][front_img]
+
                         front_img_path_resp = copy_to_hashcode_dir(src_path=front_img_path,
                                                                    exiting_hashcode=exiting_hashcode)
                         all_files.add(front_img_path_resp['relative_path'])
@@ -526,11 +543,11 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 back_content_list = deck_oj['back']['content']
 
                 if look_into_app:
-                    back_text = "<hr>".join([str(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][back_])
-                                             for back_ in back_content_list])
+                    back_text = "<hr>".join([str(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(back_, '')).replace("<br>", " ")
+                                             for back_ in back_content_list if back_ is not None and back_ != ''])
                 else:
-                    back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'][back_])
-                                             for back_ in back_content_list])
+                    back_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'].get(back_, '')).replace("<br>", " ")
+                                             for back_ in back_content_list if back_ is not None and back_ != ''])
                 back_text = assign_class_html(html_str=back_text, search_term="color", class_id='orangeText')
                 back_text_resp = write_html_mlo(text=back_text, exiting_hashcode=exiting_hashcode)
                 all_files.add(back_text_resp['relative_path'])
@@ -538,12 +555,12 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
 
                 back_img = deck_oj.get('back', None).get('img', None)
                 if back_img:
-                    if look_into_app:
-                        back_img_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][back_img]
-                    else:
-                        back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
-
                     try:
+                        if look_into_app:
+                            back_img_path = input_other_jsons_data["INPUT_IMAGES_JSON_DATA"][back_img]
+                        else:
+                            back_img_path = input_other_jsons_data["INPUT_COMMON_GLOSSARY_IMAGES_DATA"][back_img]
+
                         back_img_path_resp = copy_to_hashcode_dir(src_path=back_img_path, exiting_hashcode=exiting_hashcode)
                         all_files.add(back_img_path_resp['relative_path'])
                         exiting_hashcode.add(back_img_path_resp['hashcode'])
@@ -882,6 +899,12 @@ def assign_class_html(html_str, search_term, class_id):
                                search_term in tag.get('style', '')))
 
     for tag in span_tags:
+        # Remove the style attribute containing RGB color
+        # Check if 'color:rgb(' is present in the style attribute
+        if 'color:rgb(' in tag['style']:
+            # Remove the style attribute containing RGB color
+            del tag['style']
+
         # Assign class as orangeText
         tag['class'] = [class_id]
 

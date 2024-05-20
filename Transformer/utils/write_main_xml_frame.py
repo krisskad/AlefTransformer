@@ -2,8 +2,8 @@ import glob
 
 import htmlentities
 import os
-from Transformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags
-import shutil
+from Transformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags, mathml2latex_yarosh
+# import shutil
 from django.conf import settings
 
 
@@ -55,26 +55,41 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
     ]
 
     if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('head', None):
-        head = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['head']]
-        head = remove_html_tags(head)
+        try:
+            head = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['head']]
+            head = remove_html_tags(head)
+        except:
+            head = ""
     else:
         head = ""
 
     if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('title', None):
-        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['title']]
-        title = remove_html_tags(title)
+        try:
+            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['title']]
+            title = remove_html_tags(title)
+        except:
+            title = ""
     else:
         title = ""
 
     if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('subtitle', None):
-        subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
-        subtitle = remove_html_tags(subtitle)
-
+        try:
+            subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
+            subtitle = remove_html_tags(subtitle)
+        except:
+            subtitle = ""
     else:
         subtitle = ""
 
     if "goalText" in input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']:
-        goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText'], None)
+        try:
+            goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText'], None)
+
+            if "<math" in goalText:
+                goalText = mathml2latex_yarosh(html_string=goalText)
+        except:
+            goalText = ""
+
         # goalText = remove_html_tags(goalText)
         if goalText:
             lesson_objective_param = f'lessonObjective="{htmlentities.encode(goalText)}"'
