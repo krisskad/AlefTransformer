@@ -128,7 +128,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             #     extra_text = ""
 
         except Exception as e:
-            print(f"Title not found {e}")
+            print(f"Warning: Title not found {e}")
             title = ""
             # print(f"title text not found --> Now taking extra text as title by sorting top most text by pixel")
             # try:
@@ -181,7 +181,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             f"""
             <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description="{title}" xp:fieldtype="folder" customclass="Normal">
                 <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-                    <alef_draganddrop xlink:label="{temp[2]}" xp:name="alef_draganddrop" xp:description="" xp:fieldtype="folder" submitattempts="{submitCount}" validation="Yes" autowidth="false" optionwidth="No" invertoptions="No" stickyoptions="No">
+                    <alef_draganddrop xlink:label="{temp[2]}" xp:name="alef_draganddrop" xp:description="" xp:fieldtype="folder" submitattempts="{submitCount}" validation="No" autowidth="false" optionwidth="No" invertoptions="No" stickyoptions="No">
                         <alef_draganddropitem xlink:label="{temp[3]}" xp:name="alef_draganddropitem" xp:description="" xp:fieldtype="folder">
             """
         )
@@ -291,7 +291,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             map_link[dropId] = temp4[0]
             # print(index)
             view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
-            dropItem_list = view_obj["pageData"]["args"]["dropItems"][index]
+            try:
+                dropItem_list = view_obj["pageData"]["args"]["dropItems"][index]
+            except:
+                continue
 
             try:
                 dndProps_width = float(view_obj["pageData"]["args"]["dndProps"]["width"].replace("px", ""))
@@ -392,7 +395,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
         if src:
             resp = copy_to_hashcode_dir(
-                src_path=input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][src],
+                src_path=src,
                 exiting_hashcode=exiting_hashcode
             )
             all_files.add(resp['relative_path'])

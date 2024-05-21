@@ -108,14 +108,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode_temp2)
         temp.append(hashcode_temp2)
 
-
     try:
 
         """
         This code tries to extract a title from JSON data. If the desired title is not found directly, it checks for additional text options. It then combines the extra text with corresponding CSS attributes, sorts them by their vertical position, and selects the topmost one as the title. If inconsistencies arise in the JSON structures, it defaults to an empty title.
         """
         try:
-            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]['text']]
+            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][
+                input_json_data["pageData"]["args"]["title"]['text']]
 
             # try:
             #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
@@ -128,7 +128,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             #     extra_text = ""
 
         except Exception as e:
-            print(f"Title not found {e}")
+            print(f"Warning: Title not found {e}")
             title = ""
             # print(f"title text not found --> Now taking extra text as title by sorting top most text by pixel")
             # try:
@@ -224,7 +224,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     except Exception as e:
         print(f"Warning: CustomDragAndDrop_001 --> question statement not found {e}")
 
-
     try:
         map_link = dict()
         options = []
@@ -291,7 +290,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             map_link[dropId] = temp4[0]
             # print(index)
             view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
-            dropItem_list = view_obj["pageData"]["args"]["dropItems"][index]
+            try:
+                dropItem_list = view_obj["pageData"]["args"]["dropItems"][index]
+            except:
+                continue
 
             try:
                 dndProps_width = float(view_obj["pageData"]["args"]["dndProps"]["width"].replace("px", ""))
@@ -327,7 +329,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     screen_number = input_json_data['screen_number']
     image_name = f"{input_other_jsons_data['COURSE_ID']}_{str(screen_number)}.png"
 
-    image_path = os.path.join(settings.BASE_DIR,'media', 'customdnd_hotspot_images', image_name)
+    image_path = os.path.join(settings.BASE_DIR, 'media', 'customdnd_hotspot_images', image_name)
     # if os.path.isfile(image_path):
     #     print("Valid File")
     # else:
@@ -388,28 +390,29 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     except:
         pass
 
-    try:
-        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-        if src:
-            resp = copy_to_hashcode_dir(
-                src_path=input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][src],
-                exiting_hashcode=exiting_hashcode
-            )
-            all_files.add(resp['relative_path'])
-            exiting_hashcode.add(resp['hashcode'])
-
-            all_tags.append(
-                f"""
-                <alef_audionew xlink:label="{temp[4]}" xp:name="alef_audionew"
-                               xp:description="" xp:fieldtype="folder">
-                    <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-                                    xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-                                    src="../../../{resp['relative_path']}"/>
-                </alef_audionew>
-                """
-            )
-    except Exception as e:
-        print(f"Warning: Audio did not found in input structure {e}")
+    # try:
+    #     src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+    #     if src:
+    #         resp = copy_to_hashcode_dir(
+    #             src_path=src,
+    #             exiting_hashcode=exiting_hashcode
+    #         )
+    #
+    #         all_files.add(resp['relative_path'])
+    #         exiting_hashcode.add(resp['hashcode'])
+    #
+    #         all_tags.append(
+    #             f"""
+    #             <alef_audionew xlink:label="{temp[4]}" xp:name="alef_audionew"
+    #                            xp:description="" xp:fieldtype="folder">
+    #                 <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+    #                                 xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+    #                                 src="../../../{resp['relative_path']}"/>
+    #             </alef_audionew>
+    #             """
+    #         )
+    # except Exception as e:
+    #     print(f"Warning: Audio did not found in input structure {e}")
 
     all_tags.append(
         """
