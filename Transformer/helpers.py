@@ -306,6 +306,12 @@ def mathml2latex_yarosh(html_string: str):
 
 
 def write_html_mlo(text, exiting_hashcode, align="center"):
+    try:
+        from Transformer.helpers import assing_class_for_color
+        text = assing_class_for_color(text)
+    except:
+        pass
+
     text = convert_html_to_strong(html_str=text)
 
     if align:
@@ -952,6 +958,64 @@ def get_teachers_note_id(html_string):
         return context
     else:
         return {}
+
+
+
+def assing_class_for_color(html_string):
+
+    color_data = [
+      {"color": "Red", "hex": "#ff0000", "rgb": "rgb(255, 0, 0)", "class": "redText"},
+      {"color": "Red", "hex": "#ff0000", "rgb": "", "class": "redText"},
+      {"color": "Magenta", "hex": "#FF00FF", "rgb": "rgb(255, 0, 255)", "class": "purpleText"},
+      {"color": "Magenta", "hex": "#FF00FF", "rgb": "", "class": "purpleText"},
+      {"color": "Orange", "hex": "#F28705", "rgb": "", "class": "orangeText"},
+      {"color": "Orange", "hex": "#FD7F23", "rgb": "", "class": "orangeText"},
+      {"color": "Orange", "hex": "", "rgb": "rgb(253, 127, 35)", "class": "orangeText"},
+      {"color": "Orange", "hex": "", "rgb": "rgb(242, 135, 5)", "class": "orangeText"},
+      {"color": "Blue", "hex": "", "rgb": "rgb(0, 0, 255)", "class": "blueText_d"},
+      {"color": "Blue", "hex": "#1456eb", "rgb": "", "class": "blueText_d"},
+      {"color": "Blue", "hex": "#0000FF", "rgb": "", "class": "blueText_d"},
+      {"color": "Blue", "hex": "", "rgb": "", "class": "blueText_d"},
+      {"color": "Blue", "hex": "#0728e6", "rgb": "", "class": "blueText_d"},
+      {"color": "Indigo", "hex": "#4B0082", "rgb": "", "class": "purpleText_d"},
+      {"color": "Violet", "hex": "#7F00FF", "rgb": "", "class": "purpleText_d"},
+      {"color": "Purple", "hex": "#803D94", "rgb": "", "class": "purpleText_d"},
+      {"color": "Violet", "hex": "", "rgb": "rgb(127, 0, 255)", "class": "purpleText_d"},
+      {"color": "Indigo", "hex": "", "rgb": "rgb(75, 0, 130)", "class": "purpleText_d"},
+      {"color": "Cyan", "hex": "#00CCC2", "rgb": "", "class": "cyanText"},
+      {"color": "Cyan", "hex": "", "rgb": "rgb(0, 204, 194)", "class": "cyanText"},
+      {"color": "Green", "hex": "#1f9125", "rgb": "", "class": "greenText"},
+      {"color": "Green", "hex": "#00FF00", "rgb": "", "class": "greenText"},
+      {"color": "Green", "hex": "#4AAC00", "rgb": "", "class": "greenText"},
+      {"color": "Green", "hex": "", "rgb": "rgb(74, 172, 0)", "class": "greenText"}
+      ]
+
+    soup = BeautifulSoup(html_string, 'html.parser')
+
+    for tag in soup.find_all():
+        tag_name = tag.name.lower()
+        tag_name = tag_name.replace(" ", "")
+        tag_name = tag_name.lower()
+        for color in color_data:
+            if color["hex"].strip():
+                if color["hex"].lower().replace(" ", "") in tag.get('style', ''):
+                    tag_class = tag.get('class', [])
+                    tag_class.append(color["class"])
+                    tag['class'] = tag_class
+                    tag['style'] = ""
+                    break
+
+            if color["rgb"].strip():
+                if color["rgb"].lower().replace(" ", "") in tag.get('style', ''):
+                    tag_class = tag.get('class', [])
+                    tag_class.append(color["class"])
+                    tag['class'] = tag_class
+                    tag['style'] = ""
+                    break
+
+
+    return str(soup)
+
 
 
 def get_teacher_note(text: str, exiting_hashcode: set,

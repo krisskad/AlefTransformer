@@ -9,6 +9,11 @@ from bs4 import BeautifulSoup
 
 
 def write_html(text, exiting_hashcode):
+    try:
+        from Transformer.helpers import assing_class_for_color
+        text = assing_class_for_color(text)
+    except:
+        pass
     text = convert_html_to_strong(html_str=text)
 
     template = f"""
