@@ -86,13 +86,15 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
             goalText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['goalText'], None)
 
             if "<math" in goalText:
-                goalText = mathml2latex_yarosh(html_string=goalText)
+                goalText = remove_html_tags(goalText)
         except:
             goalText = ""
 
         # goalText = remove_html_tags(goalText)
         if goalText:
-            lesson_objective_param = f'lessonObjective="{htmlentities.encode(goalText)}"'
+            goalText = htmlentities.encode(goalText)
+            goalText = goalText.replace("&nbsp;", " ")
+            lesson_objective_param = f'lessonObjective="{goalText}"'
         else:
             lesson_objective_param = ""
     else:

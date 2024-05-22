@@ -391,6 +391,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     except:
         pass
 
+    all_tags.append(
+        """
+            </alef_draganddropitem>
+        </alef_draganddrop>
+        """
+    )
+
     try:
         src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
         if src:
@@ -416,8 +423,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(
         """
-                    </alef_draganddropitem>
-                </alef_draganddrop>
             </alef_column>
         </alef_section>
         """

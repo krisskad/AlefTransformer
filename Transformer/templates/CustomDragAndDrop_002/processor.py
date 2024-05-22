@@ -390,34 +390,38 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     except:
         pass
 
-    # try:
-    #     src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    #     if src:
-    #         resp = copy_to_hashcode_dir(
-    #             src_path=src,
-    #             exiting_hashcode=exiting_hashcode
-    #         )
-    #
-    #         all_files.add(resp['relative_path'])
-    #         exiting_hashcode.add(resp['hashcode'])
-    #
-    #         all_tags.append(
-    #             f"""
-    #             <alef_audionew xlink:label="{temp[4]}" xp:name="alef_audionew"
-    #                            xp:description="" xp:fieldtype="folder">
-    #                 <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
-    #                                 xp:description="" audiocontrols="Yes" xp:fieldtype="file"
-    #                                 src="../../../{resp['relative_path']}"/>
-    #             </alef_audionew>
-    #             """
-    #         )
-    # except Exception as e:
-    #     print(f"Warning: Audio did not found in input structure {e}")
+    all_tags.append(
+        """
+            </alef_draganddropitem>
+        </alef_draganddrop>
+        """
+    )
+
+    try:
+        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+        if src:
+            resp = copy_to_hashcode_dir(
+                src_path=src,
+                exiting_hashcode=exiting_hashcode
+            )
+            all_files.add(resp['relative_path'])
+            exiting_hashcode.add(resp['hashcode'])
+
+            all_tags.append(
+                f"""
+                <alef_audionew xlink:label="{temp[4]}" xp:name="alef_audionew"
+                               xp:description="" xp:fieldtype="folder">
+                    <alef_audiofile xlink:label="{resp['hashcode']}" xp:name="alef_audiofile"
+                                    xp:description="" audiocontrols="Yes" xp:fieldtype="file"
+                                    src="../../../{resp['relative_path']}"/>
+                </alef_audionew>
+                """
+            )
+    except Exception as e:
+        print(f"Warning: Audio did not found in input structure {e}")
 
     all_tags.append(
         """
-                    </alef_draganddropitem>
-                </alef_draganddrop>
             </alef_column>
         </alef_section>
         """
