@@ -2,6 +2,8 @@
 # from django.conf import settings
 # import os, shutil
 # import htmlentities
+import htmlentities
+
 from .helpers import *
 from bs4 import BeautifulSoup
 
@@ -89,14 +91,21 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     ]
 
     # Extracting variables
-    textFieldData = input_json_data["pageData"]["args"]["textFieldData"]
+    try:
+        textFieldData = input_json_data["pageData"]["args"]["textFieldData"]
 
-    qText = textFieldData.get("qText", None)
-    if qText:
-        text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][qText]
-        text = BeautifulSoup(text, "lxml").text
-    else:
-        print("warning: TabToRevealWithAudio_002 --> qText Not provided")
+        qText = textFieldData.get("qText", None)
+        if qText:
+            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(qText, None)
+            if text:
+                text = remove_html_tags(text)
+                text = htmlentities.encode(text)
+                text = text.replace("&nbsp;", " ")
+        else:
+            print("warning: TabToRevealWithAudio_002 --> qText Not provided")
+            text = ""
+    except Exception as e:
+        print(f"warning: TabToRevealWithAudio_002 --> {e}")
         text = ""
 
     temp1 = []
@@ -112,7 +121,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                  xp:fieldtype="folder" width="auto" cellspan="1">
                         <alef_presentation xlink:label="{temp1[2]}" xp:name="alef_presentation"
                                            xp:description="" xp:fieldtype="folder" type="Tabs" showtitle="false"
-                                           tab_title="{htmlentities.decode(text)}" multipleopen="false" firstopen="false">
+                                           tab_title="{text}" multipleopen="false" firstopen="false">
         """
     )
 

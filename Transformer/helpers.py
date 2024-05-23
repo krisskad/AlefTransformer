@@ -292,6 +292,7 @@ def mathml2latex_yarosh(html_string: str):
         newdom = transform(dom)
         newdom = str(newdom).replace("$", "")
         newdom = htmlentities.encode(newdom)
+        newdom = newdom.replace("&nbsp;", " ")
         newdom = f"\({newdom}\)"
 
         # for char, entity in html_entities.items():
@@ -307,7 +308,6 @@ def mathml2latex_yarosh(html_string: str):
 
 def write_html_mlo(text, exiting_hashcode, align="center"):
     try:
-        from Transformer.helpers import assing_class_for_color
         text = assing_class_for_color(text)
     except:
         pass
@@ -484,7 +484,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                     front_text = "<hr>".join([str(input_other_jsons_data['INPUT_COMMON_TEXT_JSON_DATA'].get(front_, '')).replace("<br>", " ")
                                               for front_ in front_content_list if front_ is not None and front_ != ''])
 
-                front_text = assign_class_html(html_str=front_text, search_term="color", class_id='orangeText')
+                # front_text = assign_class_html(html_str=front_text, search_term="color", class_id='orangeText')
                 front_text_resp = write_html_mlo(text=front_text, exiting_hashcode=exiting_hashcode)
                 all_files.add(front_text_resp['relative_path'])
                 exiting_hashcode.add(front_text_resp['hashcode'])
@@ -960,7 +960,6 @@ def get_teachers_note_id(html_string):
         return {}
 
 
-
 def assing_class_for_color(html_string):
 
     color_data = [
@@ -993,29 +992,30 @@ def assing_class_for_color(html_string):
     soup = BeautifulSoup(html_string, 'html.parser')
 
     for tag in soup.find_all():
-        tag_name = tag.name.lower()
-        tag_name = tag_name.replace(" ", "")
-        tag_name = tag_name.lower()
+        style = tag.get('style', '')
+
         for color in color_data:
             if color["hex"].strip():
-                if color["hex"].lower().replace(" ", "") in tag.get('style', ''):
+                if color["hex"].lower().replace(" ", "") in style.lower().replace(" ", ""):
                     tag_class = tag.get('class', [])
-                    tag_class.append(color["class"])
-                    tag['class'] = tag_class
-                    tag['style'] = ""
+                    if not color["class"] in tag_class:
+                        tag_class.append(color["class"])
+                        tag['class'] = tag_class
+
+                    tag['style'] = ";".join([i for i in style.split(";") if "color" not in i])
                     break
 
             if color["rgb"].strip():
-                if color["rgb"].lower().replace(" ", "") in tag.get('style', ''):
+                if color["rgb"].lower().replace(" ", "") in style.lower().replace(" ", ""):
                     tag_class = tag.get('class', [])
-                    tag_class.append(color["class"])
-                    tag['class'] = tag_class
-                    tag['style'] = ""
+                    if not color["class"] in tag_class:
+                        tag_class.append(color["class"])
+                        tag['class'] = tag_class
+
+                    tag['style'] = ";".join([i for i in style.split(";") if "color" not in i])
                     break
 
-
     return str(soup)
-
 
 
 def get_teacher_note(text: str, exiting_hashcode: set,

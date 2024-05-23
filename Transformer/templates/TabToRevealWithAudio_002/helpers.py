@@ -114,18 +114,15 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     tabHeaderTxt = input_json_data.get("tabHeaderTxt", None)
     if tabHeaderTxt:
-        tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][tabHeaderTxt]
+        tabHeaderTxt_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(tabHeaderTxt)
 
-        if "<math" in tabHeaderTxt_text:
+        if tabHeaderTxt_text and "<math" in tabHeaderTxt_text:
             warning = f"""Warning Note: TabToRevealWithAudio_002 --> \n We found MathML in TabHeader - Please check below string :\n{tabHeaderTxt_text}.We are converting above string into plain string to avoid errors in LCMS."""
             print(warning)
             STATUS.append(warning)
-
-        # if "<math" in tabHeaderTxt_text:
-        #     tabHeaderTxt_text = mathml2latex_yarosh(html_string=tabHeaderTxt_text)
-        # else:
-        tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
-
+            tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
+            tabHeaderTxt_text = htmlentities.encode(tabHeaderTxt_text)
+            tabHeaderTxt_text = tabHeaderTxt_text.replace("&nbsp;", " ")
 
     else:
         print("tabHeaderTxt Is not provided")
@@ -134,41 +131,44 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_tags.append(
         f"""
         <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
-                                              xp:description="{htmlentities.encode(tabHeaderTxt_text)}" xp:fieldtype="folder"
+                                              xp:description="{tabHeaderTxt_text}" xp:fieldtype="folder"
                                               customclass="Normal">
         """
     )
 
-    audio = input_json_data.get("audio", None)
-    if audio:
-        audio_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][audio]
-        resp = copy_to_hashcode_dir(src_path=audio_src, exiting_hashcode=exiting_hashcode)
-        all_files.add(resp['relative_path'])
-        exiting_hashcode.add(resp['hashcode'])
+    try:
+        audio = input_json_data.get("audio", None)
+        if audio:
+            audio_src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][audio]
+            resp = copy_to_hashcode_dir(src_path=audio_src, exiting_hashcode=exiting_hashcode)
+            all_files.add(resp['relative_path'])
+            exiting_hashcode.add(resp['hashcode'])
 
-        all_tags.append(
-            f"""
-            <alef_column xlink:label="{temp[1]}" xp:name="alef_column"
-                         xp:description="" xp:fieldtype="folder" width="1" alignment="Center"
-                         cellspan="1">
-                <alef_audionew xlink:label="{temp[2]}" xp:name="alef_audionew"
-                               xp:description="" xp:fieldtype="folder">
-                    <alef_audiofile xlink:label="{resp['hashcode']}"
-                                    xp:name="alef_audiofile" xp:description=""
-                                    audiocontrols="No" xp:fieldtype="file"
-                                    src="../../../{resp['relative_path']}"/>
-                </alef_audionew>
-            </alef_column>
-            """
-        )
-    else:
-        print("Warning: Audio not found so ignoring audio tag")
+            all_tags.append(
+                f"""
+                <alef_column xlink:label="{temp[1]}" xp:name="alef_column"
+                             xp:description="" xp:fieldtype="folder" width="1" alignment="Center"
+                             cellspan="1">
+                    <alef_audionew xlink:label="{temp[2]}" xp:name="alef_audionew"
+                                   xp:description="" xp:fieldtype="folder">
+                        <alef_audiofile xlink:label="{resp['hashcode']}"
+                                        xp:name="alef_audiofile" xp:description=""
+                                        audiocontrols="No" xp:fieldtype="file"
+                                        src="../../../{resp['relative_path']}"/>
+                    </alef_audionew>
+                </alef_column>
+                """
+            )
+        else:
+            print("Warning: Audio not found so ignoring audio tag")
+    except Exception as e:
+        pass
 
     TabContentText = input_json_data.get("TabContentText", None)
     if TabContentText:
-        TabContentText_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][TabContentText]
+        TabContentText_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(TabContentText)
 
-        if "<math" in TabContentText_text:
+        if TabContentText_text and "<math" in TabContentText_text:
             TabContentText_text = mathml2latex_yarosh(html_string=TabContentText_text)
 
         try:
@@ -253,46 +253,51 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
     else:
         print("tabHeaderTxt Is not provided so ignoring tag")
 
+    try:
+        imageData = input_json_data.get("imageData", None)
+        if imageData:
+            imageData_src = imageData.get("src", None)
+            if imageData_src:
+                imageData_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][imageData_src]
+                resp_img = copy_to_hashcode_dir(src_path=imageData_src, exiting_hashcode=exiting_hashcode)
+                all_files.add(resp_img['relative_path'])
+                exiting_hashcode.add(resp_img['hashcode'])
+                all_tags.append(
+                    f"""
+                        <alef_column xlink:label="{temp[7]}" xp:name="alef_column"
+                                     xp:description="" xp:fieldtype="folder" width="6" cellspan="1">
+                            <alef_image xlink:label="{resp_img['hashcode']}" xp:name="alef_image"
+                                        xp:description="" xp:fieldtype="image" alt="">
+                                <xp:img href="../../../{resp_img['relative_path']}"
+                                        width="1583" height="890"/>
+                            </alef_image>
+                        </alef_column>
+                    """
+                )
+    except Exception as e:
+        pass
 
-    imageData = input_json_data.get("imageData", None)
-    if imageData:
-        imageData_src = imageData.get("src", None)
-        if imageData_src:
-            imageData_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][imageData_src]
-            resp_img = copy_to_hashcode_dir(src_path=imageData_src, exiting_hashcode=exiting_hashcode)
-            all_files.add(resp_img['relative_path'])
-            exiting_hashcode.add(resp_img['hashcode'])
+    try:
+        bgImage = input_json_data.get("bgImage", None)
+        if bgImage:
+            bgImage_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][bgImage]
+            resp = copy_to_hashcode_dir(src_path=bgImage_src, exiting_hashcode=exiting_hashcode)
+            all_files.add(resp['relative_path'])
+            exiting_hashcode.add(resp['hashcode'])
             all_tags.append(
                 f"""
-                    <alef_column xlink:label="{temp[7]}" xp:name="alef_column"
-                                 xp:description="" xp:fieldtype="folder" width="6" cellspan="1">
-                        <alef_image xlink:label="{resp_img['hashcode']}" xp:name="alef_image"
-                                    xp:description="" xp:fieldtype="image" alt="">
-                            <xp:img href="../../../{resp_img['relative_path']}"
-                                    width="1583" height="890"/>
-                        </alef_image>
-                    </alef_column>
+                <alef_column xlink:label="{temp[6]}" xp:name="alef_column"
+                             xp:description="" xp:fieldtype="folder" width="6" cellspan="1">
+                    <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
+                                xp:description="" xp:fieldtype="image" alt="">
+                        <xp:img href="../../../{resp['relative_path']}"
+                                width="1583" height="890"/>
+                    </alef_image>
+                </alef_column>
                 """
             )
-
-    bgImage = input_json_data.get("bgImage", None)
-    if bgImage:
-        bgImage_src = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][bgImage]
-        resp = copy_to_hashcode_dir(src_path=bgImage_src, exiting_hashcode=exiting_hashcode)
-        all_files.add(resp['relative_path'])
-        exiting_hashcode.add(resp['hashcode'])
-        all_tags.append(
-            f"""
-            <alef_column xlink:label="{temp[6]}" xp:name="alef_column"
-                         xp:description="" xp:fieldtype="folder" width="6" cellspan="1">
-                <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
-                            xp:description="" xp:fieldtype="image" alt="">
-                    <xp:img href="../../../{resp['relative_path']}"
-                            width="1583" height="890"/>
-                </alef_image>
-            </alef_column>
-            """
-        )
+    except Exception as e:
+        pass
 
     all_tags.append(
         """
