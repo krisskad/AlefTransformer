@@ -120,7 +120,20 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         This code tries to extract a title from JSON data. If the desired title is not found directly, it checks for additional text options. It then combines the extra text with corresponding CSS attributes, sorts them by their vertical position, and selects the topmost one as the title. If inconsistencies arise in the JSON structures, it defaults to an empty title.
         """
         try:
-            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]['text']]
+            # title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]['text']]
+            df = input_other_jsons_data['CUSTOM_DND_TITLE'].fillna("")
+            row = df[(df['TopicID'] == input_other_jsons_data['COURSE_ID']) & (df['Screen#'] == input_json_data['screen_number'])]
+            if not row.empty:
+                title_dict = row.to_dict(orient='records')[0]
+            else:
+                title_dict = {}
+
+            title = title_dict.get("Title", "")
+            if title is None:
+                title = ""
+            instruction = title_dict.get("Instruction", "")
+            if instruction is None:
+                instruction = ""
 
             # try:
             #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
@@ -135,6 +148,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         except Exception as e:
             print(f"Warning: Title not found {e}")
             title = ""
+            instruction = ""
             # print(f"title text not found --> Now taking extra text as title by sorting top most text by pixel")
             # try:
             #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
@@ -191,20 +205,20 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
         )
 
-        try:
-            extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
-            all_text = []
-            for i in extra_text_list:
-                try:
-                    text_id = i["text"]
-                    extra = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
-                except:
-                    continue
-                all_text.append(extra)
-            all_extra = "<br>".join(all_text)
-        except Exception as e:
-            print(f"Warning: text not found --> {e}")
-            all_extra = ""
+        # try:
+        #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
+        #     all_text = []
+        #     for i in extra_text_list:
+        #         try:
+        #             text_id = i["text"]
+        #             extra = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+        #         except:
+        #             continue
+        #         all_text.append(extra)
+        #     all_extra = "<br>".join(all_text)
+        # except Exception as e:
+        #     print(f"Warning: text not found --> {e}")
+        #     all_extra = ""
 
         temp2 = []
         for _ in range(5):
@@ -212,7 +226,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             exiting_hashcode.add(hashcode_temp2)
             temp2.append(hashcode_temp2)
 
-        resp = write_html(text=all_extra, exiting_hashcode=exiting_hashcode, align=None)
+        resp = write_html(text=instruction, exiting_hashcode=exiting_hashcode, align=None)
         exiting_hashcode.add(resp['hashcode'])
         all_files.add(resp['relative_path'])
         all_tags.append(
