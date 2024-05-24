@@ -1,4 +1,6 @@
 import importlib
+
+import pandas as pd
 from django.conf import settings
 from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file, remove_char_from_keys
 from Transformer.utils.write_main_xml_frame import write_mlo
@@ -123,11 +125,17 @@ def process_data(template_ids=None):
 
 
 def iterative_process_data(all_dir_objs):
+
+    try:
+        customdnd_title = pd.read_csv(str(os.path.join(settings.BASE_DIR, 'media', 'customdnd_title.csv')))
+    except:
+        customdnd_title = pd.DataFrame()
+
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         print("#" * 20)
-        # if course_obj_dir_dict["COURSE_ID"] != "SC7_L009_Learn_2":
-        #     continue
+        if course_obj_dir_dict["COURSE_ID"] != "SC5_L009_Investigate_1":
+            continue
         print(course_obj_dir_dict['COURSE_ID'])
 
         settings.INPUT_COMMON_DIR = course_obj_dir_dict['INPUT_COMMON_DIR']
@@ -189,7 +197,8 @@ def iterative_process_data(all_dir_objs):
             "INPUT_COMMON_TEMPLATE_IMAGES_DATA":INPUT_COMMON_TEMPLATE_IMAGES_DATA,
             "INPUT_COMMON_TEXT_JSON_DATA":INPUT_COMMON_TEXT_JSON_DATA,
             "OUTPUT_DIR":course_obj_dir_dict['OUTPUT_DIR'],
-            "COURSE_ID":course_obj_dir_dict['COURSE_ID']
+            "COURSE_ID":course_obj_dir_dict['COURSE_ID'],
+            "CUSTOM_DND_TITLE":customdnd_title
         }
 
         if "INPUT_APP_GLOSSARY_JSON" in course_obj_dir_dict:
