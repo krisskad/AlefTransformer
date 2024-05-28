@@ -121,8 +121,9 @@ def image(input_json_data, input_other_jsons_data, exiting_hashcode):
             print(warning)
             STATUS.append(warning)
             tabHeaderTxt_text = remove_html_tags(tabHeaderTxt_text)
-            tabHeaderTxt_text = htmlentities.encode(tabHeaderTxt_text)
-            tabHeaderTxt_text = tabHeaderTxt_text.replace("&nbsp;", " ")
+
+        tabHeaderTxt_text = htmlentities.encode(tabHeaderTxt_text)
+        tabHeaderTxt_text = tabHeaderTxt_text.replace("&nbsp;", " ")
 
     else:
         print("tabHeaderTxt Is not provided")
