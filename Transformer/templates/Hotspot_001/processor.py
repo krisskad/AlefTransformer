@@ -187,10 +187,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         try:
             if hotpost_view:
-                top = float(hotpost_view[idx].get("top", "").replace("px", ""))
-                left = float(hotpost_view[idx].get("top", "").replace("px", ""))
-                width = float(hotpost_view[idx].get("top", "").replace("px", ""))
-                height = float(hotpost_view[idx].get("top", "").replace("px", ""))
+                top = int(float(hotpost_view[idx].get("top", "").replace("px", "")))
+                left = int(float(hotpost_view[idx].get("left", "").replace("px", "")))
+                width = int(float(hotpost_view[idx].get("width", "").replace("px", "")))
+                height = int(float(hotpost_view[idx].get("height", "").replace("px", "")))
                 bottom = top + height
                 right = left + width
 

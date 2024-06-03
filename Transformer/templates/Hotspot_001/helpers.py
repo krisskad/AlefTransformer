@@ -121,8 +121,8 @@ def hotspotitem_v_false(popup_obj, input_json_data, input_other_jsons_data, exit
                     view_obj_image = view_obj["pageData"]["args"]["hotspots"][idx]
                     popup_img = view_obj_image["popup"]
                     imageDataObj = popup_img["imageData"]
-                    width = imageDataObj["width"].replace("px", "")
-                    height = imageDataObj["height"].replace("px", "")
+                    width = float(imageDataObj["width"].replace("px", ""))
+                    height = float(imageDataObj["height"].replace("px", ""))
                 except Exception as e:
                     print(f"Warning: While looking into view.json for popup image height and width error occurred: {e}")
                     print("Setting up constant width height as w:1335 & h:890")
@@ -138,7 +138,7 @@ def hotspotitem_v_false(popup_obj, input_json_data, input_other_jsons_data, exit
                                 xp:name="alef_image" xp:description=""
                                 xp:fieldtype="image" alt="" customWidth="800">
                         <xp:img href="../../../{resp_image['relative_path']}"
-                                width="{width}" height="{height}"/>
+                                width="{int(width)}" height="{int(height)}"/>
                     </alef_image>
                 </alef_column>
                 """
@@ -312,8 +312,8 @@ def hotspotitem_v_true(popup_obj, input_json_data, input_other_jsons_data, exiti
                     view_obj_image = view_obj["pageData"]["args"]["hotspots"][idx]
                     popup_img = view_obj_image["popup"]
                     imageDataObj = popup_img["imageData"]
-                    width = imageDataObj["width"]
-                    height = imageDataObj["height"]
+                    width = float(imageDataObj["width"].replace("px", ""))
+                    height = float(imageDataObj["height"].replace("px", ""))
                 except Exception as e:
                     print(f"Warning: While looking into view.json for popup image height and width error occurred: {e}")
                     print("Setting up constant width height as w:1335 & h:890")
@@ -329,7 +329,7 @@ def hotspotitem_v_true(popup_obj, input_json_data, input_other_jsons_data, exiti
                                 xp:name="alef_image" xp:description=""
                                 xp:fieldtype="image" alt="" customWidth="800">
                         <xp:img href="../../../{resp_image['relative_path']}"
-                                width="{width}" height="{height}"/>
+                                width="{int(width)}" height="{int(height)}"/>
                     </alef_image>
                 </alef_column>
                 """
@@ -502,8 +502,8 @@ def hotspotitem_h_true(popup_obj, input_json_data, input_other_jsons_data, exiti
                     view_obj_image = view_obj["pageData"]["args"]["hotspots"][idx]
                     popup_img = view_obj_image["popup"]
                     imageDataObj = popup_img["imageData"]
-                    width = imageDataObj["width"]
-                    height = imageDataObj["height"]
+                    width = float(imageDataObj["width"].replace("px", ""))
+                    height = float(imageDataObj["height"].replace("px", ""))
                 except Exception as e:
                     print(f"Warning: While looking into view.json for popup image height and width error occurred: {e}")
                     print("Setting up constant width height as w:1335 & h:890")
@@ -519,7 +519,7 @@ def hotspotitem_h_true(popup_obj, input_json_data, input_other_jsons_data, exiti
                                 xp:name="alef_image" xp:description=""
                                 xp:fieldtype="image" alt="">
                         <xp:img href="../../../{resp_image['relative_path']}"
-                                width="{width}" height="{height}"/>
+                                width="{int(width)}" height="{int(height)}"/>
                     </alef_image>
                 </alef_column>
                 """
@@ -625,9 +625,9 @@ def hotspotitem_h_true(popup_obj, input_json_data, input_other_jsons_data, exiti
                           fullscreen="False">
             <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
                           xp:description="" xp:fieldtype="folder" customclass="Normal">
-                {image_tag}
-                {audio_tag}
                 {description_tag}
+                {audio_tag}
+                {image_tag}
             </alef_column>
             </alef_section>
         </alef_hotspotitem>
@@ -678,8 +678,8 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
                     view_obj_image = view_obj["pageData"]["args"]["hotspots"][idx]
                     popup_img = view_obj_image["popup"]
                     imageDataObj = popup_img["imageData"]
-                    width = imageDataObj["width"]
-                    height = imageDataObj["height"]
+                    width = float(imageDataObj["width"].replace("px", ""))
+                    height = float(imageDataObj["height"].replace("px", ""))
                 except Exception as e:
                     print(f"Warning: While looking into view.json for popup image height and width error occurred: {e}")
                     print("Setting up constant width height as w:1335 & h:890")
@@ -695,7 +695,7 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
                                 xp:name="alef_image" xp:description=""
                                 xp:fieldtype="image" alt="">
                         <xp:img href="../../../{resp_image['relative_path']}"
-                                width="{width}" height="{height}"/>
+                                width="{int(width)}" height="{int(height)}"/>
                     </alef_image>
                 </alef_column>
                 """
@@ -801,9 +801,9 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
                           fullscreen="False">
             <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
                           xp:description="" xp:fieldtype="folder" customclass="Normal">
+                {image_tag}
                 {description_tag}
                 {audio_tag}
-                {image_tag}
             </alef_column>
             </alef_section>
         </alef_hotspotitem>
