@@ -1,5 +1,5 @@
-from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong, get_teacher_note,
-                                 write_html_mlo, mathml2latex_yarosh, get_xml_feedback, get_xml_hint, remove_html_tags)
+from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong, get_teacher_note, get_popup_mlo_from_text,
+                                 write_html_mlo, mathml2latex_yarosh, get_xml_feedback, get_xml_hint, remove_html_tags, text_en_html_to_html_text)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -102,6 +102,12 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # Extracting variables
     hotspots = input_json_data["pageData"]["args"]["hotspots"]
 
+    temp = []
+    for _ in range(10):
+        hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp2)
+        temp.append(hashcode_temp2)
+
     try:
         view_ref = input_json_data["pageData"]['viewRef']
         view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
@@ -109,6 +115,23 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         view_obj = {}
         print(f"Warning: view_ref not found please check view.json file : {e}")
 
+    temp = []
+    for _ in range(10):
+        hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(hashcode_temp2)
+        temp.append(hashcode_temp2)
+
+    all_tags.append(
+        f"""
+        <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
+                                  xp:description="Click the boxes" xp:fieldtype="folder" customclass="Normal">
+            <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
+                         xp:fieldtype="folder" width="auto" cellspan="1">
+                <alef_hotspot xlink:label="{temp[2]}" xp:name="alef_hotspot"
+                              xp:description="" xp:fieldtype="folder" showColor="Yes" hotspotColor="Grey"
+                              borderColor="Grey" stembackround="Yes">
+        """
+    )
 
     try:
         extraTextsList = input_json_data["pageData"]["args"]["extraTexts"]
@@ -123,9 +146,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             if ques_text_id:
                 ques_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_text_id]
+                HtmlText = text_en_html_to_html_text(html_string=ques_text)
 
                 resp_ques = write_html(
-                    text=ques_text,
+                    text=HtmlText,
                     exiting_hashcode=exiting_hashcode,
                     align=None
                 )
@@ -133,51 +157,68 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 all_files.add(resp_ques['relative_path'])
                 exiting_hashcode.add(resp_ques['hashcode'])
 
-                question_xml = f"""
-                <alef_html xlink:label="{resp_ques['hashcode']}" xp:name="alef_html" xp:description=""
-                                   xp:fieldtype="html"
-                                   src="../../../{resp_ques['relative_path']}"/>
-                """
+                popup_response = get_popup_mlo_from_text(
+                    text=ques_text,
+                    input_other_jsons_data=input_other_jsons_data,
+                    all_files=all_files,
+                    exiting_hashcode=exiting_hashcode,
+                    enable_question_statement=False
+                )
+
+                if popup_response:
+                    all_files = popup_response['all_files']
+                    exiting_hashcode = popup_response['exiting_hashcode']
+                    popup = "\n".join(popup_response['all_tags'])
+
+                    all_tags.append(
+                        f"""
+                        <alef_questionstatement xlink:label="{temp[3]}"
+                                                            xp:name="alef_questionstatement" xp:description=""
+                                                            xp:fieldtype="folder">
+                            <alef_section_general xlink:label="{temp[4]}"
+                                                  xp:name="alef_section_general" xp:description=""
+                                                  xp:fieldtype="folder">
+                                <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto">
+                                    <alef_tooltip xlink:label="{temp[6]}" xp:name="alef_tooltip"
+                                                                  xp:description="" xp:fieldtype="folder">
+                                        <alef_html xlink:label="{resp_ques['hashcode']}" xp:name="alef_html"
+                                                   xp:description="" xp:fieldtype="html"
+                                                   src="../../../{resp_ques['relative_path']}"/>
+                                        {popup}
+                                    </alef_tooltip>
+                                </alef_column>
+                            </alef_section_general>
+                        </alef_questionstatement>
+                        """
+                    )
+                else:
+                    all_tags.append(
+                        f"""
+                        <alef_questionstatement xlink:label="{temp[3]}"
+                                                            xp:name="alef_questionstatement" xp:description=""
+                                                            xp:fieldtype="folder">
+                            <alef_section_general xlink:label="{temp[4]}"
+                                                  xp:name="alef_section_general" xp:description=""
+                                                  xp:fieldtype="folder">
+                                <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
+                                             xp:description="" xp:fieldtype="folder" width="auto">
+                                    <alef_html xlink:label="{resp_ques['hashcode']}" xp:name="alef_html" xp:description=""
+                                                   xp:fieldtype="html"
+                                                   src="../../../{resp_ques['relative_path']}"/>
+    
+                                </alef_column>
+                            </alef_section_general>
+                        </alef_questionstatement>
+                        """
+                    )
             else:
                 question_xml = ""
     except Exception as e:
         question_xml = ""
         print(f"Warning: Question Statement is not present - assigning it as blank {e}")
 
-    temp = []
-    for _ in range(10):
-        hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-        exiting_hashcode.add(hashcode_temp2)
-        temp.append(hashcode_temp2)
 
-    all_tags.append(
-        f"""
-        <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
-                                  xp:description="Click the boxes" xp:fieldtype="folder" customclass="Normal">
-            <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
-                         xp:fieldtype="folder" width="auto" cellspan="1">
-                {question_xml}
-                <alef_hotspot xlink:label="{temp[2]}" xp:name="alef_hotspot"
-                              xp:description="" xp:fieldtype="folder" showColor="Yes" hotspotColor="Grey"
-                              borderColor="Grey" stembackround="No">
-                    
-        """
-    )
-
-    all_tags.append(
-        f"""
-        <alef_questionstatement xlink:label="{temp[3]}"
-                                            xp:name="alef_questionstatement" xp:description=""
-                                            xp:fieldtype="folder">
-            <alef_section_general xlink:label="{temp[4]}"
-                                  xp:name="alef_section_general" xp:description=""
-                                  xp:fieldtype="folder">
-                <alef_column xlink:label="{temp[5]}" xp:name="alef_column"
-                             xp:description="" xp:fieldtype="folder" width="auto"/>
-            </alef_section_general>
-        </alef_questionstatement>
-        """
-    )
     map_links = []
     popup_items = []
     hotpost_view = view_obj['pageData']['args'].get("hotspots", [])
@@ -215,40 +256,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             # audio = popup_obj.get("audio", None)
 
             if type == "v" and textFirst == 'false':
-                resp = hotspotitem_v_false(
-                    popup_obj=popup_obj,
-                    input_json_data=input_json_data,
-                    input_other_jsons_data=input_other_jsons_data,
-                    exiting_hashcode=exiting_hashcode,
-                    view_obj=view_obj,
-                    hotspot=hotspot,
-                    idx=idx,
-                    targetid=targetid
-                )
-            elif type == "v" and textFirst == 'true':
-                resp = hotspotitem_v_true(
-                    popup_obj=popup_obj,
-                    input_json_data=input_json_data,
-                    input_other_jsons_data=input_other_jsons_data,
-                    exiting_hashcode=exiting_hashcode,
-                    view_obj=view_obj,
-                    hotspot=hotspot,
-                    idx=idx,
-                    targetid=targetid
-                )
-
-            elif type == "h" and textFirst == 'true':
-                resp = hotspotitem_h_true(
-                    popup_obj=popup_obj,
-                    input_json_data=input_json_data,
-                    input_other_jsons_data=input_other_jsons_data,
-                    exiting_hashcode=exiting_hashcode,
-                    view_obj=view_obj,
-                    hotspot=hotspot,
-                    idx=idx,
-                    targetid=targetid
-                )
-            elif type == "h" and textFirst == 'false':
                 resp = hotspotitem_h_false(
                     popup_obj=popup_obj,
                     input_json_data=input_json_data,
@@ -258,7 +265,43 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     hotspot=hotspot,
                     idx=idx,
                     targetid=targetid
-                )
+                ) # image left and text right
+
+            elif type == "v" and textFirst == 'true':
+                resp = hotspotitem_h_true(
+                    popup_obj=popup_obj,
+                    input_json_data=input_json_data,
+                    input_other_jsons_data=input_other_jsons_data,
+                    exiting_hashcode=exiting_hashcode,
+                    view_obj=view_obj,
+                    hotspot=hotspot,
+                    idx=idx,
+                    targetid=targetid
+                )  # image right and text left
+
+            elif type == "h" and textFirst == 'true':
+                resp = hotspotitem_v_true(
+                    popup_obj=popup_obj,
+                    input_json_data=input_json_data,
+                    input_other_jsons_data=input_other_jsons_data,
+                    exiting_hashcode=exiting_hashcode,
+                    view_obj=view_obj,
+                    hotspot=hotspot,
+                    idx=idx,
+                    targetid=targetid
+                ) # image bottom and text top
+
+            elif type == "h" and textFirst == 'false':
+                resp = hotspotitem_v_false(
+                    popup_obj=popup_obj,
+                    input_json_data=input_json_data,
+                    input_other_jsons_data=input_other_jsons_data,
+                    exiting_hashcode=exiting_hashcode,
+                    view_obj=view_obj,
+                    hotspot=hotspot,
+                    idx=idx,
+                    targetid=targetid
+                ) # image top and text bottom
 
             else:
                 print("type and textFirst are not compatible")
@@ -317,7 +360,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     )
 
     temp1 = []
-    for _ in range(10):
+    for _ in range(3):
         hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
         exiting_hashcode.add(hashcode_temp2)
         temp1.append(hashcode_temp2)

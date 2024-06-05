@@ -1,4 +1,4 @@
-from Transformer.helpers import remove_html_tags, generate_unique_folder_name, convert_html_to_strong
+from Transformer.helpers import remove_html_tags, generate_unique_folder_name, convert_html_to_strong, get_popup_mlo_from_text, text_en_html_to_html_text
 from django.conf import settings
 import os, shutil
 
@@ -188,9 +188,10 @@ def hotspotitem_v_false(popup_obj, input_json_data, input_other_jsons_data, exit
         descId = popup_obj.get("description", None)
         if descId:
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
+            HtmlText = text_en_html_to_html_text(html_string=desc_text)
 
             resp_desc = write_html(
-                text=desc_text,
+                text=HtmlText,
                 exiting_hashcode=exiting_hashcode,
                 align=None
             )
@@ -198,16 +199,44 @@ def hotspotitem_v_false(popup_obj, input_json_data, input_other_jsons_data, exit
             all_files.add(resp_desc['relative_path'])
             exiting_hashcode.add(resp_desc['hashcode'])
 
-            description_tag = f"""
-                <alef_column xlink:label="{temp[3]}"
-                                             xp:name="alef_column" xp:description=""
-                                             xp:fieldtype="folder" width="auto" cellspan="1">
-                    <alef_html xlink:label="{resp_desc['hashcode']}"
-                               xp:name="alef_html" xp:description=""
-                               xp:fieldtype="html"
-                               src="../../../{resp_desc['relative_path']}"/>
-                </alef_column>
-                """
+            popup_response = get_popup_mlo_from_text(
+                text=desc_text,
+                input_other_jsons_data=input_other_jsons_data,
+                all_files=all_files,
+                exiting_hashcode=exiting_hashcode,
+                enable_question_statement=False
+            )
+
+            if popup_response:
+                all_files = popup_response['all_files']
+                exiting_hashcode = popup_response['exiting_hashcode']
+                popup = "\n".join(popup_response['all_tags'])
+                description_tag = f"""
+                        <alef_column xlink:label="{temp[3]}"
+                                                     xp:name="alef_column" xp:description=""
+                                                     xp:fieldtype="folder" width="auto" cellspan="1">                          
+                           <alef_tooltip xlink:label="{temp[6]}" xp:name="alef_tooltip"
+                                                          xp:description="" xp:fieldtype="folder">
+                                <alef_html xlink:label="{resp_desc['hashcode']}" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../{resp_desc['relative_path']}"/>
+                                {popup}
+                            </alef_tooltip>
+                        </alef_column>
+                        """
+
+            else:
+
+                description_tag = f"""
+                        <alef_column xlink:label="{temp[3]}"
+                                                     xp:name="alef_column" xp:description=""
+                                                     xp:fieldtype="folder" width="auto" cellspan="1">
+                            <alef_html xlink:label="{resp_desc['hashcode']}"
+                                       xp:name="alef_html" xp:description=""
+                                       xp:fieldtype="html"
+                                       src="../../../{resp_desc['relative_path']}"/>
+                        </alef_column>
+                        """
         else:
             description_tag = ""
 
@@ -375,12 +404,14 @@ def hotspotitem_v_true(popup_obj, input_json_data, input_other_jsons_data, exiti
         audio_tag = ""
 
     try:
-        descId = popup_obj.get("audio", None)
+        descId = popup_obj.get("description", None)
         if descId:
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
 
+            HtmlText = text_en_html_to_html_text(html_string=desc_text)
+
             resp_desc = write_html(
-                text=desc_text,
+                text=HtmlText,
                 exiting_hashcode=exiting_hashcode,
                 align=None
             )
@@ -388,16 +419,44 @@ def hotspotitem_v_true(popup_obj, input_json_data, input_other_jsons_data, exiti
             all_files.add(resp_desc['relative_path'])
             exiting_hashcode.add(resp_desc['hashcode'])
 
-            description_tag = f"""
-                <alef_column xlink:label="{temp[2]}"
-                                             xp:name="alef_column" xp:description=""
-                                             xp:fieldtype="folder" width="auto" cellspan="1">
-                    <alef_html xlink:label="{resp_desc['hashcode']}"
-                               xp:name="alef_html" xp:description=""
-                               xp:fieldtype="html"
-                               src="../../../{resp_desc['relative_path']}"/>
-                </alef_column>
-                """
+            popup_response = get_popup_mlo_from_text(
+                text=desc_text,
+                input_other_jsons_data=input_other_jsons_data,
+                all_files=all_files,
+                exiting_hashcode=exiting_hashcode,
+                enable_question_statement=False
+            )
+
+            if popup_response:
+                all_files = popup_response['all_files']
+                exiting_hashcode = popup_response['exiting_hashcode']
+                popup = "\n".join(popup_response['all_tags'])
+                description_tag = f"""
+                        <alef_column xlink:label="{temp[3]}"
+                                                     xp:name="alef_column" xp:description=""
+                                                     xp:fieldtype="folder" width="auto" cellspan="1">                          
+                           <alef_tooltip xlink:label="{temp[6]}" xp:name="alef_tooltip"
+                                                          xp:description="" xp:fieldtype="folder">
+                                <alef_html xlink:label="{resp_desc['hashcode']}" xp:name="alef_html"
+                                           xp:description="" xp:fieldtype="html"
+                                           src="../../../{resp_desc['relative_path']}"/>
+                                {popup}
+                            </alef_tooltip>
+                        </alef_column>
+                        """
+
+            else:
+
+                description_tag = f"""
+                        <alef_column xlink:label="{temp[3]}"
+                                                     xp:name="alef_column" xp:description=""
+                                                     xp:fieldtype="folder" width="auto" cellspan="1">
+                            <alef_html xlink:label="{resp_desc['hashcode']}"
+                                       xp:name="alef_html" xp:description=""
+                                       xp:fieldtype="html"
+                                       src="../../../{resp_desc['relative_path']}"/>
+                        </alef_column>
+                        """
         else:
             description_tag = ""
 
@@ -565,12 +624,14 @@ def hotspotitem_h_true(popup_obj, input_json_data, input_other_jsons_data, exiti
         audio_tag = ""
 
     try:
-        descId = popup_obj.get("audio", None)
+        descId = popup_obj.get("description", None)
         if descId:
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
 
+            HtmlText = text_en_html_to_html_text(html_string=desc_text)
+
             resp_desc = write_html(
-                text=desc_text,
+                text=HtmlText,
                 exiting_hashcode=exiting_hashcode,
                 align=None
             )
@@ -578,16 +639,44 @@ def hotspotitem_h_true(popup_obj, input_json_data, input_other_jsons_data, exiti
             all_files.add(resp_desc['relative_path'])
             exiting_hashcode.add(resp_desc['hashcode'])
 
-            description_tag = f"""
-                <alef_column xlink:label="{temp[2]}"
-                                             xp:name="alef_column" xp:description=""
-                                             xp:fieldtype="folder" width="auto" cellspan="1">
-                    <alef_html xlink:label="{resp_desc['hashcode']}"
-                               xp:name="alef_html" xp:description=""
-                               xp:fieldtype="html"
-                               src="../../../{resp_desc['relative_path']}"/>
-                </alef_column>
-                """
+            popup_response = get_popup_mlo_from_text(
+                text=desc_text,
+                input_other_jsons_data=input_other_jsons_data,
+                all_files=all_files,
+                exiting_hashcode=exiting_hashcode,
+                enable_question_statement=False
+            )
+
+            if popup_response:
+                all_files = popup_response['all_files']
+                exiting_hashcode = popup_response['exiting_hashcode']
+                popup = "\n".join(popup_response['all_tags'])
+                description_tag = f"""
+                    <alef_column xlink:label="{temp[3]}"
+                                                 xp:name="alef_column" xp:description=""
+                                                 xp:fieldtype="folder" width="auto" cellspan="1">                          
+                       <alef_tooltip xlink:label="{temp[6]}" xp:name="alef_tooltip"
+                                                      xp:description="" xp:fieldtype="folder">
+                            <alef_html xlink:label="{resp_desc['hashcode']}" xp:name="alef_html"
+                                       xp:description="" xp:fieldtype="html"
+                                       src="../../../{resp_desc['relative_path']}"/>
+                            {popup}
+                        </alef_tooltip>
+                    </alef_column>
+                    """
+
+            else:
+
+                description_tag = f"""
+                    <alef_column xlink:label="{temp[3]}"
+                                                 xp:name="alef_column" xp:description=""
+                                                 xp:fieldtype="folder" width="auto" cellspan="1">
+                        <alef_html xlink:label="{resp_desc['hashcode']}"
+                                   xp:name="alef_html" xp:description=""
+                                   xp:fieldtype="html"
+                                   src="../../../{resp_desc['relative_path']}"/>
+                    </alef_column>
+                    """
         else:
             description_tag = ""
 
@@ -628,7 +717,7 @@ def hotspotitem_h_true(popup_obj, input_json_data, input_other_jsons_data, exiti
                 {description_tag}
                 {audio_tag}
                 {image_tag}
-            </alef_column>
+            
             </alef_section>
         </alef_hotspotitem>
         """
@@ -741,12 +830,14 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
         audio_tag = ""
 
     try:
-        descId = popup_obj.get("audio", None)
+        descId = popup_obj.get("description", None)
         if descId:
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
 
+            HtmlText = text_en_html_to_html_text(html_string=desc_text)
+
             resp_desc = write_html(
-                text=desc_text,
+                text=HtmlText,
                 exiting_hashcode=exiting_hashcode,
                 align=None
             )
@@ -754,16 +845,44 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
             all_files.add(resp_desc['relative_path'])
             exiting_hashcode.add(resp_desc['hashcode'])
 
-            description_tag = f"""
-                <alef_column xlink:label="{temp[2]}"
-                                             xp:name="alef_column" xp:description=""
-                                             xp:fieldtype="folder" width="auto" cellspan="1">
-                    <alef_html xlink:label="{resp_desc['hashcode']}"
-                               xp:name="alef_html" xp:description=""
-                               xp:fieldtype="html"
-                               src="../../../{resp_desc['relative_path']}"/>
-                </alef_column>
-                """
+            popup_response = get_popup_mlo_from_text(
+                text=desc_text,
+                input_other_jsons_data=input_other_jsons_data,
+                all_files=all_files,
+                exiting_hashcode=exiting_hashcode,
+                enable_question_statement=False
+            )
+
+            if popup_response:
+                all_files = popup_response['all_files']
+                exiting_hashcode = popup_response['exiting_hashcode']
+                popup = "\n".join(popup_response['all_tags'])
+                description_tag = f"""
+                    <alef_column xlink:label="{temp[3]}"
+                                                 xp:name="alef_column" xp:description=""
+                                                 xp:fieldtype="folder" width="auto" cellspan="1">                          
+                       <alef_tooltip xlink:label="{temp[6]}" xp:name="alef_tooltip"
+                                                      xp:description="" xp:fieldtype="folder">
+                            <alef_html xlink:label="{resp_desc['hashcode']}" xp:name="alef_html"
+                                       xp:description="" xp:fieldtype="html"
+                                       src="../../../{resp_desc['relative_path']}"/>
+                            {popup}
+                        </alef_tooltip>
+                    </alef_column>
+                    """
+
+            else:
+
+                description_tag = f"""
+                    <alef_column xlink:label="{temp[3]}"
+                                                 xp:name="alef_column" xp:description=""
+                                                 xp:fieldtype="folder" width="auto" cellspan="1">
+                        <alef_html xlink:label="{resp_desc['hashcode']}"
+                                   xp:name="alef_html" xp:description=""
+                                   xp:fieldtype="html"
+                                   src="../../../{resp_desc['relative_path']}"/>
+                    </alef_column>
+                    """
         else:
             description_tag = ""
 
@@ -804,7 +923,7 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
                 {image_tag}
                 {description_tag}
                 {audio_tag}
-            </alef_column>
+            
             </alef_section>
         </alef_hotspotitem>
         """
