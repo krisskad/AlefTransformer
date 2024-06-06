@@ -921,9 +921,8 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
             <alef_section xlink:label="{temp[4]}" xp:name="alef_section"
                           xp:description="" xp:fieldtype="folder" customclass="Normal">
                 {image_tag}
-                {description_tag}
                 {audio_tag}
-            
+                {description_tag}
             </alef_section>
         </alef_hotspotitem>
         """
