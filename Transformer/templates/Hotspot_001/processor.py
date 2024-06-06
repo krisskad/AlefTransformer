@@ -124,7 +124,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_tags.append(
         f"""
         <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
-                                  xp:description="Click the boxes" xp:fieldtype="folder" customclass="Normal">
+                                  xp:description="" xp:fieldtype="folder" customclass="Normal">
             <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
                          xp:fieldtype="folder" width="auto" cellspan="1">
                 <alef_hotspot xlink:label="{temp[2]}" xp:name="alef_hotspot"
