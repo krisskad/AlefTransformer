@@ -136,6 +136,27 @@ def extract_span_info(text):
     return span_info
 
 
+def extract_span_info_v1(text):
+    if "data-ref" in text or "id=" in text:
+        soup = BeautifulSoup(text, 'html.parser')
+        spans = soup.find_all('span')
+
+        if not spans:
+            return text
+
+        span_info = []
+        for span in spans:
+            content = span.text.strip()
+            span_info.append({
+                'content':content,
+                'id': span.get('id'),
+                'data-ref': span.get('data-ref')
+            })
+    else:
+        span_info = ''
+    return span_info
+
+
 def text_en_html_to_html_text(html_string):
     soup = BeautifulSoup(html_string, 'html.parser')
     spans_with_id = soup.find_all('span', id=True)
@@ -451,20 +472,26 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             """
 
         # get span info
-        span_info = extract_span_info(text=text)
+        span_info = extract_span_info_v1(text=text)
         if isinstance(span_info, str):
             return ''
-        for span_content, span_attr_obj in span_info.items():
+
+        if span_info:
+            pass
+        else:
+            return ''
+
+        for each_obj in span_info:
+
+            data_ref = each_obj["data-ref"]
+            if data_ref is None:
+                continue
 
             temp = []
             for _ in range(15):
                 hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
                 exiting_hashcode.add(hashcode_temp)
                 temp.append(hashcode_temp)
-
-            data_ref = span_attr_obj["data-ref"]
-            if data_ref is None:
-                continue
 
             try:
                 look_into_app = False
