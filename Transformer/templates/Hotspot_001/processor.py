@@ -148,6 +148,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 ques_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_text_id]
                 HtmlText = text_en_html_to_html_text(html_string=ques_text)
 
+                if "<math" in HtmlText:
+                    HtmlText = mathml2latex_yarosh(html_string=HtmlText)
+
                 resp_ques = write_html(
                     text=HtmlText,
                     exiting_hashcode=exiting_hashcode,

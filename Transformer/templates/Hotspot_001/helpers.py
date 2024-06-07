@@ -1,4 +1,5 @@
-from Transformer.helpers import remove_html_tags, generate_unique_folder_name, convert_html_to_strong, get_popup_mlo_from_text, text_en_html_to_html_text
+from Transformer.helpers import (remove_html_tags, generate_unique_folder_name, convert_html_to_strong,
+                                 get_popup_mlo_from_text, text_en_html_to_html_text, mathml2latex_yarosh)
 from django.conf import settings
 import os, shutil
 
@@ -189,6 +190,8 @@ def hotspotitem_v_false(popup_obj, input_json_data, input_other_jsons_data, exit
         if descId:
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
             HtmlText = text_en_html_to_html_text(html_string=desc_text)
+            if "<math" in HtmlText:
+                HtmlText = mathml2latex_yarosh(html_string=HtmlText)
 
             resp_desc = write_html(
                 text=HtmlText,
@@ -409,6 +412,8 @@ def hotspotitem_v_true(popup_obj, input_json_data, input_other_jsons_data, exiti
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
 
             HtmlText = text_en_html_to_html_text(html_string=desc_text)
+            if "<math" in HtmlText:
+                HtmlText = mathml2latex_yarosh(html_string=HtmlText)
 
             resp_desc = write_html(
                 text=HtmlText,
@@ -629,6 +634,8 @@ def hotspotitem_h_true(popup_obj, input_json_data, input_other_jsons_data, exiti
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
 
             HtmlText = text_en_html_to_html_text(html_string=desc_text)
+            if "<math" in HtmlText:
+                HtmlText = mathml2latex_yarosh(html_string=HtmlText)
 
             resp_desc = write_html(
                 text=HtmlText,
@@ -835,6 +842,8 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
 
             HtmlText = text_en_html_to_html_text(html_string=desc_text)
+            if "<math" in HtmlText:
+                HtmlText = mathml2latex_yarosh(html_string=HtmlText)
 
             resp_desc = write_html(
                 text=HtmlText,
