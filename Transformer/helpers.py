@@ -921,6 +921,62 @@ def convert_html_to_strong(html_str):
     return resp
 
 
+def convert_html_to_strong_v1(html_str):
+    # Replace <br/> and <br> with a placeholder
+    html_str = html_str.replace("<br/>", "<br>").replace("<br>", "#####")
+
+    # Parse the HTML string
+    soup = BeautifulSoup(html_str, 'html.parser')
+
+    # Find all <span> tags with style attribute containing "font-family: Roboto-Bold;"
+    span_tags = soup.find_all(lambda tag: (tag.name == 'span' and
+                                           ('Roboto-Bold' in tag.get('style', '')) or
+                                           ('textBold' in tag.get('class', []))))
+
+    # Replace <span> tags with <strong> tags
+    for span_tag in span_tags:
+        if span_tag:
+            try:
+                # Create a new <strong> tag
+                strong_tag = soup.new_tag('strong')
+
+                # Join all string contents within the <span> tag
+                strong_tag.string = ''.join(span_tag.stripped_strings)
+
+                # Copy all other styles and attributes except `textBold` class and `font-family: Roboto-Bold;`
+                try:
+                    style = span_tag['style']
+                except:
+                    style = ''
+
+                try:
+                    classes = span_tag['class']
+                except:
+                    classes = []
+
+                # Remove 'Roboto-Bold' from the style attribute
+                styles = [s.strip() for s in style.split(';') if 'Roboto-Bold' not in s]
+                new_style = '; '.join(styles)
+                if new_style:
+                    strong_tag['style'] = new_style
+
+                # Remove 'textBold' class
+                new_classes = [cls for cls in classes if cls != 'textBold']
+                if new_classes:
+                    strong_tag['class'] = new_classes
+
+                # Replace the original span tag with the new strong tag
+                span_tag.replace_with(strong_tag)
+            except Exception as e:
+                print(f'Error in span tag to strong tag conversion --> {e}')
+
+    # Return the modified HTML
+    resp = str(soup)
+    resp = resp.replace("#####", "<br>")
+
+    return resp
+
+
 def assign_class_html(html_str, search_term, class_id):
     html_str = html_str.replace("<br/>", "<br>").replace("<br>", "#####")
     # Parse the HTML string
