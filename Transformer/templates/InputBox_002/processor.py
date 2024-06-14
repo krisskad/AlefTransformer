@@ -100,14 +100,26 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     inputBoxes = input_json_data["pageData"]["args"].get("inputBoxes", [])
     extraTexts = input_json_data["pageData"]["args"].get("extraTexts", [])
 
-    conclusionBox = input_json_data["pageData"]["args"].get("conclusionBox", "") # Burger Writing GO
-    bookPopUpButton = input_json_data["pageData"]["args"].get("bookPopUpButton", "") # Plot Diagram
+    # buttonsPos = input_json_data["pageData"]["args"].get("buttonsPos", "") # Burger Writing GO
+    # bookPopUpButton = input_json_data["pageData"]["args"].get("bookPopUpButton", "") # Plot Diagram
+    screen_number = input_json_data["screen_number"]
+    course_id = input_other_jsons_data["COURSE_ID"]
 
     template_type = ""
-    if str(conclusionBox):
-        template_type = "Opinion and Supporting Reasons"
-        if bookPopUpButton:
-            template_type = "Opinion and Supporting Reasons"
+    try:
+        if "ELA_TEMPLATE_TYPE" in input_other_jsons_data:
+            df = input_other_jsons_data["ELA_TEMPLATE_TYPE"]
+            # Filtering the DataFrame
+            template_type_df = df[(df['LO ID'] == course_id) &
+                             (df['Template ID'] == "InputBox_001") &
+                             (df['Screen No.'] == screen_number)]
+
+            template_type = template_type_df["Template Type"].tolist()[0]
+        else:
+            print("ELA_TEMPLATE_TYPE DF is not present")
+
+    except Exception as e:
+        print(f"Warning: {e}")
 
     if not template_type:
         raise Exception("No template identity found : please check input structure.json and note which type of template is this?")
@@ -134,14 +146,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         print(f"Error: {e}")
 
     title = ""
-    if len(inputBoxes) < len(extraTexts):
-        # there are more input and less text (There are title) remove title from text
-        try:
-            titleobj = extraTextViewsorted_data[0]
-            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][titleobj["text"]]
-            extraTextViewsorted_data.pop(0)
-        except Exception as e:
-            print(f"Error : {e}")
+    try:
+        if len(inputBoxes) < len(extraTexts):
+            # there are more input and less text (There are title) remove title from text
+            try:
+                titleobj = extraTextViewsorted_data[0]
+                title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][titleobj["text"]]
+                extraTextViewsorted_data.pop(0)
+            except Exception as e:
+                print(f"Error : {e}")
+    except Exception as e:
+        print(f"Error: {e}")
 
     html_list = []
     try:

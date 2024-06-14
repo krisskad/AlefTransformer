@@ -99,13 +99,16 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     src = input_json_data["pageData"]["args"].get("src", None)
     skullBody = input_json_data["pageData"]["args"].get("skullBody", [])
 
+    try:
+        skullTitle = input_json_data["pageData"]["args"].get("skullTitle")
+        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][skullTitle]
+    except:
+        title = ""
+
     template_type = "Social Emotional Learning"
 
     if not template_type:
         raise Exception("No template identity found : please check input structure.json and note which type of template is this?")
-
-    view_ref = input_json_data["pageData"]['viewRef']
-    extraTextViewsorted_data = []
 
     html_list = []
     try:
@@ -136,7 +139,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     html_join = "\n".join(html_list)
     all_tags.append(f"""
-    <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+    <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description="{title}" xp:fieldtype="folder" customclass="Normal">
         <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
             <alef_predefined_graphorganizer xlink:label="{temp[2]}" xp:name="alef_predefined_graphorganizer" xp:description="" xp:fieldtype="folder" type="{template_type}">
                 {html_join}
