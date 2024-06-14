@@ -131,10 +131,15 @@ def iterative_process_data(all_dir_objs):
     except:
         customdnd_title = pd.DataFrame()
 
+    try:
+        ela_types = pd.read_csv(str(os.path.join(settings.BASE_DIR, 'media', 'ela_template_types.csv')))
+    except:
+        ela_types = pd.DataFrame()
+
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         print("#" * 20)
-        # if course_obj_dir_dict["COURSE_ID"] != "SC5_L009_Investigate_1":
+        # if course_obj_dir_dict["COURSE_ID"] != "CS_ELA8_L001_GoFurther":
         #     continue
         print(course_obj_dir_dict['COURSE_ID'])
 
@@ -198,7 +203,8 @@ def iterative_process_data(all_dir_objs):
             "INPUT_COMMON_TEXT_JSON_DATA":INPUT_COMMON_TEXT_JSON_DATA,
             "OUTPUT_DIR":course_obj_dir_dict['OUTPUT_DIR'],
             "COURSE_ID":course_obj_dir_dict['COURSE_ID'],
-            "CUSTOM_DND_TITLE":customdnd_title
+            "CUSTOM_DND_TITLE":customdnd_title,
+            "ELA_TEMPLATE_TYPE":ela_types
         }
 
         if "INPUT_APP_GLOSSARY_JSON" in course_obj_dir_dict:
@@ -227,7 +233,7 @@ def iterative_process_data(all_dir_objs):
 
             template_id = item['pageData']['templateID']
             item['screen_number'] = screen_number
-            # if template_id != "CustomDragAndDrop_002":
+            # if template_id != "Hotspot_001":
             #     continue
             #
             # if screen_number != 2:
