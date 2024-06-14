@@ -86,7 +86,6 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
     return response
 
 
-
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
     all_files = set()
