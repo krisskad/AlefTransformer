@@ -113,8 +113,16 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     html_list = []
     try:
         if skullBody:
-            for idx, hml_obj in enumerate(skullBody):
-                text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][hml_obj["header"]]
+            skullBodyList = []
+            for i in skullBody:
+                text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][i["header"]]
+                skullBodyList.append({"header":text})
+
+            skullBodyList.insert(0, {"header": "How do I feel about this lesson?"})
+            skullBodyList.append({"header": title})
+
+            for idx, hml_obj in enumerate(skullBodyList):
+                text = hml_obj["header"]
 
                 if text:
                     resp = write_html(
