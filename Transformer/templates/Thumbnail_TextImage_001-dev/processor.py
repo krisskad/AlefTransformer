@@ -91,7 +91,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_files = set()
     all_tags = [
         """
-        <!-- InputBox_001 -->
+        <!-- Thumbnail_TextImage_001 -->
         """
     ]
 

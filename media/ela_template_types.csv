@@ -1,10 +1,10 @@
 LO ID,Template Type,Template ID,Screen No.
-CS_ELA5_L001_GoFurther,Opinion and Supporting Reasons,InputBox_002,7
-CS_ELA5_L002_GoFurther,Opinion and Supporting Reasons,InputBox_002,5
-CS_ELA5_L005_GoFurther,Opinion and Supporting Reasons,InputBox_002,5
-CS_ELA5_L006_GoFurther,Opinion and Supporting Reasons,InputBox_001,5
-CS_ELA6_L001_GoFurther,Opinion and Supporting Reasons,InputBox_002,5
-CS_ELA6_L002_GoFurther,Opinion and Supporting Reasons,InputBox_002,4
+CS_ELA5_L001_GoFurther,Opinion Support Reasoning,InputBox_002,7
+CS_ELA5_L002_GoFurther,Opinion Support Reasoning,InputBox_002,5
+CS_ELA5_L005_GoFurther,Opinion Support Reasoning,InputBox_002,5
+CS_ELA5_L006_GoFurther,Opinion Support Reasoning,InputBox_001,5
+CS_ELA6_L001_GoFurther,Opinion Support Reasoning,InputBox_002,5
+CS_ELA6_L002_GoFurther,Opinion Support Reasoning,InputBox_002,4
 CS_ELA6_L003_GoFurther,Plot Diagram,InputBox_001,4
 CS_ELA6_L004_GoFurther,Plot Diagram,InputBox_001,4
 CS_ELA6_L005_GoFurther,Burger Writing GO,InputBox_001,4
@@ -17,23 +17,23 @@ CS_ELA7_L005_GoFurther,Plot Diagram,InputBox_001,4
 CS_ELA7_L006_GoFurther,Plot Diagram,InputBox_001,5
 CS_ELA7_L007_GoFurther,Burger Writing GO,InputBox_001,7
 CS_ELA7_L008_GoFurther,Burger Writing GO,InputBox_001,5
-CS_ELA7_L009_GoFurther,Opinion and Supporting Reasons,InputBox_001,4
-CS_ELA7_L010_GoFurther,Opinion and Supporting Reasons,InputBox_001,5
+CS_ELA7_L009_GoFurther,Opinion Support Reasoning,InputBox_001,4
+CS_ELA7_L010_GoFurther,Opinion Support Reasoning,InputBox_001,5
 CS_ELA8_L001_GoFurther,Plot Diagram,InputBox_001,6
-CS_ELA8_L002_GoFurther,Opinion and Supporting Reasons,InputBox_002,4
+CS_ELA8_L002_GoFurther,Opinion Support Reasoning,InputBox_002,4
 CS_ELA8_L004_GoFurther,Plot Diagram,InputBox_001,6
 CS_ELA8_L006_GoFurther,Opinion Support Reasoning,InputBox_001,6
-CS_ELA8_L008_GoFurther,Opinion and Supporting Reasons,InputBox_001,7
+CS_ELA8_L008_GoFurther,Opinion Support Reasoning,InputBox_001,7
 CS_ELA8_L009_GoFurther,Plot Diagram,InputBox_001,5
 CS_ELA8_L010_GoFurther,Plot Diagram,InputBox_001,4
-CS_ELA9_L001_GoFurther,Opinion and Supporting Reasons,InputBox_002,8
-CS_ELA9_L002_GoFurther,Opinion and Supporting Reasons,InputBox_002,6
+CS_ELA9_L001_GoFurther,Opinion Support Reasoning,InputBox_002,8
+CS_ELA9_L002_GoFurther,Opinion Support Reasoning,InputBox_002,6
 CS_ELA9_L003_GoFurther,Plot Diagram,InputBox_001,4
 CS_ELA9_L003_Reflection,Plot Diagram,InputBox_001,6
 CS_ELA9_L004_GoFurther,Plot Diagram,InputBox_001,5
 CS_ELA9_L005_GoFurther,Burger Writing GO,InputBox_001,6
-CS_ELA9_L006_GoFurther,Opinion and Supporting Reasons,InputBox_002,6
-CS_ELA9_L007_GoFurther,Opinion and Supporting Reasons,InputBox_001,6
-CS_ELA9_L008_GoFurther,Opinion and Supporting Reasons,InputBox_001,6
+CS_ELA9_L006_GoFurther,Opinion Support Reasoning,InputBox_002,6
+CS_ELA9_L007_GoFurther,Opinion Support Reasoning,InputBox_001,6
+CS_ELA9_L008_GoFurther,Opinion Support Reasoning,InputBox_001,6
 CS_ELA9_L009_GoFurther,Plot Diagram,InputBox_001,5
 CS_ELA9_L010_GoFurther,Plot Diagram,InputBox_001,5

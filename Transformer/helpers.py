@@ -1338,5 +1338,100 @@ def replace_chars_in_json(json_path):
 
     print("Replacement done and JSON file updated.")
 
-# Example usage:
-# replace_chars_in_json('your_file.json')
+
+def transcript_generator(html_string: str, audio_transcript: dict):
+    soup = BeautifulSoup(html_string, 'html.parser')
+
+    main = []
+    title_list = []
+    content_list = []
+
+    # Extract title section
+    title_section = soup.find('span', id='title')
+    if title_section:
+        title_spans = title_section.find_all('span')
+
+        for title_span in title_spans:
+            if title_span.name == 'br':
+                content_list.append('<br>')
+                continue
+
+            if title_span.name == 'span':
+                title_contents = title_span.text
+                title_list.append(title_contents)
+                title_span_id = title_span.get('id')  # Get the id attribute of the span
+                # print(title_span_id)
+
+                title_audio_timestamp = audio_transcript.get(title_span_id)
+
+                if title_audio_timestamp:
+                    start_time = title_audio_timestamp[0] / 1000
+                    end_time = title_audio_timestamp[1] / 1000
+
+                    ts = start_time
+                    end_ts = start_time + end_time
+
+                    title_tokens = re.findall(r'\w+|[^\w\s]|\s$', title_contents)
+
+                    for i_token in title_tokens:
+                        if i_token in string.punctuation:
+                            main.append(
+                                {"type": "punct", "value": i_token}
+                            )
+                        elif i_token == " ":
+                            main.append(
+                                {"type": "punct", "value": i_token}
+                            )
+                        else:
+                            main.append(
+                                {"type": "text", "value": i_token, "ts": ts, "end_ts": end_ts, "confidence": 0.99}
+                            )
+
+    # Extract content section
+    content_section = soup.find('span', id='content')
+    if content_section:
+        content_spans = content_section.find_all()
+        for content_span in content_spans:
+            if content_span.name == 'br':
+                content_list.append('<br>')
+                continue
+            if content_span.name == 'span':
+                content_contents = content_span.text
+                content_list.append(content_contents)
+
+                content_span_id = content_span.get('id')  # Get the id attribute of the span
+                # print(content_span_id)
+
+                content_audio_timestamp = audio_transcript.get(content_span_id)
+
+                if content_audio_timestamp:
+                    start_time = content_audio_timestamp[0] / 1000
+                    end_time = content_audio_timestamp[1] / 1000
+
+                    ts = start_time
+                    end_ts = start_time + end_time
+
+                    content_tokens = re.findall(r'\w+|[^\w\s]|\s$', content_contents)
+
+                    for j_token in content_tokens:
+                        if j_token in string.punctuation:
+                            main.append(
+                                {"type": "punct", "value": j_token}
+                            )
+                        elif j_token == " ":
+                            main.append(
+                                {"type": "punct", "value": j_token}
+                            )
+                        else:
+                            main.append(
+                                {"type": "text", "value": j_token, "ts": ts, "end_ts": end_ts, "confidence": 0.99}
+                            )
+
+    title_text = "".join(title_list)
+    content_text = "".join(content_list)
+    text_area = f"<strong>{title_text}</strong><br>{content_text}"
+    context = {
+        "text":text_area,
+        "transcript":json.dumps(main)
+    }
+    return context
