@@ -141,34 +141,39 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 else:
                     transcript_resp = {"text": textAreaText}
 
-                textAreaMergeHtmlText = text_en_html_to_html_text(html_string=transcript_resp["text"])
+                # textAreaMergeHtmlText = text_en_html_to_html_text(html_string=transcript_resp["text"])
                 resp = write_html(
-                    text=textAreaMergeHtmlText,
+                    text=transcript_resp["text"],
                     exiting_hashcode=exiting_hashcode,
                     align=None
                 )
                 all_files.add(resp['relative_path'])
                 exiting_hashcode.add(resp['hashcode'])
 
-                popup_response = get_popup_mlo_from_text(
-                    text=transcript_resp["text"],
-                    input_other_jsons_data=input_other_jsons_data,
-                    all_files=all_files,
-                    exiting_hashcode=exiting_hashcode,
-                    enable_question_statement=False
-                )
+                if "data-ref" in transcript_resp["text"]:
+                    popup_response = get_popup_mlo_from_text(
+                        text=transcript_resp["text"],
+                        input_other_jsons_data=input_other_jsons_data,
+                        all_files=all_files,
+                        exiting_hashcode=exiting_hashcode,
+                        enable_question_statement=False
+                    )
 
-                if popup_response:
-                    all_files = popup_response['all_files']
-                    exiting_hashcode = popup_response['exiting_hashcode']
-                    popup = "\n".join(popup_response['all_tags'])
+                    if popup_response:
+                        all_files = popup_response['all_files']
+                        exiting_hashcode = popup_response['exiting_hashcode']
+                        popup = "\n".join(popup_response['all_tags'])
 
-                    textAreaHtml = f"""
-                    <alef_tooltip xlink:label="{temp[0]}" xp:name="alef_tooltip" xp:description="" xp:fieldtype="folder">
-                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
-                        {popup}
-                    </alef_tooltip>
-                    """
+                        textAreaHtml = f"""
+                        <alef_tooltip xlink:label="{temp[0]}" xp:name="alef_tooltip" xp:description="" xp:fieldtype="folder">
+                            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
+                            {popup}
+                        </alef_tooltip>
+                        """
+                    else:
+                        textAreaHtml = f"""
+                                            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
+                                            """
                 else:
                     textAreaHtml = f"""
                     <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
