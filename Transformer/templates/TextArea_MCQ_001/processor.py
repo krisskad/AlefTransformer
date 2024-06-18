@@ -110,13 +110,16 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     """
     MCQ Column
     """
-    mcq_title_id = mcqData.get("title")
+    try:
+        mcq_title_id = mcqData.get("title")
+
+        mcq_title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][mcq_title_id]
+        if mcq_title:
+            mcq_title = remove_html_tags(text=mcq_title)
+    except Exception as e:
+        mcq_title = ""
+
     questions_list = mcqData.get("questions")
-
-    mcq_title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][mcq_title_id]
-    if mcq_title:
-        mcq_title = remove_html_tags(text=mcq_title)
-
     for idx, each_mcq in enumerate(questions_list):
         idx = idx + 1
         temp = []
