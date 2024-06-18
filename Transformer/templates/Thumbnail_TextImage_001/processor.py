@@ -122,9 +122,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                 img_tag = f"""
                 <alef_image xlink:label="{imgfile_resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
-                    <xp:img href="../../../{imgfile_resp['relative_path']}" width="1860" height="812">
-                    <maplink xlink:name="New Link" name="New Link" xlink:href="../../../1/mlo/T7KP3OIZ2WREPBI2GM7LDEXRZU/tooltip_RDHA2CASDLWUTGRZBZNLS7XDNQ.html#LQ64735LIRKUUPCAPSV6V3G2X4M" href="../../../1/mlo/T7KP3OIZ2WREPBI2GM7LDEXRZU/tooltip_RDHA2CASDLWUTGRZBZNLS7XDNQ.html#LQ64735LIRKUUPCAPSV6V3G2X4M" type="internal" targetid="LQ64735LIRKUUPCAPSV6V3G2X4M" ShowMode="" left="30" right="1121" top="118" bottom="668" />
-                    </xp:img>
+                    <xp:img href="../../../{imgfile_resp['relative_path']}" width="1860" height="812" />
                 </alef_image>
                 """
             except Exception as e:
