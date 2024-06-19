@@ -105,7 +105,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     bookPopUpButton = input_json_data["pageData"]["args"].get("bookPopUpButton", "")
     hintEnable = input_json_data["pageData"]["args"].get("hintEnable", "")
     bookPageNumber = input_json_data["pageData"]["args"].get("bookPageNumber", "")
-    reader = textAreaData.get("reader", "")
+    reader = textAreaData.get("reader", "true")
 
     """
     MCQ Column
@@ -149,7 +149,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             textAreaTextId = textAreaData.get("text")
             textAreaText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][textAreaTextId]
 
-            if str(reader) == "true":
+            if str(reader) == "true" or textAreaAudioTranscriptObj:
                 transcript_resp = transcript_generator(
                     html_string=textAreaText,
                     audio_transcript=textAreaAudioTranscriptObj
@@ -233,8 +233,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             """
             textAreaSection = f"""
             <alef_column xlink:label="{temp[3]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1" hasHighlight="Yes" hasNotes="Yes">
-                {audio_tag}
                 {textAreaHtml}
+                {audio_tag}
             </alef_column>
             """
         except Exception as e:
@@ -289,8 +289,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             question_statement = f"""
             <alef_questionstatement xlink:label="{temp[7]}" xp:name="alef_questionstatement" xp:description="" xp:fieldtype="folder">
                 <alef_section_general xlink:label="{temp[8]}" xp:name="alef_section_general" xp:description="" xp:fieldtype="folder">
-                    {question_html}
                     {question_audio_col}
+                    {question_html}
                 </alef_section_general>
             </alef_questionstatement>
             """

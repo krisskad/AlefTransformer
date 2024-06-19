@@ -76,6 +76,7 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
         try:
             subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
             subtitle = remove_html_tags(subtitle)
+            subtitle = subtitle.replace("—", "-")
         except:
             subtitle = ""
     else:

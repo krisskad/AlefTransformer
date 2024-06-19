@@ -1371,6 +1371,9 @@ def transcript_generator(html_string: str, audio_transcript: dict):
                     ts = start_time
                     end_ts = start_time + end_time
 
+                    ts = round(ts, 3)
+                    end_ts = round(end_ts, 3)
+
                     title_tokens = re.findall(r'\w+|[^\w\s]|\s$', title_contents)
 
                     for i_token in title_tokens:

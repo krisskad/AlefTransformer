@@ -98,6 +98,48 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     thumbnails_list = input_json_data["pageData"]["args"].get("thumbnails", [])
 
     for idx, thumbnail in enumerate(thumbnails_list):
+        idx = idx + 1
+
+        try:
+            # Assuming input_other_jsons_data and input_json_data are properly defined
+
+            # Extract ELA_DF and drop rows where 'left' is NaN
+            ELA_DF = input_other_jsons_data.get("ELA_TEXTBOX_POSITIONS")
+            ELA_DF = ELA_DF.dropna(subset=['left'])
+
+            # Extract necessary values
+            screen_number = input_json_data['screen_number']
+            COURSE_ID = input_other_jsons_data['COURSE_ID']
+
+            # Filter ELA_DF based on conditions
+            ELA_DF = ELA_DF[
+                (ELA_DF["TopicID"] == COURSE_ID) &
+                (ELA_DF["Screen#"] == screen_number) &
+                (ELA_DF["Reader"] == idx)
+                ]
+
+            # Ensure there's at least one row matching the conditions
+            if not ELA_DF.empty:
+                ELA_DF_DICT = ELA_DF.iloc[0].to_dict()  # Take the first row
+                top = int(float(ELA_DF_DICT['top']))
+                bottom = int(float(ELA_DF_DICT['bottom']))
+                left = int(float(ELA_DF_DICT['left']))
+                right = int(float(ELA_DF_DICT['right']))
+                print(f"Got positions: left: {left}, right: {right}, top: {top}, bottom: {bottom}")
+            else:
+                # Handle case where no rows match the conditions
+                top = 118
+                bottom = 668
+                left = 30
+                right = 1121
+
+        except Exception as e:
+            print(f"Warning: {e}")
+            # Assign default values
+            top = 118
+            bottom = 668
+            left = 30
+            right = 1121
 
         temp = []
         for _ in range(10):
@@ -126,8 +168,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                 img_tag = f"""
                 <alef_image xlink:label="{imgfile_resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
-                    <xp:img href="../../../{imgfile_resp['relative_path']}" width="1860" height="812">
-                    	<maplink xlink:name="New Link" name="New Link" type="internal" targetid="LW66C5DAG67JEJBGMYQPVBXIG7A" ShowMode="" left="30" right="1121" top="118" bottom="668" />
+                    <xp:img href="../../../{imgfile_resp['relative_path']}" width="1920" height="1080">
+                    	<maplink xlink:name="New Link" name="New Link" type="internal" targetid="LW66C5DAG67JEJBGMYQPVBXIG7A" ShowMode="" left="{left}" right="{right}" top="{top}" bottom="{bottom}" />
                     </xp:img>
                 </alef_image>
                 """
@@ -139,7 +181,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 textAreaTextId = col_obj.get("text")
                 textAreaText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][textAreaTextId]
 
-                if "<span" in textAreaText:
+                if audioData:
                     transcript_resp = transcript_generator(
                         html_string=textAreaText,
                         audio_transcript=audioData
