@@ -105,6 +105,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             exiting_hashcode.add(hashcode_temp)
             temp.append(hashcode_temp)
 
+        target_link = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+        exiting_hashcode.add(target_link)
+        temp.append(target_link)
+
         try:
             col_list = thumbnail.get("col")
             col_obj = col_list[0][0]
@@ -122,7 +126,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
                 img_tag = f"""
                 <alef_image xlink:label="{imgfile_resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
-                    <xp:img href="../../../{imgfile_resp['relative_path']}" width="1860" height="812" />
+                    <xp:img href="../../../{imgfile_resp['relative_path']}" width="1860" height="812">
+                    	<maplink xlink:name="New Link" name="New Link" type="internal" targetid="LW66C5DAG67JEJBGMYQPVBXIG7A" ShowMode="" left="30" right="1121" top="118" bottom="668" />
+                    </xp:img>
                 </alef_image>
                 """
             except Exception as e:
@@ -170,14 +176,20 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                             {popup}
                         </alef_tooltip>
                         """
+
+                        img_tag = img_tag.replace("LW66C5DAG67JEJBGMYQPVBXIG7A", temp[0])
                     else:
                         textAreaHtml = f"""
-                                            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
-                                            """
+                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
+                        """
+                        img_tag = img_tag.replace("LW66C5DAG67JEJBGMYQPVBXIG7A", resp['hashcode'])
+
                 else:
                     textAreaHtml = f"""
                     <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
                     """
+                    img_tag = img_tag.replace("LW66C5DAG67JEJBGMYQPVBXIG7A", resp['hashcode'])
+
             except Exception as e:
                 transcript_resp = {"text": ""}
                 textAreaHtml = ""

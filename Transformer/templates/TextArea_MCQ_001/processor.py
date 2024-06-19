@@ -218,7 +218,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     else:
                         audio_tag = f"""
                         <alef_audionew xlink:label="{temp[1]}" xp:name="alef_audionew" xp:description="" xp:fieldtype="folder">
-                            <alef_audiofile xlink:label="{audiofile_resp['hashcode']}" xp:name="alef_audiofile" xp:description="" audiocontrols="No" xp:fieldtype="file" src="../../../{audiofile_resp['relative_path']}" />
+                            <alef_audiofile xlink:label="{audiofile_resp['hashcode']}" xp:name="alef_audiofile" xp:description="" audiocontrols="Yes" xp:fieldtype="file" src="../../../{audiofile_resp['relative_path']}" />
                         </alef_audionew>
                         """
                 else:
