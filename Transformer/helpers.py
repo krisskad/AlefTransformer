@@ -591,6 +591,9 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 exiting_hashcode.add(hashcode_temp)
                 temp.append(hashcode_temp)
 
+            if "The pupil is an opening in the iris" in text:
+                pass
+
             try:
                 look_into_app = False
                 deck_oj = input_other_jsons_data["INPUT_COMMON_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
@@ -601,7 +604,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
                 deck_oj = input_other_jsons_data["INPUT_APP_GLOSSARY_JSON_DATA"]["glossaryData"][data_ref]["deck"]
 
             if "front" in deck_oj:
-                front_content_list = deck_oj['front'].get('content', None)
+                front_content_list = deck_oj['front'].get('content', [])
                 if look_into_app:
                     front_text = "<hr>".join([str(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(front_, '')).replace("<br>", " ")
                                               for front_ in front_content_list if front_ is not None and front_ != ''])
@@ -671,7 +674,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
 
             if "back" in deck_oj:
 
-                back_content_list = deck_oj['back']['content']
+                back_content_list = deck_oj['back'].get('content', [])
 
                 if look_into_app:
                     back_text = "<hr>".join([str(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'].get(back_, '')).replace("<br>", " ")
