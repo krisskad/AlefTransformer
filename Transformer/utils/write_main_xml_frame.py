@@ -201,6 +201,8 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
     all_files.add(os.path.join("1", "mlo", hashcode, 'mlo.html'))
     all_files.add(os.path.join("1", f'lo_{hashcode}.xpl.xml'))
 
+    xml_content = xml_content.replace("LT7KP3OIZ2WREPBI2GM7LDEXRZU", hashcode)
+
     write_xml(
         file_path=path_to_xml,
         xml_content=xml_content
