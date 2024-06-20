@@ -838,8 +838,6 @@ def hotspotitem_h_false(popup_obj, input_json_data, input_other_jsons_data, exit
 
     try:
         descId = popup_obj.get("description", None)
-        if "SC6_L017_LRN2_S04_textContent_4" == descId:
-            pass
         if descId:
             desc_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][descId]
 
