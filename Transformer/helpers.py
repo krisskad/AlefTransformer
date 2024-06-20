@@ -6,12 +6,12 @@ import string
 # import os
 import json
 from django.conf import settings
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 # import traceback
 import os
 import zipfile
 from lxml import etree
-import xml.etree.ElementTree as ET
+# import xml.etree.ElementTree as ET
 import re
 import html
 import htmlentities
@@ -157,6 +157,37 @@ def extract_span_info_v1(text):
     return span_info
 
 
+def extract_span_info_v2(text):
+    # List to store objects
+    toolkit_objects = []
+
+    if "data-ref" in text or "id=" in text:
+
+        # Parse the HTML content
+        soup = BeautifulSoup(text, 'html.parser')
+
+        # Function to recursively search and store objects
+        def store_toolkit_objects(element):
+            # Check if the element has a class attribute
+            if element.has_attr('class') and 'toolKit' in element['class']:
+                # Create dictionary with desired attributes
+                toolkit_object = {
+                    'content': element.text.strip(),
+                    'id': element.get('id'),
+                    'data-ref': element.get('data-ref')
+                }
+                # Append object to list
+                toolkit_objects.append(toolkit_object)
+            # Recursively call for all children of the current element
+            for child in element.children:
+                if child.name:
+                    store_toolkit_objects(child)
+
+        # Start recursively storing objects
+        store_toolkit_objects(soup)
+    return toolkit_objects
+
+
 def text_en_html_to_html_text(html_string):
     soup = BeautifulSoup(html_string, 'html.parser')
     spans_with_id = soup.find_all('span', id=True)
@@ -175,6 +206,73 @@ def text_en_html_to_html_text(html_string):
         span['class'] = 'jsx_tooltip'
 
     return str(soup)
+
+
+# def text_en_html_to_html_text_v1(html_string):
+#     # Parse the HTML content
+#     soup = BeautifulSoup(html_string, 'html.parser')
+#
+#     # Function to recursively search and replace classes
+#     def replace_toolkit_classes(element):
+#         # Check if the element has a class attribute
+#         if element.has_attr('class'):
+#             classes = element['class']
+#             # Check if 'toolKit' is in the classes list
+#             if 'toolKit' in classes:
+#                 # Replace 'toolKit' with 'jsx_tooltip'
+#                 new_classes = ['jsx_tooltip' if cls == 'toolKit' else cls for cls in classes]
+#                 element['class'] = new_classes
+#             else:
+#                 # Get the children (contents) of the element
+#                 inner_contents = element.contents
+#                 # print(inner_contents)
+#
+#                 # Initialize an empty string to store inner HTML
+#                 inner_html = ''
+#
+#                 # Concatenate the inner HTML of each child
+#                 for content in inner_contents:
+#                     inner_html += str(content)
+#
+#                 element.replace_with(BeautifulSoup(inner_html, 'html.parser'))
+#                 # print(element)
+#
+#         # Recursively call for all children of the current element
+#         for child in element.children:
+#             if child.name:
+#                 replace_toolkit_classes(child)
+#
+#     # Start recursively replacing classes
+#     replace_toolkit_classes(soup)
+#
+#     return str(soup)
+
+def text_en_html_to_html_text_v1(html_string):
+    html_string = html_string.replace("toolKit", "jsx_tooltip")
+    # Create a BeautifulSoup object
+    soup = BeautifulSoup(html_string, 'html.parser')
+
+    # Define a recursive function to remove tags except <span class="jsx_tooltip">
+    def remove_tags_recursively(element):
+        for child in element.children:
+            if isinstance(child, Tag):
+                if child.name == 'span' and 'jsx_tooltip' in child.get('class', ''):
+                    # Do not remove <span class="jsx_tooltip">, but process its children
+                    remove_tags_recursively(child)
+                else:
+                    # Remove the tag and continue processing its children
+                    child.unwrap()
+            else:
+                # If it's not a Tag, it's a string or NavigableString, continue
+                continue
+
+    # Start recursive removal from the top-level of the document
+    remove_tags_recursively(soup)
+
+    # Get the cleaned HTML string
+    cleaned_html = str(soup)
+
+    return cleaned_html
 
 
 def validate_paths(*paths):
@@ -472,7 +570,7 @@ def get_popup_mlo_from_text(text: str, input_other_jsons_data: dict, all_files: 
             """
 
         # get span info
-        span_info = extract_span_info_v1(text=text)
+        span_info = extract_span_info_v2(text=text)
         if isinstance(span_info, str):
             return ''
 
@@ -1347,7 +1445,7 @@ def transcript_generator(html_string: str, audio_transcript: dict):
     content_list = []
 
     # Extract title section
-    title_section = soup.find('span', id='title')
+    title_section = soup.find(id='title')
     if title_section:
         title_spans = title_section.find_all('span')
 

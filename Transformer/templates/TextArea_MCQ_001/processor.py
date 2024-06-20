@@ -1,6 +1,6 @@
 from Transformer.helpers import (generate_unique_folder_name, get_xml_feedback,
                                  mathml2latex_yarosh, transcript_generator, get_xml_hint,
-                                 text_en_html_to_html_text, remove_html_tags,
+                                 text_en_html_to_html_text, remove_html_tags, text_en_html_to_html_text_v1,
                                  get_popup_mlo_from_text, convert_html_to_strong)
 from django.conf import settings
 import os, shutil
@@ -157,19 +157,19 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             else:
                 transcript_resp = {"text":textAreaText}
 
-            # textAreaMergeHtmlText = text_en_html_to_html_text(html_string=transcript_resp["text"])
+            textAreaMergeHtmlText = text_en_html_to_html_text_v1(html_string=textAreaText)
             resp = write_html(
-                text=transcript_resp["text"],
+                text=textAreaMergeHtmlText,
                 exiting_hashcode=exiting_hashcode,
                 align=None
             )
             all_files.add(resp['relative_path'])
             exiting_hashcode.add(resp['hashcode'])
 
-            if "data-ref" in transcript_resp["text"]:
+            if "data-ref" in textAreaText:
 
                 popup_response = get_popup_mlo_from_text(
-                    text=transcript_resp["text"],
+                    text=textAreaText,
                     input_other_jsons_data=input_other_jsons_data,
                     all_files=all_files,
                     exiting_hashcode=exiting_hashcode,
