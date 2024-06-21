@@ -1465,16 +1465,19 @@ def transcript_generator(html_string: str, audio_transcript: dict):
                     ts = start_time
                     end_ts = start_time + end_time
 
+                    ts = round(ts, 3)
+                    end_ts = round(end_ts, 3)
+
                     content_tokens = re.findall(r'\w+|[^\w\s]|\s$', content_contents)
 
                     for j_token in content_tokens:
                         if j_token in string.punctuation:
                             main.append(
-                                {"type": "punct", "value": j_token}
+                                {"type": "punct", "value": htmlentities.encode(j_token)}
                             )
                         elif j_token == " ":
                             main.append(
-                                {"type": "punct", "value": j_token}
+                                {"type": "punct", "value": htmlentities.encode(j_token)}
                             )
                         else:
                             main.append(
