@@ -104,7 +104,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     submitCount = input_json_data["pageData"]["args"].get("submitCount", 2)
     # shuffle = input_json_data["pageData"]["args"]["shuffle"]
     dragItems = input_json_data["pageData"]["args"]["dragItems"]
-    # dropItems = input_json_data["pageData"]["args"]["dropItems"]
+    dropItems = input_json_data["pageData"]["args"]["dropItems"]
     view_ref = input_json_data["pageData"]['viewRef']
 
     temp = []
@@ -250,9 +250,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         map_link_list = []
         for index, each_option in enumerate(dragItems):
             dropId = each_option.get("dropId")
-            dropId = int(dropId)
-            if dropId >= 0:
-                dropId = dropId + 1
+            # dropId = int(dropId)
+            # if dropId >= 0:
+            #     dropId = dropId + 1
 
             temp4 = []
             for _ in range(5):
@@ -304,42 +304,39 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 """
             )
 
-            if dropId < 0:
-                continue
-
-            map_link[dropId] = temp4[0]
-            # print(index)
             view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
             try:
-                dropItem_list = view_obj["pageData"]["args"]["dropItems"][index]
+                dropItem_view = view_obj["pageData"]["args"]["dropItems"]
             except:
-                continue
+                dropItem_view = []
 
-            try:
-                dndProps_width = float(view_obj["pageData"]["args"]["dndProps"]["width"].replace("px", ""))
-                dndProps_height = float(view_obj["pageData"]["args"]["dndProps"]["height"].replace("px", ""))
-            except:
-                dndProps_width = 60
-                dndProps_height = 20
-                pass
+            for j, k in zip(dropItems, dropItem_view):
+                if str(j["dropId"]) == str(dropId):
+                    try:
+                        dndProps_width = float(view_obj["pageData"]["args"]["dndProps"]["width"].replace("px", ""))
+                        dndProps_height = float(view_obj["pageData"]["args"]["dndProps"]["height"].replace("px", ""))
+                    except:
+                        dndProps_width = 60
+                        dndProps_height = 20
+                        pass
 
-            top_pos = dropItem_list['top'].replace("px", "")
-            left_pos = dropItem_list['left'].replace("px", "")
+                    top_pos = k['top'].replace("px", "")
+                    left_pos = k['left'].replace("px", "")
 
-            top_pos = float(top_pos)
-            left_pos = float(left_pos)
+                    top_pos = int(float(top_pos))
+                    left_pos = int(float(left_pos))
 
-            minus = 200
-            top_pos = top_pos - minus
+                    minus = 200
+                    top_pos = top_pos - minus
 
-            buttom_pos = top_pos + dndProps_height
-            right_pos = left_pos + dndProps_width
+                    buttom_pos = top_pos + int(dndProps_height)
+                    right_pos = left_pos + int(dndProps_width)
 
-            map_link_list.append(
-                f"""
-                 <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{temp4[0]}" ShowMode="" left="{left_pos}" top="{top_pos}" right="{right_pos}" bottom="{buttom_pos}"/>
-                """
-            )
+                    map_link_list.append(
+                        f"""
+                         <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{temp4[0]}" ShowMode="" left="{left_pos}" top="{top_pos}" right="{right_pos}" bottom="{buttom_pos}"/>
+                        """
+                    )
 
     except Exception as e:
         map_link_list = []
