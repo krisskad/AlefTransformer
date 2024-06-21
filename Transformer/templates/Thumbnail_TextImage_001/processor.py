@@ -97,63 +97,64 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     thumbnails_list = input_json_data["pageData"]["args"].get("thumbnails", [])
 
-    for idx, thumbnail in enumerate(thumbnails_list):
-        idx = idx + 1
+    try:
+        # Assuming input_other_jsons_data and input_json_data are properly defined
 
-        try:
-            # Assuming input_other_jsons_data and input_json_data are properly defined
+        # Extract ELA_DF and drop rows where 'left' is NaN
+        ELA_DF = input_other_jsons_data.get("ELA_TEXTBOX_POSITIONS")
 
-            # Extract ELA_DF and drop rows where 'left' is NaN
-            ELA_DF = input_other_jsons_data.get("ELA_TEXTBOX_POSITIONS")
+        # Define default values
+        defaults = {
+            'top': 118,
+            'bottom': 668,
+            'left': 30,
+            'right': 1121
+        }
 
-            # Define default values
-            defaults = {
-                'top': 118,
-                'bottom': 668,
-                'left': 30,
-                'right': 1121
-            }
+        # Fill NaN values in each column with respective default value
+        ELA_DF['top'].fillna(defaults['top'], inplace=True)
+        ELA_DF['bottom'].fillna(defaults['bottom'], inplace=True)
+        ELA_DF['left'].fillna(defaults['left'], inplace=True)
+        ELA_DF['right'].fillna(defaults['right'], inplace=True)
 
-            # Fill NaN values in each column with respective default value
-            ELA_DF['top'].fillna(defaults['top'], inplace=True)
-            ELA_DF['bottom'].fillna(defaults['bottom'], inplace=True)
-            ELA_DF['left'].fillna(defaults['left'], inplace=True)
-            ELA_DF['right'].fillna(defaults['right'], inplace=True)
+        # ELA_DF = ELA_DF.dropna(subset=['left'])
 
-            # ELA_DF = ELA_DF.dropna(subset=['left'])
+        # Extract necessary values
+        screen_number = input_json_data['screen_number']
+        COURSE_ID = input_other_jsons_data['COURSE_ID']
 
-            # Extract necessary values
-            screen_number = input_json_data['screen_number']
-            COURSE_ID = input_other_jsons_data['COURSE_ID']
+        # Filter ELA_DF based on conditions
+        ELA_DF = ELA_DF[
+            (ELA_DF["TopicID"] == COURSE_ID) &
+            (ELA_DF["Screen#"] == screen_number)
+            ]
 
-            # Filter ELA_DF based on conditions
-            ELA_DF = ELA_DF[
-                (ELA_DF["TopicID"] == COURSE_ID) &
-                (ELA_DF["Screen#"] == screen_number)
-                ]
-
-            # Ensure there's at least one row matching the conditions
-            if not ELA_DF.empty:
-                ELA_DF_DICT = ELA_DF.iloc[0].to_dict()  # Take the first row
-                top = int(float(ELA_DF_DICT.get('top', 118)))
-                bottom = int(float(ELA_DF_DICT.get('bottom', 668)))
-                left = int(float(ELA_DF_DICT.get('left', 30)))
-                right = int(float(ELA_DF_DICT.get('right', 1121)))
-                print(f"Got positions: left: {left}, right: {right}, top: {top}, bottom: {bottom}")
-            else:
-                # Handle case where no rows match the conditions
-                top = 118
-                bottom = 668
-                left = 30
-                right = 1121
-
-        except Exception as e:
-            print(f"Warning: {e}")
-            # Assign default values
+        # Ensure there's at least one row matching the conditions
+        if not ELA_DF.empty:
+            ELA_DF_DICT = ELA_DF.iloc[0].to_dict()  # Take the first row
+            top = int(float(ELA_DF_DICT.get('top', 118)))
+            bottom = int(float(ELA_DF_DICT.get('bottom', 668)))
+            left = int(float(ELA_DF_DICT.get('left', 30)))
+            right = int(float(ELA_DF_DICT.get('right', 1121)))
+            print(f"Got positions from file: left: {left}, right: {right}, top: {top}, bottom: {bottom}")
+        else:
+            # Handle case where no rows match the conditions
             top = 118
             bottom = 668
             left = 30
             right = 1121
+
+    except Exception as e:
+        print(f"Warning: {e}")
+        # Assign default values
+        top = 118
+        bottom = 668
+        left = 30
+        right = 1121
+
+    for idx, thumbnail in enumerate(thumbnails_list):
+        print(f"Col: *******{idx}*******")
+        idx = idx + 1
 
         temp = []
         for _ in range(10):
@@ -198,7 +199,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     </span>
                     """
                 except Exception as e:
-                    print(f"Warning: {e}")
+                    print(f"Warning: ViewRef : {e}")
 
                 resp = write_html(
                     text=textAreaMergeHtmlText,
@@ -257,10 +258,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             except Exception as e:
                 transcript_resp = {"text": "", "transcript": []}
                 textAreaHtml = ""
-                print(f"Warning: {e}")
+                print(f"Warning: MapLink & HTML Link: {e}")
 
             try:
                 backgroundImageId = col_obj.get("backgroundImage")
+
+                if backgroundImageId is None:
+                    img_obj = col_list[0][1]
+                    backgroundImageId = img_obj.get("image")
 
                 ImgSrc = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][backgroundImageId]
                 imgfile_resp = copy_to_hashcode_dir(src_path=ImgSrc, exiting_hashcode=exiting_hashcode)
@@ -277,7 +282,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 """
             except Exception as e:
                 img_tag = ""
-                print(f"Warning: {e}")
+                print(f"Warning:MapLink BG Image:  {e}")
 
             ########
             # Audio File
@@ -306,7 +311,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     """
 
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Error: Audio : {e}")
                 audio_tag = ""
 
             all_tags.append(
@@ -324,7 +329,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             )
 
         except Exception as e:
-            print(f"Warning: {e}")
+            print(f"Warning: Final: {e}")
 
     response = {
         "XML_STRING": "".join(all_tags),
