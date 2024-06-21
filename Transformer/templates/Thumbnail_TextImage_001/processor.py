@@ -120,10 +120,10 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             # Ensure there's at least one row matching the conditions
             if not ELA_DF.empty:
                 ELA_DF_DICT = ELA_DF.iloc[0].to_dict()  # Take the first row
-                top = int(float(ELA_DF_DICT['top']))
-                bottom = int(float(ELA_DF_DICT['bottom']))
-                left = int(float(ELA_DF_DICT['left']))
-                right = int(float(ELA_DF_DICT['right']))
+                top = int(float(ELA_DF_DICT.get('top', 118)))
+                bottom = int(float(ELA_DF_DICT.get('bottom', 668)))
+                left = int(float(ELA_DF_DICT.get('left', 30)))
+                right = int(float(ELA_DF_DICT.get('right', 1121)))
                 print(f"Got positions: left: {left}, right: {right}, top: {top}, bottom: {bottom}")
             else:
                 # Handle case where no rows match the conditions
