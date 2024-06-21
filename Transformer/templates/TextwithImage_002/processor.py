@@ -173,11 +173,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         all_image_tags_list.append(
             f"""
-                                <alef_image xlink:label="{img_resp['hashcode']}" xp:name="alef_image"
-                                            xp:description="" xp:fieldtype="image" alt="" customAlign="Center">
-                                    <xp:img href="../../../{img_resp['relative_path']}" width="1644"
-                                            height="487"/>
-                                </alef_image>
+            <alef_image xlink:label="{img_resp['hashcode']}" xp:name="alef_image"
+                        xp:description="" xp:fieldtype="image" alt="" customAlign="Center">
+                <xp:img href="../../../{img_resp['relative_path']}" width="1644"
+                        height="487"/>
+            </alef_image>
             """
         )
     all_image_tags = "\n".join(all_image_tags_list)
@@ -191,29 +191,23 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     all_tags.append(
         f"""
     <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
-                              xp:description="{htmlentities.encode(ques)}" xp:fieldtype="folder" customclass="Normal">
-                    <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
-                                 xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_section xlink:label="{temp[3]}" xp:name="alef_section"
-                                      xp:description="" xp:fieldtype="folder" customclass="Normal">
-                            <alef_column xlink:label="{temp[4]}" xp:name="alef_column"
-                                         xp:description="" xp:fieldtype="folder" width="12" cellspan="1">
-                                <alef_html xlink:label="{text_resp['hashcode']}" xp:name="alef_html"
-                                           xp:description="" xp:fieldtype="html"
-                                           src="../../../{text_resp['relative_path']}"/>
-                                {teachers_note_xml}
-                                {all_image_tags}
-                                <alef_audionew xlink:label="{temp[5]}" xp:name="alef_audionew"
-                                               xp:description="" xp:fieldtype="folder">
-                                    <alef_audiofile xlink:label="{resp['hashcode']}"
-                                                    xp:name="alef_audiofile" xp:description="" audiocontrols="Yes"
-                                                    xp:fieldtype="file"
-                                                    src="../../../{resp['relative_path']}"/>
-                                </alef_audionew>
-                            </alef_column>
-                        </alef_section>
-                    </alef_column>
-                </alef_section>
+                              xp:description="{htmlentities.encode(ques)}" xp:fieldtype="folder" customclass="Text- Left">
+        <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
+                     xp:fieldtype="folder" width="auto" cellspan="1">
+            <alef_html xlink:label="{text_resp['hashcode']}" xp:name="alef_html"
+                       xp:description="" xp:fieldtype="html"
+                       src="../../../{text_resp['relative_path']}"/>
+            {teachers_note_xml}
+            {all_image_tags}
+            <alef_audionew xlink:label="{temp[5]}" xp:name="alef_audionew"
+                           xp:description="" xp:fieldtype="folder">
+                <alef_audiofile xlink:label="{resp['hashcode']}"
+                                xp:name="alef_audiofile" xp:description="" audiocontrols="Yes"
+                                xp:fieldtype="file"
+                                src="../../../{resp['relative_path']}"/>
+            </alef_audionew>
+        </alef_column>
+    </alef_section>
         """
     )
     response = {
