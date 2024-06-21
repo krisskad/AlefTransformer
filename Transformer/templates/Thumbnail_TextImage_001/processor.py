@@ -1,5 +1,5 @@
 from Transformer.helpers import (generate_unique_folder_name,
-                                 mathml2latex_yarosh, transcript_generator,
+                                 mathml2latex_yarosh, transcript_generator, remove_html_tags,
                                  text_en_html_to_html_text, text_en_html_to_html_text_v1,
                                  get_popup_mlo_from_text, convert_html_to_strong)
 from django.conf import settings
@@ -186,9 +186,11 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         audio_transcript=audioData
                     )
                 else:
-                    transcript_resp = {"text": textAreaText}
+                    transcript_resp = {"text": textAreaText, "transcript":[]}
 
-                textAreaMergeHtmlText = text_en_html_to_html_text_v1(html_string=textAreaText)
+                # textAreaMergeHtmlText = text_en_html_to_html_text_v1(html_string=textAreaText)
+                textAreaMergeHtmlText = remove_html_tags(textAreaText)
+                # textAreaMergeHtmlText = textAreaText.replace("toolKit", "jsx_tooltip")
                 resp = write_html(
                     text=textAreaMergeHtmlText,
                     exiting_hashcode=exiting_hashcode,
@@ -233,7 +235,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     img_tag = img_tag.replace("LW66C5DAG67JEJBGMYQPVBXIG7A", resp['hashcode'])
 
             except Exception as e:
-                transcript_resp = {"text": ""}
+                transcript_resp = {"text": "", "transcript": []}
                 textAreaHtml = ""
                 print(f"Warning: {e}")
 
@@ -249,12 +251,19 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 all_files.add(audiofile_resp['relative_path'])
                 exiting_hashcode.add(audiofile_resp['hashcode'])
 
-                audio_tag = f"""
-                <alef_audionew xlink:label="{temp[1]}" xp:name="alef_audionew" xp:description="" xp:fieldtype="folder">
-                    <alef_audiofile xlink:label="{audiofile_resp['hashcode']}" xp:name="alef_audiofile" xp:description="" audiocontrols="No" xp:fieldtype="file" src="../../../{audiofile_resp['relative_path']}" />
-                    <alef_audiotranscript xlink:label="{temp[2]}" xp:name="alef_audiotranscript" xp:description="" xp:fieldtype="text">{transcript_resp["transcript"]}</alef_audiotranscript>
-                </alef_audionew>
-                """
+                if transcript_resp["transcript"]:
+                    audio_tag = f"""
+                    <alef_audionew xlink:label="{temp[1]}" xp:name="alef_audionew" xp:description="" xp:fieldtype="folder">
+                        <alef_audiofile xlink:label="{audiofile_resp['hashcode']}" xp:name="alef_audiofile" xp:description="" audiocontrols="No" xp:fieldtype="file" src="../../../{audiofile_resp['relative_path']}" />
+                        <alef_audiotranscript xlink:label="{temp[2]}" xp:name="alef_audiotranscript" xp:description="" xp:fieldtype="text">{transcript_resp["transcript"]}</alef_audiotranscript>
+                    </alef_audionew>
+                    """
+                else:
+                    audio_tag = f"""
+                    <alef_audionew xlink:label="{temp[1]}" xp:name="alef_audionew" xp:description="" xp:fieldtype="folder">
+                        <alef_audiofile xlink:label="{audiofile_resp['hashcode']}" xp:name="alef_audiofile" xp:description="" audiocontrols="Yes" xp:fieldtype="file" src="../../../{audiofile_resp['relative_path']}" />
+                    </alef_audionew>
+                    """
 
             except Exception as e:
                 print(f"Error: {e}")

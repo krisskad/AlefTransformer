@@ -247,32 +247,44 @@ def text_en_html_to_html_text(html_string):
 #
 #     return str(soup)
 
+# def text_en_html_to_html_text_v1(html_string):
+#     html_string = html_string.replace("toolKit", "jsx_tooltip")
+#     # Create a BeautifulSoup object
+#     soup = BeautifulSoup(html_string, 'html.parser')
+#
+#     # Define a recursive function to remove tags except <span class="jsx_tooltip">
+#     def remove_tags_recursively(element):
+#         for child in element.children:
+#             if isinstance(child, Tag):
+#                 if child.name == 'span' and 'jsx_tooltip' in child.get('class', ''):
+#                     # Do not remove <span class="jsx_tooltip">, but process its children
+#                     remove_tags_recursively(child)
+#                 else:
+#                     # Remove the tag and continue processing its children
+#                     child.unwrap()
+#             else:
+#                 # If it's not a Tag, it's a string or NavigableString, continue
+#                 continue
+#
+#     # Start recursive removal from the top-level of the document
+#     remove_tags_recursively(soup)
+#
+#     # Get the cleaned HTML string
+#     cleaned_html = str(soup)
+#
+#     return cleaned_html
+
+
 def text_en_html_to_html_text_v1(html_string):
-    html_string = html_string.replace("toolKit", "jsx_tooltip")
-    # Create a BeautifulSoup object
-    soup = BeautifulSoup(html_string, 'html.parser')
+    pattern = r"<span\s+class='toolKit'([^>]*)>"
 
-    # Define a recursive function to remove tags except <span class="jsx_tooltip">
-    def remove_tags_recursively(element):
-        for child in element.children:
-            if isinstance(child, Tag):
-                if child.name == 'span' and 'jsx_tooltip' in child.get('class', ''):
-                    # Do not remove <span class="jsx_tooltip">, but process its children
-                    remove_tags_recursively(child)
-                else:
-                    # Remove the tag and continue processing its children
-                    child.unwrap()
-            else:
-                # If it's not a Tag, it's a string or NavigableString, continue
-                continue
+    # Replacement pattern
+    replacement = r"<span class='jsx_tooltip'>"
 
-    # Start recursive removal from the top-level of the document
-    remove_tags_recursively(soup)
+    # Perform the replacement using re.sub
+    new_html_string = re.sub(pattern, replacement, html_string)
 
-    # Get the cleaned HTML string
-    cleaned_html = str(soup)
-
-    return cleaned_html
+    return new_html_string
 
 
 def validate_paths(*paths):
