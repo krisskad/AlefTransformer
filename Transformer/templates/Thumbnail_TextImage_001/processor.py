@@ -105,7 +105,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             # Extract ELA_DF and drop rows where 'left' is NaN
             ELA_DF = input_other_jsons_data.get("ELA_TEXTBOX_POSITIONS")
-            ELA_DF = ELA_DF.dropna(subset=['left'])
+            # ELA_DF = ELA_DF.dropna(subset=['left'])
 
             # Extract necessary values
             screen_number = input_json_data['screen_number']
