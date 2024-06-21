@@ -136,10 +136,15 @@ def iterative_process_data(all_dir_objs):
     except:
         ela_types = pd.DataFrame()
 
+    try:
+        ela_positions = pd.read_csv(str(os.path.join(settings.BASE_DIR, 'media', 'ela_thumbnail_imagetext_position.csv')))
+    except:
+        ela_positions = pd.DataFrame()
+
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         print("#" * 20)
-        # if course_obj_dir_dict["COURSE_ID"] != "CS_ELA8_L001_GoFurther":
+        # if course_obj_dir_dict["COURSE_ID"] != "CS_ELA8_L001_Discover":
         #     continue
         print(course_obj_dir_dict['COURSE_ID'])
 
@@ -204,7 +209,8 @@ def iterative_process_data(all_dir_objs):
             "OUTPUT_DIR":course_obj_dir_dict['OUTPUT_DIR'],
             "COURSE_ID":course_obj_dir_dict['COURSE_ID'],
             "CUSTOM_DND_TITLE":customdnd_title,
-            "ELA_TEMPLATE_TYPE":ela_types
+            "ELA_TEMPLATE_TYPE":ela_types,
+            "ELA_TEXTBOX_POSITIONS":ela_positions
         }
 
         if "INPUT_APP_GLOSSARY_JSON" in course_obj_dir_dict:
@@ -233,7 +239,7 @@ def iterative_process_data(all_dir_objs):
 
             template_id = item['pageData']['templateID']
             item['screen_number'] = screen_number
-            # if template_id != "Hotspot_001":
+            # if template_id != "Thumbnail_TextImage_001":
             #     continue
             #
             # if screen_number != 2:
