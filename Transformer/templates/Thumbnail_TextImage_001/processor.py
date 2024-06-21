@@ -105,6 +105,21 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             # Extract ELA_DF and drop rows where 'left' is NaN
             ELA_DF = input_other_jsons_data.get("ELA_TEXTBOX_POSITIONS")
+
+            # Define default values
+            defaults = {
+                'top': 118,
+                'bottom': 668,
+                'left': 30,
+                'right': 1121
+            }
+
+            # Fill NaN values in each column with respective default value
+            ELA_DF['top'].fillna(defaults['top'], inplace=True)
+            ELA_DF['bottom'].fillna(defaults['bottom'], inplace=True)
+            ELA_DF['left'].fillna(defaults['left'], inplace=True)
+            ELA_DF['right'].fillna(defaults['right'], inplace=True)
+
             # ELA_DF = ELA_DF.dropna(subset=['left'])
 
             # Extract necessary values
@@ -157,25 +172,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             title = col_obj.get("title")
             audioData = col_obj.get("audioData")
 
-            try:
-                backgroundImageId = col_obj.get("backgroundImage")
-
-                ImgSrc = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][backgroundImageId]
-                imgfile_resp = copy_to_hashcode_dir(src_path=ImgSrc, exiting_hashcode=exiting_hashcode)
-                all_files.add(imgfile_resp['relative_path'])
-                exiting_hashcode.add(imgfile_resp['hashcode'])
-
-                img_tag = f"""
-                <alef_image xlink:label="{imgfile_resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
-                    <xp:img href="../../../{imgfile_resp['relative_path']}" width="1920" height="1080">
-                    	<maplink xlink:name="New Link" name="New Link" type="internal" targetid="LW66C5DAG67JEJBGMYQPVBXIG7A" ShowMode="" left="{left}" right="{right}" top="{top}" bottom="{bottom}" />
-                    </xp:img>
-                </alef_image>
-                """
-            except Exception as e:
-                img_tag = ""
-                print(f"Warning: {e}")
-
+            maplink_tags = []
             try:
                 textAreaTextId = col_obj.get("text")
                 textAreaText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][textAreaTextId]
@@ -186,11 +183,23 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                         audio_transcript=audioData
                     )
                 else:
-                    transcript_resp = {"text": textAreaText, "transcript":[]}
+                    transcript_resp = {"text": textAreaText, "transcript": []}
 
-                # textAreaMergeHtmlText = text_en_html_to_html_text_v1(html_string=textAreaText)
-                textAreaMergeHtmlText = remove_html_tags(textAreaText)
-                # textAreaMergeHtmlText = textAreaText.replace("toolKit", "jsx_tooltip")
+                textAreaText = text_en_html_to_html_text_v1(html_string=textAreaText)
+                textAreaMergeHtmlText = text_en_html_to_html_text(textAreaText)
+
+                try:
+                    view_ref = input_json_data["pageData"]['viewRef']
+                    view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
+                    fontStyle = view_obj['pageData']['args']['fontStyle']
+                    textAreaMergeHtmlText = f"""
+                    <span style="color: {fontStyle['color']};">
+                    {textAreaMergeHtmlText}
+                    </span>
+                    """
+                except Exception as e:
+                    print(f"Warning: {e}")
+
                 resp = write_html(
                     text=textAreaMergeHtmlText,
                     exiting_hashcode=exiting_hashcode,
@@ -211,32 +220,63 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                     if popup_response:
                         all_files = popup_response['all_files']
                         exiting_hashcode = popup_response['exiting_hashcode']
-                        # popup = "\n".join(popup_response['all_tags'])
-                        textAreaHtml = ""
-                        for each_popup in popup_response['all_tags']:
-                            textAreaHtml = f"""
-                            <alef_tooltip xlink:label="{temp[0]}" xp:name="alef_tooltip" xp:description="" xp:fieldtype="folder">
-                                <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
-                                {each_popup}
-                            </alef_tooltip>
+                        popup = "\n".join(popup_response['all_tags'])
+                        textAreaHtml = f"""
+                        <alef_tooltip xlink:label="{temp[0]}" xp:name="alef_tooltip" xp:description="" xp:fieldtype="folder">
+                            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
+                            {popup}
+                        </alef_tooltip>
+                        """
+                        maplink_tags.append(
+                            f"""
+                            <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{temp[0]}" ShowMode="" left="{left}" right="{right}" top="{top}" bottom="{bottom}" />
+                    	    <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{resp['hashcode']}" ShowMode="" left="{left}" right="{right}" top="{top}" bottom="{bottom}" />
                             """
+                        )
 
-                        img_tag = img_tag.replace("LW66C5DAG67JEJBGMYQPVBXIG7A", temp[0])
                     else:
                         textAreaHtml = f"""
                         <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
                         """
-                        img_tag = img_tag.replace("LW66C5DAG67JEJBGMYQPVBXIG7A", resp['hashcode'])
+                        maplink_tags.append(
+                            f"""
+                        <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{resp['hashcode']}" ShowMode="" left="{left}" right="{right}" top="{top}" bottom="{bottom}" />
+                        """
+                        )
 
                 else:
                     textAreaHtml = f"""
                     <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
                     """
-                    img_tag = img_tag.replace("LW66C5DAG67JEJBGMYQPVBXIG7A", resp['hashcode'])
+                    maplink_tags.append(
+                        f"""
+                    <maplink xlink:name="New Link" name="New Link" type="internal" targetid="{resp['hashcode']}" ShowMode="" left="{left}" right="{right}" top="{top}" bottom="{bottom}" />
+                    """
+                    )
 
             except Exception as e:
                 transcript_resp = {"text": "", "transcript": []}
                 textAreaHtml = ""
+                print(f"Warning: {e}")
+
+            try:
+                backgroundImageId = col_obj.get("backgroundImage")
+
+                ImgSrc = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][backgroundImageId]
+                imgfile_resp = copy_to_hashcode_dir(src_path=ImgSrc, exiting_hashcode=exiting_hashcode)
+                all_files.add(imgfile_resp['relative_path'])
+                exiting_hashcode.add(imgfile_resp['hashcode'])
+
+                maplinks = "\n".join(maplink_tags)
+                img_tag = f"""
+                <alef_image xlink:label="{imgfile_resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
+                    <xp:img href="../../../{imgfile_resp['relative_path']}" width="1920" height="1080">
+                    	{maplinks}
+                    </xp:img>
+                </alef_image>
+                """
+            except Exception as e:
+                img_tag = ""
                 print(f"Warning: {e}")
 
             ########
