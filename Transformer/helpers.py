@@ -1429,11 +1429,11 @@ def transcript_generator(html_string: str, audio_transcript: dict):
 
                     for i_token in title_tokens:
                         if i_token in string.punctuation:
-                            token_html = htmlentities.encode(i_token)
-                            if not token_html == i_token:
-                                print(f"Warning: There are html entities present in transcript which can cause xml crash so we are converting it into html encoding check below--> \n Original {i_token}\n Encoded {token_html}")
+                            # token_html = htmlentities.encode(i_token)
+                            # if not token_html == i_token:
+                            #     print(f"Warning: There are html entities present in transcript which can cause xml crash so we are converting it into html encoding check below--> \n Original {i_token}\n Encoded {token_html}")
                             main.append(
-                                {"type": "punct", "value": htmlentities.encode(i_token)}
+                                {"type": "punct", "value": i_token}
                             )
                         elif i_token == " ":
                             main.append(
@@ -1491,12 +1491,12 @@ def transcript_generator(html_string: str, audio_transcript: dict):
                                 {"type": "punct", "value": j_token}
                             )
                         else:
-                            token_html = htmlentities.encode(j_token)
-                            if not token_html == j_token:
-                                print(
-                                    f"Warning: There are html entities present in transcript which can cause xml crash so we are converting it into html encoding check below--> \n Original {j_token}\n Encoded {token_html}")
+                            # token_html = htmlentities.encode(j_token)
+                            # if not token_html == j_token:
+                            #     print(
+                            #         f"Warning: There are html entities present in transcript which can cause xml crash so we are converting it into html encoding check below--> \n Original {j_token}\n Encoded {token_html}")
                             main.append(
-                                {"type": "text", "value": token_html, "ts": ts, "end_ts": end_ts, "confidence": 0.99}
+                                {"type": "text", "value": j_token, "ts": ts, "end_ts": end_ts, "confidence": 0.99}
                             )
 
     title_text = "".join(title_list)
