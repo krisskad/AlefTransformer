@@ -5,6 +5,8 @@ import os
 from Transformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags, mathml2latex_yarosh
 # import shutil
 from django.conf import settings
+import random
+import string
 
 
 MLO_HTML_TEMPLATE = """
@@ -187,8 +189,10 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
 
     xml_content = "\n".join(all_tags)
 
+    random_prefix = str(random.choice(string.ascii_letters)).upper()
+
     # create folder
-    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix=random_prefix, k=26)
 
     path_to_hashcode = str(os.path.join(settings.OUTPUT_DIR, "1", "mlo", hashcode))
     os.makedirs(path_to_hashcode, exist_ok=True)
