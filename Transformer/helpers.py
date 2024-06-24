@@ -364,7 +364,7 @@ def mathml2latex_yarosh(html_string: str):
         newdom = transform(dom)
         newdom = str(newdom).replace("$", "")
         newdom = htmlentities.encode(newdom)
-        newdom = newdom.replace("&nbsp;", " ")
+        newdom = newdom.replace("&nbsp;", "\; ").replace("<0xa0>", "\; ")
         newdom = f"\({newdom}\)"
 
         # for char, entity in html_entities.items():
@@ -1429,14 +1429,21 @@ def transcript_generator(html_string: str, audio_transcript: dict):
 
                     for i_token in title_tokens:
                         if i_token in string.punctuation:
+                            token_html = htmlentities.encode(i_token)
+                            if not token_html == i_token:
+                                print(f"Warning: There are html entities present in transcript which can cause xml crash so we are converting it into html encoding check below--> \n Original {i_token}\n Encoded {token_html}")
                             main.append(
-                                {"type": "punct", "value": i_token}
+                                {"type": "punct", "value": htmlentities.encode(i_token)}
                             )
                         elif i_token == " ":
                             main.append(
                                 {"type": "punct", "value": i_token}
                             )
                         else:
+                            token_html = htmlentities.encode(i_token)
+                            if not token_html == i_token:
+                                print(
+                                    f"Warning: There are html entities present in transcript which can cause xml crash so we are converting it into html encoding check below--> \n Original {i_token}\n Encoded {token_html}")
                             main.append(
                                 {"type": "text", "value": i_token, "ts": ts, "end_ts": end_ts, "confidence": 0.99}
                             )
@@ -1472,16 +1479,24 @@ def transcript_generator(html_string: str, audio_transcript: dict):
 
                     for j_token in content_tokens:
                         if j_token in string.punctuation:
+                            token_html = htmlentities.encode(j_token)
+                            if not token_html == j_token:
+                                print(
+                                    f"Warning: There are html entities present in transcript which can cause xml crash so we are converting it into html encoding check below--> \n Original {j_token}\n Encoded {token_html}")
                             main.append(
-                                {"type": "punct", "value": htmlentities.encode(j_token)}
+                                {"type": "punct", "value": htmlentities.encode(token_html)}
                             )
                         elif j_token == " ":
                             main.append(
-                                {"type": "punct", "value": htmlentities.encode(j_token)}
+                                {"type": "punct", "value": j_token}
                             )
                         else:
+                            token_html = htmlentities.encode(j_token)
+                            if not token_html == j_token:
+                                print(
+                                    f"Warning: There are html entities present in transcript which can cause xml crash so we are converting it into html encoding check below--> \n Original {j_token}\n Encoded {token_html}")
                             main.append(
-                                {"type": "text", "value": j_token, "ts": ts, "end_ts": end_ts, "confidence": 0.99}
+                                {"type": "text", "value": token_html, "ts": ts, "end_ts": end_ts, "confidence": 0.99}
                             )
 
     title_text = "".join(title_list)
