@@ -189,10 +189,11 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
 
     xml_content = "\n".join(all_tags)
 
-    random_prefix = str(random.choice(string.ascii_letters)).upper()
+    # random_prefix = str(random.choice(string.ascii_letters)).upper()
+    random_prefix = "L"
 
     # create folder
-    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix=random_prefix, k=26)
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix=random_prefix, k=27)
 
     path_to_hashcode = str(os.path.join(settings.OUTPUT_DIR, "1", "mlo", hashcode))
     os.makedirs(path_to_hashcode, exist_ok=True)
