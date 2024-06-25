@@ -224,7 +224,7 @@ def text_en_html_to_html_text_v1(html_string):
         elif element.name == 'br':
             final_list.append("<br>")
 
-    context = " ".join(final_list)
+    context = "".join(final_list)
     return context
 
 
