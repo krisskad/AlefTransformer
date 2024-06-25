@@ -116,13 +116,18 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     try:
         title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
     except Exception as e:
-        print('Error: Unable to find the title in English text data. Trying to find the title in text content...')
+        print(f'Error: Unable to find the title in title field of structure.json. Trying to find the title in textContent in structure.json... {e}')
         try:
-            text_id = input_json_data["pageData"]["args"]["textFieldData"]["textContent"][0].get("text")
-            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id]
+            text_ids = input_json_data["pageData"]["args"]["textFieldData"]["textContent"]
+            text_list = []
+            for text_id in text_ids:
+                text_id_ref = text_id.get("text")
+                text_list.append(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id_ref])
+            # print(text_list)
+            title = "<br>".join(text_list)
         except Exception as e:
             title = ""
-            print('Error: The text content is also not found. The title will be left blank.')
+            print(f'Warning: The text content is also not found. The title will be left blank. {e}')
 
     try:
 
