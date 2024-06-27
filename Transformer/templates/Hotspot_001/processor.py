@@ -1,5 +1,6 @@
 from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong, get_teacher_note, get_popup_mlo_from_text,
-                                 write_html_mlo, mathml2latex_yarosh, get_xml_feedback, get_xml_hint, remove_html_tags, text_en_html_to_html_text)
+                                 write_html_mlo, mathml2latex_yarosh, get_xml_feedback, get_xml_hint, remove_html_tags,
+                                 text_en_html_to_html_text, remove_div_wrapper)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -147,6 +148,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             if ques_text_id:
                 ques_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][ques_text_id]
                 HtmlText = text_en_html_to_html_text(html_string=ques_text)
+                HtmlText = remove_div_wrapper(HtmlText)
 
                 if "<math" in HtmlText:
                     HtmlText = mathml2latex_yarosh(html_string=HtmlText)

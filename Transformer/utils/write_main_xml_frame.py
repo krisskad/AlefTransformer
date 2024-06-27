@@ -189,11 +189,11 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
 
     xml_content = "\n".join(all_tags)
 
-    # random_prefix = str(random.choice(string.ascii_letters)).upper()
-    random_prefix = "L"
+    random_prefix = str(random.choice(string.ascii_letters)).upper()
+    # random_prefix = "L"
 
     # create folder
-    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix=random_prefix, k=27)
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix=random_prefix, k=26)
 
     path_to_hashcode = str(os.path.join(settings.OUTPUT_DIR, "1", "mlo", hashcode))
     os.makedirs(path_to_hashcode, exist_ok=True)
@@ -206,7 +206,7 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
     all_files.add(os.path.join("1", "mlo", hashcode, 'mlo.html'))
     all_files.add(os.path.join("1", f'lo_{hashcode}.xpl.xml'))
 
-    xml_content = xml_content.replace("LT7KP3OIZ2WREPBI2GM7LDEXRZU", hashcode)
+    xml_content = xml_content.replace("LT7KP3OIZ2WREPBI2GM7LDEXRZU", f"L{hashcode}")
 
     write_xml(
         file_path=path_to_xml,
