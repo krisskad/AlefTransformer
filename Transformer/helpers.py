@@ -1507,3 +1507,36 @@ def transcript_generator(html_string: str, audio_transcript: dict):
         "transcript":json.dumps(main)
     }
     return context
+
+
+import re
+
+
+def remove_div_wrapper(html_text):
+    # Define a regex pattern to match <div> tags with optional attributes
+    pattern = r'<div[^>]*>(.*?)</div>'
+
+    # Use re.sub() with a callback function to handle nested <div> tags
+    def replace_div(match):
+        inner_content = match.group(1)
+        # Replace nested <div> tags recursively
+        inner_content = re.sub(pattern, replace_div, inner_content)
+        return inner_content
+
+    # Replace all <div> tags with their inner content
+    return re.sub(pattern, replace_div, html_text)
+
+
+def remove_br_tags(html_text):
+    # Define a regex pattern to match <br> tags and their immediate text content
+    pattern = r'<br\s*/?\s*>(?![\s\S]*?\.[\s\S]*?</)'
+
+    # Use re.sub() with a callback function to remove <br> tags based on the pattern
+    def replace_br(match):
+        # Replace <br> tags with an empty string
+        return ''
+
+    # Apply the regex pattern to remove <br> tags
+    cleaned_text = re.sub(pattern, replace_br, html_text)
+
+    return cleaned_text

@@ -1,5 +1,5 @@
 from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong, get_teacher_note,
-                                 remove_html_tags, mathml2latex_yarosh)
+                                 remove_html_tags, mathml2latex_yarosh, remove_div_wrapper, remove_br_tags)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -95,83 +95,147 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         """
     ]
+
+    try:
+        view_ref = input_json_data["pageData"]['viewRef']
+        view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
+    except Exception as e:
+        view_obj = {}
+        print(f"Warning: view_ref not found please check view.json file : {e}")
+
+
     # Assigning values to variables
     # Extracting variables
-    try:
-        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
-    except:
-        raise Exception('Error: TextwithImage_002 --> src not found')
-
     try:
         ques = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["ques"]]
         if "<math" in ques:
             ques = mathml2latex_yarosh(html_string=ques)
         else:
             ques = remove_html_tags(ques)
-
-    except:
+    except Exception as e:
         ques = ""
-        print('Error: TextwithImage_002 --> ques not found')
+        print(f'Warning: TextwithImage_002 --> ques --> {e}')
 
     try:
-        title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
+        title_t = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_json_data["pageData"]["args"]["title"]]
     except Exception as e:
-        print(f'Error: Unable to find the title in title field of structure.json. Trying to find the title in textContent in structure.json... {e}')
+        title_t = ""
+
+    text_list = [title_t]
+
+    try:
+        text_ids = input_json_data["pageData"]["args"]["textFieldData"]["textContent"]
+        for text_id in text_ids:
+            text_id_ref = text_id.get("text")
+            text_list.append(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id_ref])
+    except Exception as e:
+        text_list = []
+        print(f'Warning: The text content is also not found. The title will be left blank. {e}')
+
+    html_tags_list = []
+    teachers_note_xml = ""
+    for idx, title in enumerate(text_list):
         try:
-            text_ids = input_json_data["pageData"]["args"]["textFieldData"]["textContent"]
-            text_list = []
-            for text_id in text_ids:
-                text_id_ref = text_id.get("text")
-                text_list.append(input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_id_ref])
-            # print(text_list)
-            title = "<br>".join(text_list)
+            title = remove_div_wrapper(title)
+            title = remove_br_tags(title)
+            if "<math" in title:
+                title = mathml2latex_yarosh(html_string=title)
+
+            teachers_note_xml = ""
+            teacher_resp = get_teacher_note(
+                text=title, all_files=all_files,
+                exiting_hashcode=exiting_hashcode,
+                input_other_jsons_data=input_other_jsons_data
+            )
+
+            if teacher_resp:
+                title = teacher_resp["remaining_text"]
+                teachers_note_xml = teacher_resp["teachers_note_xml"]
+                exiting_hashcode.update(teacher_resp["exiting_hashcode"])
+                all_files.update(teacher_resp["all_files"])
+
+            try:
+                if title_t:
+                    if idx > 0:
+                        extraTextsViewList = view_obj["pageData"]["args"]["extraTexts"][idx]
+                        skip = False
+                    else:
+                        skip = True
+                else:
+                    extraTextsViewList = view_obj["pageData"]["args"]["extraTexts"][idx]
+                    skip = False
+
+                if not skip:
+                    text_top = extraTextsViewList["top"]
+                    text_left = extraTextsViewList["left"]
+                    text_height = extraTextsViewList["height"]
+                    text_width = extraTextsViewList["width"]
+                    fontSize = extraTextsViewList["fontSize"]
+                    color = extraTextsViewList["color"]
+
+                    title = f"""
+                    <span style="position: absolute; top: {text_top}; left: {text_left}; width: {text_width}; height: {text_height}; font-size: {fontSize}; color: {color};">
+                        {title}
+                    </span>
+                    """
+
+            except:
+                pass
+
+            text_resp = write_html(text=title, exiting_hashcode=exiting_hashcode, align=False)
+            all_files.add(text_resp['relative_path'])
+            exiting_hashcode.add(text_resp['hashcode'])
+
+            text_html_tag = f"""
+            <alef_html xlink:label="{text_resp['hashcode']}" xp:name="alef_html"
+               xp:description="" xp:fieldtype="html"
+               src="../../../{text_resp['relative_path']}"/>
+            """
+
+            html_tags_list.append(text_html_tag)
+
         except Exception as e:
-            title = ""
-            print(f'Warning: The text content is also not found. The title will be left blank. {e}')
-
-    try:
-
-        if "<math" in title:
-            title = mathml2latex_yarosh(html_string=title)
-
-        teachers_note_xml = ""
-        teacher_resp = get_teacher_note(
-            text=title, all_files=all_files,
-            exiting_hashcode=exiting_hashcode,
-            input_other_jsons_data=input_other_jsons_data
-        )
-
-        if teacher_resp:
-            title = teacher_resp["remaining_text"]
-            teachers_note_xml = teacher_resp["teachers_note_xml"]
-            exiting_hashcode.update(teacher_resp["exiting_hashcode"])
-            all_files.update(teacher_resp["all_files"])
-
-    except Exception as e:
-        teachers_note_xml = ""
-        print(f"Error: TextwithImage_001 --> While creating teachers note --> {e}")
+            teachers_note_xml = ""
+            html_tags_list = []
+            print(f"Error: TextwithImage_001 --> While creating teachers note --> {e}")
 
 
     try:
         images = input_json_data["pageData"]["args"]["textFieldData"]["imageContent"]
-    except:
-        raise Exception('Error: TextwithImage_002 --> images not found')
-
-    resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
-    all_files.add(resp['relative_path'])
-    exiting_hashcode.add(resp['hashcode'])
-
-    text_resp = write_html(text=title, exiting_hashcode=exiting_hashcode, align=True)
-    all_files.add(text_resp['relative_path'])
-    exiting_hashcode.add(text_resp['hashcode'])
+    except Exception as e:
+        raise Exception(f'Error: TextwithImage_002 --> images not found {e}')
 
     all_image_tags_list = []
-    for each_img in images:
+    for idx, each_img in enumerate(images):
         try:
             img_path = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][each_img['image']]
         except:
             print('Error: TextwithImage_002 --> image not found inside image list')
             continue
+
+        try:
+            extraImagesViewList = view_obj["pageData"]["args"]["extraImages"][idx]
+            widthImg = int(float(extraImagesViewList["width"].replace("px", "")))
+            heightImg = int(float(extraImagesViewList["height"].replace("px", "")))
+
+            leftImg = int(float(extraImagesViewList["left"].replace("px", "")))
+
+            alignImg = "Left"
+            if leftImg <= 400:
+                alignImg = "Left"
+
+            if 400 < leftImg <= 800:
+                alignImg = "Center"
+
+            if leftImg > 800:
+                alignImg = "Right"
+
+        except Exception as e:
+            widthImg = 1644
+            heightImg = 487
+            alignImg = "Left"
+            print(f"Warning: {e}")
+
         img_resp = copy_to_hashcode_dir(src_path=img_path, exiting_hashcode=exiting_hashcode)
         all_files.add(img_resp['relative_path'])
         exiting_hashcode.add(img_resp['hashcode'])
@@ -179,9 +243,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         all_image_tags_list.append(
             f"""
             <alef_image xlink:label="{img_resp['hashcode']}" xp:name="alef_image"
-                        xp:description="" xp:fieldtype="image" alt="" customAlign="Center">
-                <xp:img href="../../../{img_resp['relative_path']}" width="1644"
-                        height="487"/>
+                        xp:description="" xp:fieldtype="image" alt="" customAlign="{alignImg}">
+                <xp:img href="../../../{img_resp['relative_path']}" width="{widthImg}"
+                        height="{heightImg}"/>
             </alef_image>
             """
         )
@@ -193,24 +257,38 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode_temp2)
         temp.append(hashcode_temp2)
 
+
+    try:
+        src = input_other_jsons_data['INPUT_AUDIO_JSON_DATA'][input_json_data["pageData"]["args"]["src"]]
+        resp = copy_to_hashcode_dir(src_path=src, exiting_hashcode=exiting_hashcode)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+
+        audio_tag = f"""
+        <alef_audionew xlink:label="{temp[5]}" xp:name="alef_audionew"
+                           xp:description="" xp:fieldtype="folder">
+            <alef_audiofile xlink:label="{resp['hashcode']}"
+                            xp:name="alef_audiofile" xp:description="" audiocontrols="Yes"
+                            xp:fieldtype="file"
+                            src="../../../{resp['relative_path']}"/>
+        </alef_audionew>
+        """
+
+    except Exception as e:
+        audio_tag = ""
+        print(f'Warning: TextwithImage_002 --> src not found {e}')
+
+    text_html_tags = "\n".join(html_tags_list)
     all_tags.append(
         f"""
     <alef_section xlink:label="{temp[0]}" xp:name="alef_section"
                               xp:description="{htmlentities.encode(ques)}" xp:fieldtype="folder" customclass="Text- Left">
         <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
                      xp:fieldtype="folder" width="auto" cellspan="1">
-            <alef_html xlink:label="{text_resp['hashcode']}" xp:name="alef_html"
-                       xp:description="" xp:fieldtype="html"
-                       src="../../../{text_resp['relative_path']}"/>
+            {text_html_tags}
             {teachers_note_xml}
             {all_image_tags}
-            <alef_audionew xlink:label="{temp[5]}" xp:name="alef_audionew"
-                           xp:description="" xp:fieldtype="folder">
-                <alef_audiofile xlink:label="{resp['hashcode']}"
-                                xp:name="alef_audiofile" xp:description="" audiocontrols="Yes"
-                                xp:fieldtype="file"
-                                src="../../../{resp['relative_path']}"/>
-            </alef_audionew>
+            {audio_tag}
         </alef_column>
     </alef_section>
         """
