@@ -217,23 +217,24 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             extraImagesViewList = view_obj["pageData"]["args"]["extraImages"][idx]
             widthImg = int(float(extraImagesViewList["width"].replace("px", "")))
             heightImg = int(float(extraImagesViewList["height"].replace("px", "")))
+            alignImg = ""
 
-            leftImg = int(float(extraImagesViewList["left"].replace("px", "")))
-
-            alignImg = "Left"
-            if leftImg <= 400:
-                alignImg = "Left"
-
-            if 400 < leftImg <= 800:
-                alignImg = "Center"
-
-            if leftImg > 800:
-                alignImg = "Right"
+            # leftImg = int(float(extraImagesViewList["left"].replace("px", "")))
+            #
+            # alignImg = "Left"
+            # if leftImg <= 400:
+            #     alignImg = "Left"
+            #
+            # if 400 < leftImg <= 800:
+            #     alignImg = "Center"
+            #
+            # if leftImg > 800:
+            #     alignImg = "Right"
 
         except Exception as e:
             widthImg = 1644
             heightImg = 487
-            alignImg = "Left"
+            alignImg = ""
             print(f"Warning: {e}")
 
         img_resp = copy_to_hashcode_dir(src_path=img_path, exiting_hashcode=exiting_hashcode)
