@@ -399,6 +399,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         else:
             hint_resp = {"XML_STRING": ""}
 
+        try:
+            questionNumber = each_mcq.get("questionNumber", None)
+            if questionNumber:
+                idx = questionNumber
+        except:
+            pass
+
         entire_xml_screen = f"""
         <alef_section xlink:label="{temp[9]}" xp:name="alef_section" xp:description="{textAreaTitle}" xp:fieldtype="folder" customclass="Wireframe- Box">
             {textAreaSection}

@@ -1,7 +1,8 @@
 from Transformer.helpers import (generate_unique_folder_name,
                                  mathml2latex_yarosh,
                                  text_en_html_to_html_text,
-                                 get_popup_mlo_from_text, convert_html_to_strong)
+                                 get_popup_mlo_from_text,
+                                 convert_html_to_strong)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -111,7 +112,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             df = input_other_jsons_data["ELA_TEMPLATE_TYPE"]
             # Filtering the DataFrame
             template_type_df = df[(df['LO ID'] == course_id) &
-                             (df['Template ID'] == "InputBox_001") &
+                             (df['Template ID'] == "InputBox_002") &
                              (df['Screen No.'] == screen_number)]
 
             template_type = template_type_df["Template Type"].tolist()[0]
