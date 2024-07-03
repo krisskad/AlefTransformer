@@ -1540,3 +1540,34 @@ def remove_br_tags(html_text):
     cleaned_text = re.sub(pattern, replace_br, html_text)
 
     return cleaned_text
+
+
+def set_question_number(pages):
+    new_pages = []
+    counter = 1
+    for page in pages:
+        if "TextArea_MCQ_001" in page.get("pageData", {}).get("templateID", ""):
+            questions = page.get("pageData", {}).get("args", {}).get("mcqData", {}).get("questions", [])
+            new_questions = []
+            for ques in questions:
+                ques["questionNumber"] = counter
+                counter+=1
+                new_questions.append(ques)
+            page["pageData"]["args"]["mcqData"]["questions"] = new_questions
+        new_pages.append(page)
+    # print(new_pages)
+    return new_pages
+
+
+def replace_br_after_punctuation(text):
+    # Create a regex pattern to match punctuation followed by <br> tags, ignoring spaces in between
+    pattern = re.compile(r'([{}])\s*(<br\s*/?>)+'.format(re.escape(string.punctuation)))
+
+    # Replace matched patterns with the punctuation followed by <hello>
+    replaced_text = pattern.sub(r'\1<hello>', text)
+
+    replaced_text = replaced_text.replace("<br> ", "").replace(" <br>", "").replace(" <br> ", "").replace("<br>", " ")
+
+    replaced_text = replaced_text.replace("<hello>", "<br>")
+
+    return replaced_text

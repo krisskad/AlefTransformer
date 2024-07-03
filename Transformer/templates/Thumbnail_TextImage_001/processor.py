@@ -1,5 +1,5 @@
 from Transformer.helpers import (generate_unique_folder_name,
-                                 mathml2latex_yarosh, transcript_generator, remove_html_tags,
+                                 mathml2latex_yarosh, transcript_generator, remove_html_tags, replace_br_after_punctuation,
                                  text_en_html_to_html_text, text_en_html_to_html_text_v1,
                                  get_popup_mlo_from_text, convert_html_to_strong)
 from django.conf import settings
@@ -14,7 +14,7 @@ def write_html(text, exiting_hashcode, align=None):
     except:
         pass
     text = convert_html_to_strong(html_str=text)
-
+    text = replace_br_after_punctuation(text)
     if align:
         template = f"""
         <html>

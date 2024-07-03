@@ -49,7 +49,7 @@ sample = """
 
 from Transformer.helpers import (generate_unique_folder_name,
                                  text_en_html_to_html_text,
-                                 get_popup_mlo_from_text, get_teacher_note,
+                                 get_popup_mlo_from_text, get_teacher_note, replace_br_after_punctuation,
                                  convert_html_to_strong, remove_html_tags, mathml2latex_yarosh
                                  )
 from django.conf import settings
@@ -64,7 +64,7 @@ def write_html(text, exiting_hashcode, align=None):
     except:
         pass
     text = convert_html_to_strong(html_str=text)
-
+    text = replace_br_after_punctuation(text)
     if align:
         template = f"""
         <html>

@@ -1,7 +1,7 @@
 from Transformer.helpers import (generate_unique_folder_name, get_xml_feedback,
-                                 mathml2latex_yarosh, transcript_generator, get_xml_hint,
+                                 mathml2latex_yarosh, transcript_generator, get_xml_hint, get_teacher_note,
                                  text_en_html_to_html_text, remove_html_tags, text_en_html_to_html_text_v1,
-                                 get_popup_mlo_from_text, convert_html_to_strong)
+                                 get_popup_mlo_from_text, convert_html_to_strong, replace_br_after_punctuation)
 from django.conf import settings
 import os, shutil
 import htmlentities
@@ -14,6 +14,8 @@ def write_html(text, exiting_hashcode, align=None):
     except:
         pass
     text = convert_html_to_strong(html_str=text)
+
+    text = replace_br_after_punctuation(text)
 
     if align:
         template = f"""
@@ -159,6 +161,24 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             textAreaText = text_en_html_to_html_text_v1(html_string=textAreaText)
             textAreaMergeHtmlText = text_en_html_to_html_text(textAreaText)
+
+            try:
+                teachers_note_xml = ""
+                teacher_resp = get_teacher_note(
+                    text=textAreaMergeHtmlText, all_files=all_files,
+                    exiting_hashcode=exiting_hashcode,
+                    input_other_jsons_data=input_other_jsons_data
+                )
+
+                if teacher_resp:
+                    textAreaMergeHtmlText = teacher_resp["remaining_text"]
+                    teachers_note_xml = teacher_resp["teachers_note_xml"]
+                    exiting_hashcode.update(teacher_resp["exiting_hashcode"])
+                    all_files.update(teacher_resp["all_files"])
+
+            except Exception as e:
+                teachers_note_xml = ""
+                print(f"Error: TextwithImage_001 --> While creating teachers note --> {e}")
 
             resp = write_html(
                 text=textAreaMergeHtmlText,
@@ -400,7 +420,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             hint_resp = {"XML_STRING": ""}
 
         try:
-            questionNumber = each_mcq.get("questionNumber", None)
+            questionNumber = each_mcq.get("questionNumber", "")
             if questionNumber:
                 idx = questionNumber
         except:

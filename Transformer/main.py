@@ -2,7 +2,7 @@ import importlib
 
 import pandas as pd
 from django.conf import settings
-from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file, remove_char_from_keys
+from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file, remove_char_from_keys, set_question_number
 from Transformer.utils.write_main_xml_frame import write_mlo
 from Transformer.utils.write_manifest_xml import write_imsmanifest_xml
 import os, shutil
@@ -144,7 +144,7 @@ def iterative_process_data(all_dir_objs):
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         print("#" * 20)
-        # if course_obj_dir_dict["COURSE_ID"] != "CS_ELA8_L001_Discover":
+        # if course_obj_dir_dict["COURSE_ID"] != "CS_ELA9_L007_Discover":
         #     continue
         print(course_obj_dir_dict['COURSE_ID'])
 
@@ -227,6 +227,7 @@ def iterative_process_data(all_dir_objs):
         ALL_MANIFEST_FILES = set()
 
         input_pages = INPUT_STRUCTURE_JSON_DATA.get('pages', [])
+        input_pages = set_question_number(input_pages)
 
         MLO_TEMPLATES_OUTPUT_LIST = []
 
@@ -239,10 +240,10 @@ def iterative_process_data(all_dir_objs):
 
             template_id = item['pageData']['templateID']
             item['screen_number'] = screen_number
-            # if template_id != "Thumbnail_TextImage_001":
+            # if template_id == "TextwithImage_002":
             #     continue
             #
-            # if screen_number != 2:
+            # if screen_number != 5:
             #     continue
             if template_id == "DragAndDrop_002":
                 print("Found DragAndDrop_002 --> Considering it as DragAndDrop_003")

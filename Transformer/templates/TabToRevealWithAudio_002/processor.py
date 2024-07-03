@@ -5,7 +5,8 @@
 import htmlentities
 
 from .helpers import *
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
+from Transformer.helpers import replace_br_after_punctuation
 
 
 def write_html(text, exiting_hashcode):
@@ -15,6 +16,7 @@ def write_html(text, exiting_hashcode):
     except:
         pass
     text = convert_html_to_strong(html_str=text)
+    text = replace_br_after_punctuation(text)
 
     template = f"""
     <html>
