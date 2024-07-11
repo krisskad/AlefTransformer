@@ -217,17 +217,23 @@ def text_en_html_to_html_text_v1(html_string):
 
     final_list = []
     # Loop through the selected elements and do something with them
+    title = None
     for element in elements:
         if element.name == 'span':
             if element.get('id', '').startswith("spn_"):  # Check if id starts with 'spn_'
                 final_list += [str(i) for i in element.contents]
             elif element.get('id', '').startswith("title"):
-                final_list += [f"""<span id="title">{str(i)}</span>""" for i in element.contents]
+                title = element.text
 
         elif element.name == 'br':
             final_list.append("<br>")
 
     context = "".join(final_list)
+
+    if title:
+        if title in context:
+            context = context.replace(title, "")
+            context = f"<strong>{title}</strong><br><br>{context}"
     return context
 
 
