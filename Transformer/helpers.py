@@ -386,8 +386,9 @@ def write_html_mlo(text, exiting_hashcode, align="center"):
         text = assing_class_for_color(text)
     except:
         pass
-
     text = convert_html_to_strong(html_str=text)
+
+    text = replace_br_after_punctuation(text)
 
     if align:
         template = f"""

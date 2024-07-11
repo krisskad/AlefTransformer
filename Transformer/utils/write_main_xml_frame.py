@@ -2,7 +2,7 @@ import glob
 
 import htmlentities
 import os
-from Transformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags, mathml2latex_yarosh
+from Transformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags, mathml2latex_yarosh, write_html_mlo
 # import shutil
 from django.conf import settings
 import random
@@ -141,12 +141,12 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
     all_tags.append(
         f"""
         <alef_page xlink:label="{temp[0]}" xp:name="alef_page" xp:description="{htmlentities.encode(head)}" xp:fieldtype="folder" unittitle="{htmlentities.encode(title)} | {htmlentities.encode(subtitle)}" view="Normal" direction="LTR" allowautoplay="false" style="Style 1" customizationid="R_n_I_custom" width="1440" height="810" fixeddimension="No" includetoolkit="No" sequence="000">
-        <alef_section xlink:label="{temp[1]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
-        <alef_column xlink:label="{temp[2]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-        <alef_presentation xlink:label="{temp[3]}" xp:name="alef_presentation" xp:description="" xp:fieldtype="folder" type="Carousel" ela_title1="{htmlentities.encode(title)}" ela_title2="{htmlentities.encode(subtitle)}" {lesson_objective_param} showtitle="false" multipleopen="false" firstopen="false">
-        <alef_section xlink:label="{temp[4]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
-        <alef_column xlink:label="{temp[5]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1" />
-        </alef_section>
+            <alef_section xlink:label="{temp[1]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+                <alef_column xlink:label="{temp[2]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+                    <alef_presentation xlink:label="{temp[3]}" xp:name="alef_presentation" xp:description="" xp:fieldtype="folder" type="Carousel" ela_title1="{htmlentities.encode(title)}" ela_title2="{htmlentities.encode(subtitle)}" {lesson_objective_param} showtitle="false" multipleopen="false" firstopen="false">
+                    <alef_section xlink:label="{temp[4]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
+                        <alef_column xlink:label="{temp[5]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1" />
+                    </alef_section>
         {launchPage_img}
         """,
     )
@@ -155,11 +155,42 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
 
     all_tags.append(sections)
 
-    all_tags.append(
+    try:
+        bookPopUpTitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA']["bookPopUpTitle"]
+        bookPopUpText = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA']["bookPopUpText"]
+
+        html_text = f"""
+        <div id="title">
+        <span class="text" id="title"><strong>{bookPopUpTitle}</strong></span>
+        <br><br>
+        </div>
+        <div class="text" id="text">
+        <span class="text" id="text">{bookPopUpText}</span>
+        </div>
         """
-        </alef_presentation>
-        </alef_column>
-        </alef_section>
+
+        if "<math" in html_text:
+            html_text = mathml2latex_yarosh(html_string=html_text)
+
+        resp = write_html_mlo(text=html_text, exiting_hashcode=exiting_hashcode, align=None)
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+
+        html_xml = f"""
+            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" 
+            src="../../../{resp['relative_path']}" />
+        """
+
+    except Exception as e:
+        html_xml = ""
+        print(f"Warning: Popup not exist in the en_text {e}")
+
+    all_tags.append(
+        f"""
+                    </alef_presentation>
+                </alef_column>
+            </alef_section>
+            {html_xml}
         </alef_page>
         """
     )
