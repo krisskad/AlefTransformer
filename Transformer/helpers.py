@@ -221,6 +221,9 @@ def text_en_html_to_html_text_v1(html_string):
         if element.name == 'span':
             if element.get('id', '').startswith("spn_"):  # Check if id starts with 'spn_'
                 final_list += [str(i) for i in element.contents]
+            elif element.get('id', '').startswith("title"):
+                final_list += [f"""<span id="title">{str(i)}</span>""" for i in element.contents]
+
         elif element.name == 'br':
             final_list.append("<br>")
 
@@ -1566,7 +1569,7 @@ def replace_br_after_punctuation(text):
     # Replace matched patterns with the punctuation followed by <hello>
     replaced_text = pattern.sub(r'\1<hello>', text)
 
-    replaced_text = replaced_text.replace("<br> ", "").replace(" <br>", "").replace(" <br> ", "").replace("<br>", " ")
+    replaced_text = replaced_text.replace("<br> ", " ").replace(" <br>", " ").replace(" <br> ", " ").replace("<br>", " ")
 
     replaced_text = replaced_text.replace("<hello>", "<br>")
 

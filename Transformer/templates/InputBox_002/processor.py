@@ -101,85 +101,114 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     inputBoxes = input_json_data["pageData"]["args"].get("inputBoxes", [])
     extraTexts = input_json_data["pageData"]["args"].get("extraTexts", [])
 
-    # buttonsPos = input_json_data["pageData"]["args"].get("buttonsPos", "") # Burger Writing GO
-    # bookPopUpButton = input_json_data["pageData"]["args"].get("bookPopUpButton", "") # Plot Diagram
-    screen_number = input_json_data["screen_number"]
-    course_id = input_other_jsons_data["COURSE_ID"]
+    if extraTexts:
 
-    template_type = ""
-    try:
-        if "ELA_TEMPLATE_TYPE" in input_other_jsons_data:
-            df = input_other_jsons_data["ELA_TEMPLATE_TYPE"]
-            # Filtering the DataFrame
-            template_type_df = df[(df['LO ID'] == course_id) &
-                             (df['Template ID'] == "InputBox_002") &
-                             (df['Screen No.'] == screen_number)]
+        # buttonsPos = input_json_data["pageData"]["args"].get("buttonsPos", "") # Burger Writing GO
+        # bookPopUpButton = input_json_data["pageData"]["args"].get("bookPopUpButton", "") # Plot Diagram
+        screen_number = input_json_data["screen_number"]
+        course_id = input_other_jsons_data["COURSE_ID"]
 
-            template_type = template_type_df["Template Type"].tolist()[0]
-        else:
-            print("ELA_TEMPLATE_TYPE DF is not present")
+        template_type = ""
+        try:
+            if "ELA_TEMPLATE_TYPE" in input_other_jsons_data:
+                df = input_other_jsons_data["ELA_TEMPLATE_TYPE"]
+                # Filtering the DataFrame
+                template_type_df = df[(df['LO ID'] == course_id) &
+                                 (df['Template ID'] == "InputBox_002") &
+                                 (df['Screen No.'] == screen_number)]
 
-    except Exception as e:
-        print(f"Warning: {e}")
+                template_type = template_type_df["Template Type"].tolist()[0]
+            else:
+                print("ELA_TEMPLATE_TYPE DF is not present")
 
-    if not template_type:
-        raise Exception("No template identity found : please check input structure.json and note which type of template is this?")
+        except Exception as e:
+            print(f"Warning: {e}")
 
-    view_ref = input_json_data["pageData"]['viewRef']
-    extraTextViewsorted_data = []
+        if not template_type:
+            raise Exception("No template identity found : please check input structure.json and note which type of template is this?")
 
-    try:
-        view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
-        extra_text_css_list = view_obj["pageData"]["args"]["extraTexts"]
-        extraTextView = []
-        for i, j in zip(extra_text_css_list, extraTexts):
-            i["text"] = j["text"]
-            extraTextView.append(i)
+        view_ref = input_json_data["pageData"]['viewRef']
+        extraTextViewsorted_data = []
 
-        # Define a custom key function to extract the integer value from the "top" key
-        def sort_by_top(item):
-            return int(float(item["top"].replace("px", "")))
+        try:
+            view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
+            extra_text_css_list = view_obj["pageData"]["args"]["extraTexts"]
+            extraTextView = []
+            for i, j in zip(extra_text_css_list, extraTexts):
+                i["text"] = j["text"]
+                extraTextView.append(i)
 
-        # Sort the data using the custom key function
-        extraTextViewsorted_data = sorted(extraTextView, key=sort_by_top)
+            # Define a custom key function to extract the integer value from the "top" key
+            def sort_by_top(item):
+                return int(float(item["top"].replace("px", "")))
 
-    except Exception as e:
-        print(f"Error: {e}")
+            # Sort the data using the custom key function
+            extraTextViewsorted_data = sorted(extraTextView, key=sort_by_top)
 
-    title = ""
-    try:
-        if len(inputBoxes) < len(extraTexts):
-            # there are more input and less text (There are title) remove title from text
-            try:
-                titleobj = extraTextViewsorted_data[0]
-                title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][titleobj["text"]]
-                extraTextViewsorted_data.pop(0)
-            except Exception as e:
-                print(f"Error : {e}")
-    except Exception as e:
-        print(f"Error: {e}")
+        except Exception as e:
+            print(f"Error: {e}")
 
-    html_list = []
-    try:
-        if inputBoxes:
-            for idx, hml_obj in enumerate(extraTextViewsorted_data):
-                text_obj = extraTextViewsorted_data[idx]
-                text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_obj["text"]]
+        title = ""
+        try:
+            if len(inputBoxes) < len(extraTexts):
+                # there are more input and less text (There are title) remove title from text
+                try:
+                    titleobj = extraTextViewsorted_data[0]
+                    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][titleobj["text"]]
+                    extraTextViewsorted_data.pop(0)
+                except Exception as e:
+                    print(f"Error : {e}")
+        except Exception as e:
+            print(f"Error: {e}")
 
-                if text:
-                    resp = write_html(
-                        text=text,
-                        exiting_hashcode=exiting_hashcode
-                    )
-                    exiting_hashcode.add(resp['hashcode'])
-                    all_files.add(resp['relative_path'])
+        html_list = []
+        try:
+            if inputBoxes:
+                for idx, hml_obj in enumerate(extraTextViewsorted_data):
+                    text_obj = extraTextViewsorted_data[idx]
+                    text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][text_obj["text"]]
 
-                    html_xml = f"""
-                    <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
-                    """
-                    html_list.append(html_xml)
-    except Exception as e:
-        print(e)
+                    if text:
+                        resp = write_html(
+                            text=text,
+                            exiting_hashcode=exiting_hashcode
+                        )
+                        exiting_hashcode.add(resp['hashcode'])
+                        all_files.add(resp['relative_path'])
+
+                        html_xml = f"""
+                        <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
+                        """
+                        html_list.append(html_xml)
+        except Exception as e:
+            print(e)
+    else:
+        title = "Opinion and Supporting Reasons"
+        extraTextViewsorted_data = [
+            "Topic:",
+            "My Opinion (What I think)",
+            "Supporting Reason #1",
+            "Supporting Reason #2",
+            "Supporting Reason #3",
+            "Conclusion:"
+        ]
+        html_list = []
+        template_type = "Opinion Support Reasoning"
+
+        for idx, hml_obj in enumerate(extraTextViewsorted_data):
+            text = extraTextViewsorted_data[idx]
+            if text:
+                resp = write_html(
+                    text=text,
+                    exiting_hashcode=exiting_hashcode
+                )
+                exiting_hashcode.add(resp['hashcode'])
+                all_files.add(resp['relative_path'])
+
+                html_xml = f"""
+                <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html" xp:description="" xp:fieldtype="html" src="../../../{resp['relative_path']}" />
+                """
+                html_list.append(html_xml)
 
     temp = []
     for _ in range(5):
