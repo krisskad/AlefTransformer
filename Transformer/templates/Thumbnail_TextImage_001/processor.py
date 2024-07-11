@@ -318,7 +318,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 f"""
                 <alef_section xlink:label="{temp[3]}" xp:name="alef_section" xp:description="" xp:fieldtype="folder" customclass="Normal">
                     <alef_column xlink:label="{temp[4]}" xp:name="alef_column" xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-                        <alef_reader xlink:label="{temp[5]}" xp:name="alef_reader" xp:description="" xp:fieldtype="folder" has_reader="Yes" is_bordered="No">
+                        <alef_reader xlink:label="{temp[5]}" xp:name="alef_reader" xp:description="" xp:fieldtype="folder" has_reader="Yes" is_bordered="Yes">
                             {img_tag}
                             {audio_tag}
                             {textAreaHtml}

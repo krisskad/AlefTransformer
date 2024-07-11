@@ -140,7 +140,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
             # Define a custom key function to extract the integer value from the "top" key
             def sort_by_top(item):
-                return int(float(item["top"].replace("px", "")))
+                return (int(float(item["top"].replace("px", ""))), int(float(item["left"].replace("px", ""))))
 
             # Sort the data using the custom key function
             extraTextViewsorted_data = sorted(extraTextView, key=sort_by_top)
