@@ -199,9 +199,19 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
     <body>   <html>{"fixed_dimension":true,"width":1920,"height":1080,"show_toc":false,"skin":"reveal_inspire","padding":{"top":"0px","bottom":"0px","right":"0px","left":"0px"},"content_padding":{"top":"0px","bottom":"0px","right":"0px","left":"0px"},"primary_color":"","interactive_color":"","sequence":"free","icon":"","full_screen":"none","show_unit_title":false,"show_lesson_title":false,"summary_screen":false,"feedback_popup":true,"show_how_to":true,"background_image":"","background_repeat":"cover","font_path":"","fonts":{"content":null,"buttons":null,"icons":null},"localization":{}}</html>
     </body>
     """
+
+    if "ela" in lo_id.lower():
+        xml_tag = f"""
+        xp:description="ELA_Custom_1" xp:locked="" xp:globalchunckid="_MQCKK3X24CKE5BOIVBQBTI2UPM_1_LLUMCKNRB6RIE3EF5Q3EH4P6JHQ" xp:chunkid="LLUMCKNRB6RIE3EF5Q3EH4P6JHQ" xp:packageid="_MQCKK3X24CKE5BOIVBQBTI2UPM" xp:packageversion="1" 
+        """
+    else:
+        xml_tag = f"""
+        xp:description="R_n_I_custom" xp:locked="" xp:globalchunckid="_QTPE575ZBSVU7KQCLZ623JKD5I_2_LNW5NP5L7FL3EDD2SRKZMNIXWUU" xp:chunkid="LNW5NP5L7FL3EDD2SRKZMNIXWUU" xp:packageid="_QTPE575ZBSVU7KQCLZ623JKD5I" xp:packageversion="2"
+        """
+
     all_tags.append(
         f"""
-        <customization xlink:label="{temp[6]}" xp:name="customization" xp:description="R_n_I_custom" xp:locked="" xp:globalchunckid="_QTPE575ZBSVU7KQCLZ623JKD5I_2_LNW5NP5L7FL3EDD2SRKZMNIXWUU" xp:chunkid="LNW5NP5L7FL3EDD2SRKZMNIXWUU" xp:packageid="_QTPE575ZBSVU7KQCLZ623JKD5I" xp:packageversion="2" xp:autoupdate="True" xp:lobstername="alef02" xp:linktype="link" xp:class="" xp:fieldtype="folder" xp:templateversion="1.0" xp:derivedItemClass="" fixed_dimension="False" width="1440" height="810" full_screen="None" show_toc="False" skin="Default" padding_top="0px" padding_bottom="0px" padding_left="0px" padding_right="0px" sequence="Free" show_unit_title="False" show_lesson_title="False" content_fontsize="22px" button_fontsize="20px" icon_fontsize="24px" summary_screen="False" primary_color="hsla(215, 17%, 34%)" interactive_color="hsla(178, 70%, 43%)" content_padding_top="0px" content_padding_bottom="0px" content_padding_left="0px" content_padding_right="0px" background_repeat="Extend">
+        <customization xlink:label="{temp[6]}" xp:name="customization" {xml_tag} xp:autoupdate="True" xp:lobstername="alef02" xp:linktype="link" xp:class="" xp:fieldtype="folder" xp:templateversion="1.0" xp:derivedItemClass="" fixed_dimension="False" width="1440" height="810" full_screen="None" show_toc="False" skin="Default" padding_top="0px" padding_bottom="0px" padding_left="0px" padding_right="0px" sequence="Free" show_unit_title="False" show_lesson_title="False" content_fontsize="22px" button_fontsize="20px" icon_fontsize="24px" summary_screen="False" primary_color="hsla(215, 17%, 34%)" interactive_color="hsla(178, 70%, 43%)" content_padding_top="0px" content_padding_bottom="0px" content_padding_left="0px" content_padding_right="0px" background_repeat="Extend">
 
             <alef_customcontent xlink:label="{temp[7]}" xp:name="alef_customcontent" xp:description="" xp:locked="" xp:class="" xp:fieldtype="text">
                 
