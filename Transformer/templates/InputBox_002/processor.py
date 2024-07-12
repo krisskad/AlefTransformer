@@ -1,7 +1,7 @@
 from Transformer.helpers import (generate_unique_folder_name,
                                  mathml2latex_yarosh,
                                  text_en_html_to_html_text,
-                                 get_popup_mlo_from_text,
+                                 get_popup_mlo_from_text, sort_by_position,
                                  convert_html_to_strong)
 from django.conf import settings
 import os, shutil
@@ -129,7 +129,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
         view_ref = input_json_data["pageData"]['viewRef']
         extraTextViewsorted_data = []
-
+        title = ""
         try:
             view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
             extra_text_css_list = view_obj["pageData"]["args"]["extraTexts"]
@@ -138,26 +138,17 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 i["text"] = j["text"]
                 extraTextView.append(i)
 
-            # Define a custom key function to extract the integer value from the "top" key
-            def sort_by_top(item):
-                return (int(float(item["top"].replace("px", ""))), int(float(item["left"].replace("px", ""))))
-
             # Sort the data using the custom key function
-            extraTextViewsorted_data = sorted(extraTextView, key=sort_by_top)
+            sorted_context = sort_by_position(extraTextView)
+            extraTextViewsorted_data = sorted_context.get("final_list", [])
+            titleobj = sorted_context.get("title", "")
 
-        except Exception as e:
-            print(f"Error: {e}")
+            # there are more input and less text (There are title) remove title from text
+            try:
+                title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][titleobj]
+            except Exception as e:
+                print(f"Warning : {e}")
 
-        title = ""
-        try:
-            if len(inputBoxes) < len(extraTexts):
-                # there are more input and less text (There are title) remove title from text
-                try:
-                    titleobj = extraTextViewsorted_data[0]
-                    title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][titleobj["text"]]
-                    extraTextViewsorted_data.pop(0)
-                except Exception as e:
-                    print(f"Error : {e}")
         except Exception as e:
             print(f"Error: {e}")
 

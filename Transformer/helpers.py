@@ -394,7 +394,7 @@ def write_html_mlo(text, exiting_hashcode, align="center"):
         pass
     text = convert_html_to_strong(html_str=text)
 
-    text = replace_br_after_punctuation(text)
+    # text = replace_br_after_punctuation(text)
 
     if align:
         template = f"""
@@ -1581,3 +1581,48 @@ def replace_br_after_punctuation(text):
     replaced_text = replaced_text.replace("<hello>", "<br>")
 
     return replaced_text
+
+
+# def sort_by_position(items):
+#     # Sort primarily by 'top' position, then by 'left' position
+#     sorted_items = sorted(items, key=lambda x: (float(x['top'].replace("px", "")), float(x['left'].replace("px", ""))))
+#     return sorted_items
+
+
+def sort_by_position(extraTextView):
+    # Step 1: Sort the list by the 'top' key
+    sorted_list = sorted(extraTextView, key=lambda x: float(x['top'].replace('px', '')))
+
+    # Step 2: Pick the topmost element and assign its 'text' value to the title variable
+    if sorted_list:
+        title = sorted_list[0]['text']
+        sorted_list = sorted_list[1:]
+    else:
+        title = None
+
+    # Step 3: Categorize objects into 'left' and 'right' based on the 'left' attribute
+    left_group = []
+    right_group = []
+    for item in sorted_list:
+        left_value = float(item['left'].replace('px', ''))
+        if left_value < 800:
+            left_group.append(item)
+        else:
+            right_group.append(item)
+
+    # Step 4: Sort left_group and right_group by 'top' key in ascending order
+    left_sorted = sorted(left_group, key=lambda x: float(x['top'].replace('px', '')))
+    right_sorted = sorted(right_group, key=lambda x: float(x['top'].replace('px', '')))
+
+    final_list = []
+    if len(left_sorted) == len(right_sorted):
+        for i, j in zip(left_sorted, right_sorted):
+            final_list.append(i)
+            final_list.append(j)
+
+    context = {
+        "title": title,
+        "final_list": final_list
+    }
+
+    return context
