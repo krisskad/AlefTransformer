@@ -1,4 +1,4 @@
-from Transformer.helpers import (generate_unique_folder_name, get_teacher_note,
+from Transformer.helpers import (generate_unique_folder_name, get_teacher_note, get_xml_feedback, get_xml_hint,
                                  mathml2latex_yarosh, convert_html_to_strong, remove_html_tags)
 from django.conf import settings
 import os, shutil
@@ -284,7 +284,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         """
     )
 
-    from Transformer.helpers import get_xml_feedback, get_xml_hint
     try:
         feedback = input_json_data["pageData"]["args"].get("feedback", None)
         # get feedback xml

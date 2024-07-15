@@ -1,8 +1,11 @@
-from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong, get_teacher_note,
-                                 write_html_mlo, mathml2latex_yarosh, get_xml_feedback, get_xml_hint, remove_html_tags)
+from Transformer.helpers import (generate_unique_folder_name, convert_html_to_strong,
+                                 get_teacher_note,
+                                 write_html_mlo, mathml2latex_yarosh, get_xml_feedback,
+                                 get_xml_hint, remove_html_tags)
 from django.conf import settings
 import os, shutil
 import htmlentities
+from .helpers import group_text_by_area
 
 
 def write_html(text, exiting_hashcode, align=None):
@@ -113,7 +116,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         exiting_hashcode.add(hashcode_temp2)
         temp.append(hashcode_temp2)
 
-
+    template_type = ""
     try:
 
         """
@@ -134,6 +137,9 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             instruction = title_dict.get("Instruction", "")
             if instruction is None:
                 instruction = ""
+
+            template_type = title_dict.get("type", "")
+
 
             # try:
             #     extra_text_list = input_json_data["pageData"]["args"]["extraTexts"]
@@ -343,38 +349,79 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         options = []
         print(f"Error while creating options: {e}")
 
-    screen_number = input_json_data['screen_number']
-    image_name = f"{input_other_jsons_data['COURSE_ID']}_{str(screen_number)}.png"
+    html_ques = ""
+    if "fill in" in template_type.lower():
+        try:
+            extraTexts = input_json_data["pageData"]["args"]["extraTexts"]
+            # extraImages = input_json_data["pageData"]["args"]["extraImages"]
+            dropItems = input_json_data["pageData"]["args"]["dropItems"]
 
-    image_path = os.path.join(settings.BASE_DIR,'media', 'customdnd_hotspot_images', image_name)
-    # if os.path.isfile(image_path):
-    #     print("Valid File")
-    # else:
-    #     image_path = os.path.join('B1_CustomDND', image_name)
+            view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
+            try:
+                extraTexts_view = view_obj["pageData"]["args"]["extraTexts"]
+                extraImages_view = view_obj["pageData"]["args"]["extraImages"]
+                dropItems_view = view_obj["pageData"]["args"]["dropItems"]
+            except:
+                extraTexts_view = []
+                extraImages_view = []
+                dropItems_view = []
 
-    # print(image_path)
-    try:
+            ques_text = group_text_by_area(
+                texts=extraTexts,
+                styles=extraTexts_view,
+                objects=extraImages_view,
+                drop_items_positions=dropItems_view,
+                drop_items_ids=dropItems,
+                input_other_jsons_data=input_other_jsons_data
+            )
 
-        map_link_join = "\n".join(map_link_list)
+            resp = write_html(
+                text=ques_text,
+                exiting_hashcode=exiting_hashcode
+            )
+            exiting_hashcode.add(resp['hashcode'])
+            all_files.add(resp['relative_path'])
 
-        resp = copy_to_hashcode_dir(src_path=image_path, exiting_hashcode=exiting_hashcode)
-        exiting_hashcode.add(resp['hashcode'])
-        all_files.add(resp['relative_path'])
-        all_tags.append(
-            f"""
-            <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
-                <xp:img href="../../../{resp['relative_path']}" width="1466" height="600">
-                    {map_link_join}
-                </xp:img>
-            </alef_image>
+            html_ques = f"""
+            <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                               xp:description="" xp:fieldtype="html"
+                               src="../../../{resp['relative_path']}"/>
             """
-        )
-    except Exception as e:
-        print(f"Warning: {e}")
+        except Exception as e:
+            print("Error : ", e)
+
+    if not html_ques:
+        screen_number = input_json_data['screen_number']
+        image_name = f"{input_other_jsons_data['COURSE_ID']}_{str(screen_number)}.png"
+
+        image_path = os.path.join(settings.BASE_DIR,'media', 'customdnd_hotspot_images', image_name)
+
+        try:
+
+            map_link_join = "\n".join(map_link_list)
+
+            resp = copy_to_hashcode_dir(src_path=image_path, exiting_hashcode=exiting_hashcode)
+            exiting_hashcode.add(resp['hashcode'])
+            all_files.add(resp['relative_path'])
+            all_tags.append(
+                f"""
+                <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
+                    <xp:img href="../../../{resp['relative_path']}" width="1466" height="600">
+                        {map_link_join}
+                    </xp:img>
+                </alef_image>
+                """
+            )
+        except Exception as e:
+            print(f"Warning: {e}")
 
     options_join = "\n".join(options)
     all_tags.append(
         options_join
+    )
+
+    all_tags.append(
+        html_ques
     )
 
     try:
