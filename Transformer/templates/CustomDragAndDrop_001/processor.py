@@ -351,9 +351,13 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     html_ques = ""
     if "fill in" in template_type.lower():
+        title_text = ""
         try:
             extraTexts = input_json_data["pageData"]["args"]["extraTexts"]
-            # extraImages = input_json_data["pageData"]["args"]["extraImages"]
+            title_text_id = input_json_data["pageData"]["args"].get("title", {}).get("text", "")
+            if title_text_id:
+                title_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][title_text_id]
+
             dropItems = input_json_data["pageData"]["args"]["dropItems"]
 
             view_obj = input_other_jsons_data["INPUT_VIEW_JSON_DATA"]["pages"][view_ref]
@@ -372,7 +376,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 objects=extraImages_view,
                 drop_items_positions=dropItems_view,
                 drop_items_ids=dropItems,
-                input_other_jsons_data=input_other_jsons_data
+                input_other_jsons_data=input_other_jsons_data,
+                title_text=title_text
             )
 
             resp = write_html(

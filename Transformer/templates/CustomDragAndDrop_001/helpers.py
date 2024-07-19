@@ -1,4 +1,3 @@
-
 from collections import Counter
 
 
@@ -21,7 +20,7 @@ def group_items_by_position(sorted_combined, objects):
                 sorted_items.append(item)
                 break
 
-    return {"grouped_items":grouped_items, "sorted_items":sorted_items}
+    return {"grouped_items": grouped_items, "sorted_items": sorted_items}
 
 
 def merge_and_sort_arrays(texts, styles):
@@ -38,21 +37,30 @@ def merge_and_sort_arrays(texts, styles):
     return sorted_combined
 
 
-def find_most_common_left(objects):
-    left_counts = Counter(obj['left'] for obj in objects)
-    most_common_left = left_counts.most_common(1)[0][0]
-
-    final_obj = []
-    for i in objects:
-        if i["left"] == most_common_left:
-            final_obj.append(i)
-    return final_obj
-
-
 def sort_by_left(data):
     # Sort the list of dictionaries by the "left" key
     sorted_data = sorted(data, key=lambda x: float(x["left"].replace("px", "")))
     return sorted_data
+
+
+def find_most_common_left(objects):
+    try:
+        if len(objects) <= 2:
+            most_common_left = sort_by_left(objects)
+
+            return [most_common_left[0], ]
+        else:
+            left_counts = Counter(obj['left'] for obj in objects)
+            most_common_left = left_counts.most_common(1)[0][0]
+
+        final_obj = []
+        for i in objects:
+            if i["left"] == most_common_left:
+                final_obj.append(i)
+        return final_obj
+    except Exception as e:
+        print(f"Error in find_most_common_left: {e}")
+        return objects
 
 
 def group_by_top(objects):
@@ -72,7 +80,8 @@ def group_by_top(objects):
     return grouped
 
 
-def group_text_by_area(texts, styles, objects, drop_items_positions, drop_items_ids, input_other_jsons_data):
+def group_text_by_area(texts, styles, objects, drop_items_positions, drop_items_ids, input_other_jsons_data,
+                       title_text):
     # Example usage:
     # texts = [
     #         { "text": "CS_extraTxt_2" },
@@ -226,17 +235,28 @@ def group_text_by_area(texts, styles, objects, drop_items_positions, drop_items_
     grouped_items = response["grouped_items"]
     sorted_items = response["sorted_items"]
 
-    if len(sorted_combined) > len(sorted_items):
-        # there is title present
-        titles = []
-        for each_check in sorted_combined:
-            if not each_check in sorted_items:
-                if "text" in each_check:
-                    en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_check["text"]]
-                    titles.append(en_text)
-        main_title = " ".join(titles)
+    if title_text:
+        main_title = title_text
     else:
-        main_title = ""
+        if len(sorted_combined) > len(sorted_items):
+            # there is title present
+            titles = []
+            instructions = []
+            for each_check in sorted_combined:
+                if not each_check in sorted_items:
+                    if "text" in each_check:
+                        en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][each_check["text"]]
+                        if int(float(each_check["left"].replace("px", ""))) >= 1300:
+                            instructions.append(instructions)
+                        else:
+                            if int(float(each_check["top"].replace("px", ""))) <= 200:
+                                titles.append(en_text)
+
+            main_title = " ".join(titles)
+            instructions_text = " ".join(instructions)
+        else:
+            main_title = title_text
+            instructions_text = ""
 
     final_group = {}
     for key, items in grouped_items.items():
@@ -252,7 +272,7 @@ def group_text_by_area(texts, styles, objects, drop_items_positions, drop_items_
         drop_box_top = int(float(drop_box_obj["top"].replace("px", ""))) + 5
         group = {}
         for each_y_key, each_y_value in group_val.items():
-            if drop_box_top <= each_y_key:
+            if drop_box_top in range(int(each_y_key) - 5, int(each_y_key) + 5):
                 each_y_value.append(drop_box_obj)
                 each_y_sorted = sort_by_left(each_y_value)
                 group[each_y_key] = each_y_sorted
@@ -262,6 +282,12 @@ def group_text_by_area(texts, styles, objects, drop_items_positions, drop_items_
     final_text = []
 
     for key, val in final.items():
+        try:
+            drop_id = drop_items_ids[key].get("dropId")
+        except Exception as e:
+            drop_id = key
+            print(f"Error: {e}")
+
         temp_text = []
         for k, v in val.items():
             for j in v:
@@ -269,16 +295,15 @@ def group_text_by_area(texts, styles, objects, drop_items_positions, drop_items_
                     en_text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][j["text"]]
                     temp_text.append(en_text)
                 else:
-                    try:
-                        drop_id = drop_items_ids[key].get("dropId")
-                    except Exception as e:
-                        drop_id = key
-                        print(f"Error: {e}")
                     temp_text.append(f"""<span class="dragndrop">{drop_id}</span>""")
 
         final_text.append(" ".join(temp_text))
 
     text = "<hr>".join(final_text)
 
-    final_html_text = f"""<strong>{main_title}</strong><br>{text}"""
+    if main_title:
+        final_html_text = f"""<strong>{main_title}</strong><br>{text}"""
+    else:
+        final_html_text = text
+
     return final_html_text
