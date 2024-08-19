@@ -21,12 +21,13 @@ def write_imsmanifest_xml(all_manifest_files, exiting_hashcode, input_other_json
     mlo_html_path = ""
     mlo_html_folder_hash = ""
     for each in all_manifest_files:
-        if "1/mlo/" in each and "mlo.html" in each:
-            mlo_html_path = each
-            mlo_html_folder_hash = each.replace("1/mlo/", "").replace("/mlo.html", "")
-        temp = f"""<file href="{each}" />"""
+        sanitized = each.replace("\\", "/")
+        if "1/mlo/" in sanitized and "mlo.html" in sanitized:
+            mlo_html_path = sanitized
+            mlo_html_folder_hash = sanitized.replace("1/mlo/", "").replace("/mlo.html", "")
+        temp = f"""<file href="{sanitized}" />"""
         file_tags.append(temp)
-
+        
     file_tag_string = "\n".join(file_tags)
 
     resource_html = f"""

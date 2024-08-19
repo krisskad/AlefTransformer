@@ -2,7 +2,7 @@ import glob
 
 import htmlentities
 import os
-from Transformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags, mathml2latex_yarosh, write_html_mlo
+from termOneTransformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags, mathml2latex_yarosh, write_html_mlo
 # import shutil
 from django.conf import settings
 import random
@@ -56,30 +56,29 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
         f"""<alef_mlo xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xp="http://www.giuntilabs.com/exact/xp_v1d0" xlink:label="LT7KP3OIZ2WREPBI2GM7LDEXRZU" xp:name="mlo" xp:description="{lo_id}" href="mlo.html" xp:version="3.1" xp:editortype="webeditor" xml:space="preserve" xml:class="" webeditorsafe="true" xp:deliverytype="SCORM" direction="LTR" sequence="000" xp:templateversion="1.0" xp:derivedItemClass="">"""
     ]
 
-    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('head', None):
+    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['toc_course'].get('subtitle', None):
         try:
-            head = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['head']]
+            head = input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['toc_course']['subtitle']
             head = remove_html_tags(head)
-        except:
+        except Exception as e:
             head = ""
     else:
         head = ""
 
-    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('title', None):
+    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['toc_course'].get('subtitle', None):
         try:
-            title = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['title']]
+            title = input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['toc_course']['subtitle']
             title = remove_html_tags(title)
-        except:
+        except Exception as e:
             title = ""
     else:
         title = ""
 
-    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA'].get('subtitle', None):
+    if input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['toc_course']['toc_node'].get('lesson', None):
         try:
-            subtitle = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['subtitle']]
+            subtitle = input_other_jsons_data['INPUT_STRUCTURE_JSON_DATA']['toc_course']['toc_node']['lesson'][0]['lesson_name']
             subtitle = remove_html_tags(subtitle)
-            subtitle = subtitle.replace("—", "-")
-        except:
+        except Exception as e:
             subtitle = ""
     else:
         subtitle = ""
@@ -90,7 +89,7 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
 
             if "<math" in goalText:
                 goalText = remove_html_tags(goalText)
-        except:
+        except Exception as e:
             goalText = ""
 
         # goalText = remove_html_tags(goalText)
@@ -117,10 +116,11 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
     #         break
     try:
         if not launchPage_img:
-            all_images = glob.glob(os.path.join(settings.INPUT_APP_DIR, "images", "*"))
+            COMMON_DIR = os.path.join(settings.INPUT_APP_DIR, "common")
+            all_images = glob.glob(os.path.join(COMMON_DIR, "images", "*"))
             for each_img in all_images:
-                if "launchPage" in each_img:
-                    resp = copy_to_hashcode_dir(src_path=os.path.join("images", os.path.basename(each_img)), exiting_hashcode=exiting_hashcode)
+                if os.path.basename(each_img) in ["homePageBg.png", "coverPage.png"]:
+                    resp = copy_to_hashcode_dir(src_path=os.path.join("common","images", os.path.basename(each_img)), exiting_hashcode=exiting_hashcode)
                     all_files.add(resp['relative_path'])
                     exiting_hashcode.add(resp['hashcode'])
                     launchPage_img = f"""
