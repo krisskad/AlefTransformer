@@ -1104,7 +1104,28 @@ def get_teachers_note_id(html_string):
         return {}
 
 
+def remove_font_position_properties(html_text):
+    # Compile the regular expression pattern
+    pattern = re.compile(
+        r'(<span\s+[^>]*?)style\s*=\s*"[^"]*(position\s*:\s*[^;]*;|font\s*:\s*[^;]*;)[^"]*"(.*?>)',
+        re.IGNORECASE
+    )
+
+    # Substitute the matched pattern with a cleaned span tag
+    clean_text = pattern.sub(r'\1style=""\3', html_text)
+
+    return clean_text
+
+
 def assing_class_for_color(html_string):
+
+    # Compile the regular expression pattern
+    pattern = re.compile(r'(?<![.:])\s*<br>')
+
+    # Substitute the <br> tags with an empty string
+    html_string = pattern.sub('', html_string)
+
+    html_string = remove_font_position_properties(html_string)
 
     color_data = [
       {"color": "Red", "hex": "#ff0000", "rgb": "rgb(255, 0, 0)", "class": "redText"},
@@ -1626,3 +1647,13 @@ def sort_by_position(extraTextView):
     }
 
     return context
+
+
+def remove_br_tag(html_text):
+    # Compile the regular expression pattern
+    pattern = re.compile(r'(?<![.:])\s*<br>')
+
+    # Substitute the <br> tags with an empty string
+    clean_text = pattern.sub('', html_text)
+
+    return clean_text
