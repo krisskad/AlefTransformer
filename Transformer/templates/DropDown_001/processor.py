@@ -350,8 +350,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 input_other_jsons_data=input_other_jsons_data
             )
             all_tags.append(feedback_resp["XML_STRING"])
-            exiting_hashcode.add(feedback_resp["GENERATED_HASH_CODES"])
-            all_files.add(feedback_resp["MANIFEST_FILES"])
+            exiting_hashcode.update(feedback_resp["GENERATED_HASH_CODES"])
+            all_files.update(feedback_resp["MANIFEST_FILES"])
         except:
             pass
 
@@ -365,8 +365,8 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                 input_other_jsons_data=input_other_jsons_data
             )
             all_tags.append(hint_resp["XML_STRING"])
-            exiting_hashcode.add(hint_resp["GENERATED_HASH_CODES"])
-            all_files.add(hint_resp["MANIFEST_FILES"])
+            exiting_hashcode.update(hint_resp["GENERATED_HASH_CODES"])
+            all_files.update(hint_resp["MANIFEST_FILES"])
         except:
             pass
 

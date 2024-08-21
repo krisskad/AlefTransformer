@@ -264,7 +264,8 @@ def group_text_by_area(texts, styles, objects, drop_items_positions, drop_items_
         for top_key, top_items in group_of_tops.items():
             group_of_tops[top_key] = sort_by_left(top_items)
 
-        final_group[key] = group_of_tops
+        if group_of_tops:
+            final_group[key] = group_of_tops
 
     final = {}
     for group_key, group_val in final_group.items():
@@ -276,8 +277,8 @@ def group_text_by_area(texts, styles, objects, drop_items_positions, drop_items_
                 each_y_value.append(drop_box_obj)
                 each_y_sorted = sort_by_left(each_y_value)
                 group[each_y_key] = each_y_sorted
-
-        final[group_key] = group
+        if group:
+            final[group_key] = group
 
     final_text = []
 

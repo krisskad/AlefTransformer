@@ -195,19 +195,22 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
         """
     )
 
-    body = """
-    <body>   <html>{"fixed_dimension":true,"width":1920,"height":1080,"show_toc":false,"skin":"reveal_inspire","padding":{"top":"0px","bottom":"0px","right":"0px","left":"0px"},"content_padding":{"top":"0px","bottom":"0px","right":"0px","left":"0px"},"primary_color":"","interactive_color":"","sequence":"free","icon":"","full_screen":"none","show_unit_title":false,"show_lesson_title":false,"summary_screen":false,"feedback_popup":true,"show_how_to":true,"background_image":"","background_repeat":"cover","font_path":"","fonts":{"content":null,"buttons":null,"icons":null},"localization":{}}</html>
-    </body>
-    """
 
     if "ela" in lo_id.lower():
         xml_tag = f"""
         xp:description="ELA_Custom_1" xp:locked="" xp:globalchunckid="_MQCKK3X24CKE5BOIVBQBTI2UPM_1_LLUMCKNRB6RIE3EF5Q3EH4P6JHQ" xp:chunkid="LLUMCKNRB6RIE3EF5Q3EH4P6JHQ" xp:packageid="_MQCKK3X24CKE5BOIVBQBTI2UPM" xp:packageversion="1" 
         """
+        skin = "ela_like"
     else:
         xml_tag = f"""
         xp:description="R_n_I_custom" xp:locked="" xp:globalchunckid="_QTPE575ZBSVU7KQCLZ623JKD5I_2_LNW5NP5L7FL3EDD2SRKZMNIXWUU" xp:chunkid="LNW5NP5L7FL3EDD2SRKZMNIXWUU" xp:packageid="_QTPE575ZBSVU7KQCLZ623JKD5I" xp:packageversion="2"
         """
+        skin = "reveal_inspire"
+
+    body = """
+        <body>   <html>{"fixed_dimension":true,"width":1920,"height":1080,"show_toc":false,"skin":"ADD_YOUR_SKIN","padding":{"top":"0px","bottom":"0px","right":"0px","left":"0px"},"content_padding":{"top":"0px","bottom":"0px","right":"0px","left":"0px"},"primary_color":"","interactive_color":"","sequence":"free","icon":"","full_screen":"none","show_unit_title":false,"show_lesson_title":false,"summary_screen":false,"feedback_popup":true,"show_how_to":true,"background_image":"","background_repeat":"cover","font_path":"","fonts":{"content":null,"buttons":null,"icons":null},"localization":{}}</html>
+        </body>
+        """.replace("ADD_YOUR_SKIN", skin)
 
     all_tags.append(
         f"""
