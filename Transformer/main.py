@@ -1,11 +1,12 @@
 import importlib
-
+import glob
 import pandas as pd
 from django.conf import settings
 from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file, remove_char_from_keys, set_question_number
 from Transformer.utils.write_main_xml_frame import write_mlo
 from Transformer.utils.write_manifest_xml import write_imsmanifest_xml
 import os, shutil
+import platform
 
 
 def call_package(template_id, page_data, other_json_data, exiting_hashcode):
@@ -123,6 +124,20 @@ def process_data(template_ids=None):
 
     return True
 
+def sanitizeXML(OUTPUT_DIR):
+    if platform.system() == 'Windows':
+        xml_files = glob.glob(os.path.join(OUTPUT_DIR,"**", "*.xml"),recursive=True)
+        for xml_file in xml_files:
+            # Read the content of the file
+            with open(xml_file, 'r', encoding='utf-8') as file:
+                content = file.read()
+            
+            # Replace backslashes with forward slashes
+            content = content.replace('\\', '/')
+            
+            # Write the modified content back to the file
+            with open(xml_file, 'w', encoding='utf-8') as file:
+                file.write(content)
 
 def iterative_process_data(all_dir_objs):
 
@@ -301,6 +316,9 @@ def iterative_process_data(all_dir_objs):
         )
 
         print("Zipping output and moving it to output dir")
+
+        sanitizeXML(settings.OUTPUT_DIR)
+
         zip_folder_contents(
             folder_path=str(settings.OUTPUT_DIR),
             zip_filename=str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'],

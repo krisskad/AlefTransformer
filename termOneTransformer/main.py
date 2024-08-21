@@ -1,4 +1,5 @@
 import importlib
+import glob
 
 import pandas as pd
 from django.conf import settings
@@ -6,6 +7,7 @@ from .helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file
 from .utils.write_main_xml_frame import write_mlo
 from .utils.write_manifest_xml import write_imsmanifest_xml
 import os, shutil
+import platform
 
 def call_package(template_id, page_data, other_json_data, exiting_hashcode):
     try:
@@ -122,13 +124,27 @@ def process_data(template_ids=None):
 
     return True
 
+def sanitizeXML(OUTPUT_DIR):
+    if platform.system() == 'Windows':
+        xml_files = glob.glob(os.path.join(OUTPUT_DIR,"**", "*.xml"),recursive=True)
+        for xml_file in xml_files:
+            # Read the content of the file
+            with open(xml_file, 'r', encoding='utf-8') as file:
+                content = file.read()
+            
+            # Replace backslashes with forward slashes
+            content = content.replace('\\', '/')
+            
+            # Write the modified content back to the file
+            with open(xml_file, 'w', encoding='utf-8') as file:
+                file.write(content)
 
 def iterative_process_data(all_dir_objs, input_dir):
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
         settings.INPUT_COMMON_DIR = course_obj_dir_dict['INPUT_COMMON_DIR']
         COURSE_ID = course_obj_dir_dict["COURSE_ID"]
-        settings.INPUT_APP_DIR = input_dir + '\\' + COURSE_ID #OS.join
+        settings.INPUT_APP_DIR = os.path.join(input_dir, COURSE_ID)
         INPUT_STRUCTURE_JSON_DATA = read_json(
             file_path=course_obj_dir_dict["INPUT_STRUCTURE_JSON"]
         )
@@ -215,6 +231,7 @@ def iterative_process_data(all_dir_objs, input_dir):
         )
 
         print("Zipping output and moving it to output dir")
+        sanitizeXML(settings.OUTPUT_DIR)
         zip_folder_contents(
             folder_path=str(settings.OUTPUT_DIR),
             zip_filename=str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'],
