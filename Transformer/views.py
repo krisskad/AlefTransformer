@@ -5,7 +5,6 @@ from rest_framework import status
 # Create your views here.
 from Transformer.main import process_data, iterative_process_data
 
-
 import os
 import datetime
 import zipfile
@@ -16,7 +15,8 @@ from django.conf import settings
 import shutil
 from .serializers import FileUploadSerializer, DeleteSerializer  # Import your serializer
 from .helpers import zip_folder_contents, validate_inputs_dirs, replace_chars_in_json  # Import your function to process the zip file
-
+import termOneTransformer.helpers as termOneHelpers
+import termOneTransformer.main as termOneMain
 
 def index(request):
     return render(request, 'index.html')
@@ -122,25 +122,32 @@ class LocalFileProcessViewSet(viewsets.ViewSet):
         input_dir = request.data.get("courses_path", None)  # Assuming the file is sent as 'file' in the request
         output_dir = request.data.get("output_path", None)  # Assuming the file is sent as 'file' in the request
         common_dir = request.data.get("common_path", None)  # Assuming the file is sent as 'file' in the request
+        term = request.data.get("terms", None)
 
-        all_dir_list = validate_inputs_dirs(
-            input_dir=input_dir,
-            output_dir=output_dir,
-            common_dir=common_dir
-        )
+        if term == "Term 1":
+            all_dir_list = termOneHelpers.validate_inputs_dirs(input_dir=input_dir, output_dir=output_dir, common_dir=common_dir)
+            if isinstance(all_dir_list, dict):
+                return Response(data=all_dir_list)
+            resp = termOneMain.iterative_process_data(all_dir_objs=all_dir_list, input_dir=input_dir)
+        elif term == "Term 2":
+            all_dir_list = validate_inputs_dirs(
+                input_dir=input_dir,
+                output_dir=output_dir,
+                common_dir=common_dir
+            )
 
-        if isinstance(all_dir_list, dict):
-            return Response(data=all_dir_list)
+            if isinstance(all_dir_list, dict):
+                return Response(data=all_dir_list)
 
-        # replace all with '
-        # for each in all_dir_list:
-        #     for key, each_file in each.items():
-        #         print(each_file)
-        #         if os.path.isfile(each_file) and ".json" in each_file:
-        #             replace_chars_in_json(json_path=each_file)
+            # replace all with '
+            # for each in all_dir_list:
+            #     for key, each_file in each.items():
+            #         print(each_file)
+            #         if os.path.isfile(each_file) and ".json" in each_file:
+            #             replace_chars_in_json(json_path=each_file)
 
-        # Call the function to process the zip content
-        resp = iterative_process_data(all_dir_objs=all_dir_list)
+            # Call the function to process the zip content
+            resp = iterative_process_data(all_dir_objs=all_dir_list)
 
         return Response(data=resp)
 

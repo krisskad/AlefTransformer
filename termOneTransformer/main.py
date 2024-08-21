@@ -1,17 +1,17 @@
 import importlib
 import glob
+
 import pandas as pd
 from django.conf import settings
-from Transformer.helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file, remove_char_from_keys, set_question_number
-from Transformer.utils.write_main_xml_frame import write_mlo
-from Transformer.utils.write_manifest_xml import write_imsmanifest_xml
+from .helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file, remove_char_from_keys, set_question_number
+from .utils.write_main_xml_frame import write_mlo
+from .utils.write_manifest_xml import write_imsmanifest_xml
 import os, shutil
 import platform
 
-
 def call_package(template_id, page_data, other_json_data, exiting_hashcode):
     try:
-        package_name = f"Transformer.templates.{template_id}.processor"
+        package_name = f"termOneTransformer.templates.{template_id}.processor"
         module = importlib.import_module(package_name)
         print(f"Package Imported : {template_id}")
         return module.process_page_data(page_data, other_json_data, exiting_hashcode)
@@ -139,137 +139,51 @@ def sanitizeXML(OUTPUT_DIR):
             with open(xml_file, 'w', encoding='utf-8') as file:
                 file.write(content)
 
-def iterative_process_data(all_dir_objs):
-
-    try:
-        customdnd_title = pd.read_csv(str(os.path.join(settings.BASE_DIR, 'media', 'customdnd_title.csv')))
-    except:
-        customdnd_title = pd.DataFrame()
-
-    try:
-        ela_types = pd.read_csv(str(os.path.join(settings.BASE_DIR, 'media', 'ela_template_types.csv')))
-    except:
-        ela_types = pd.DataFrame()
-
-    try:
-        ela_positions = pd.read_csv(str(os.path.join(settings.BASE_DIR, 'media', 'ela_thumbnail_imagetext_position.csv')))
-    except:
-        ela_positions = pd.DataFrame()
-
+def iterative_process_data(all_dir_objs, input_dir):
     resp_list = []
     for course_obj_dir_dict in all_dir_objs:
-        print("#" * 20)
-        # if course_obj_dir_dict["COURSE_ID"] != "CS_ELA9_L007_Discover":
-        #     continue
-        print(course_obj_dir_dict['COURSE_ID'])
-
         settings.INPUT_COMMON_DIR = course_obj_dir_dict['INPUT_COMMON_DIR']
-        settings.INPUT_APP_DIR = course_obj_dir_dict['INPUT_APP_DIR']
-
-        # print("Reading all input files")
+        COURSE_ID = course_obj_dir_dict["COURSE_ID"]
+        settings.INPUT_APP_DIR = os.path.join(input_dir, COURSE_ID)
         INPUT_STRUCTURE_JSON_DATA = read_json(
             file_path=course_obj_dir_dict["INPUT_STRUCTURE_JSON"]
         )
-        INPUT_AUDIO_JSON_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_AUDIO_JSON"]
-        )
-        INPUT_VIDEO_JSON_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_VIDEO_JSON"]
-        )
-        INPUT_VIEW_JSON_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_VIEW_JSON"]
-        )
-        INPUT_IMAGES_JSON_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_IMAGES_JSON"]
-        )
-        INPUT_EN_TEXT_JSON_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_EN_TEXT_JSON"]
-        )
+        MLO_TEMPLATES_OUTPUT_LIST = []
+        # TODO: REVISIT LATER
 
-        # Common
-        INPUT_COMMON_GLOSSARY_JSON_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_COMMON_GLOSSARY_JSON"]
-        )
-        INPUT_COMMON_GLOSSARY_IMAGES_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_COMMON_GLOSSARY_IMAGES_JSON"]
-        )
-        INPUT_COMMON_TEMPLATE_IMAGES_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_COMMON_TEMPLATE_IMAGES_JSON"]
-        )
-        INPUT_COMMON_TEXT_JSON_DATA = read_json(
-            file_path=course_obj_dir_dict["INPUT_COMMON_TEXT_JSON"]
-        )
-
-        # Iterate through the dictionary and replace 'non ansi' with 'ansi' in all values
-        for key, value in INPUT_EN_TEXT_JSON_DATA.items():
-            INPUT_EN_TEXT_JSON_DATA[key] = value.replace("’", "'") #
-            # INPUT_EN_TEXT_JSON_DATA[key] = value.encode('ascii', 'ignore').decode('ascii')
-
-        # Iterate through the dictionary and replace 'non ansi' with 'ansi' in all values
-        for key, value in INPUT_COMMON_TEXT_JSON_DATA.items():
-            INPUT_COMMON_TEXT_JSON_DATA[key] = value.replace("’", "'")
-            # INPUT_COMMON_TEXT_JSON_DATA[key] = value.encode('ascii', 'ignore').decode('ascii')
+        # for key, value in INPUT_STRUCTURE_JSON_DATA.items():
+        #     INPUT_STRUCTURE_JSON_DATA[key] = value.replace("’", "'") #
 
         OTHER_JSON_DATA = {
-            "INPUT_STRUCTURE_JSON_DATA": INPUT_STRUCTURE_JSON_DATA,
-            "INPUT_AUDIO_JSON_DATA":INPUT_AUDIO_JSON_DATA,
-            "INPUT_VIDEO_JSON_DATA":INPUT_VIDEO_JSON_DATA,
-            "INPUT_VIEW_JSON_DATA":INPUT_VIEW_JSON_DATA,
-            "INPUT_IMAGES_JSON_DATA":INPUT_IMAGES_JSON_DATA,
-            "INPUT_EN_TEXT_JSON_DATA":INPUT_EN_TEXT_JSON_DATA,
-            "INPUT_COMMON_GLOSSARY_JSON_DATA":INPUT_COMMON_GLOSSARY_JSON_DATA,
-            "INPUT_COMMON_GLOSSARY_IMAGES_DATA":INPUT_COMMON_GLOSSARY_IMAGES_DATA,
-            "INPUT_COMMON_TEMPLATE_IMAGES_DATA":INPUT_COMMON_TEMPLATE_IMAGES_DATA,
-            "INPUT_COMMON_TEXT_JSON_DATA":INPUT_COMMON_TEXT_JSON_DATA,
-            "OUTPUT_DIR":course_obj_dir_dict['OUTPUT_DIR'],
-            "COURSE_ID":course_obj_dir_dict['COURSE_ID'],
-            "CUSTOM_DND_TITLE":customdnd_title,
-            "ELA_TEMPLATE_TYPE":ela_types,
-            "ELA_TEXTBOX_POSITIONS":ela_positions
+            "INPUT_STRUCTURE_JSON_DATA": INPUT_STRUCTURE_JSON_DATA
         }
-
-        if "INPUT_APP_GLOSSARY_JSON" in course_obj_dir_dict:
-            INPUT_APP_GLOSSARY_JSON_DATA = read_json(
-                file_path=course_obj_dir_dict["INPUT_APP_GLOSSARY_JSON"]
-            )
-
-            OTHER_JSON_DATA["INPUT_APP_GLOSSARY_JSON_DATA"] = INPUT_APP_GLOSSARY_JSON_DATA
-
-        # storing all hash strings
+                    # storing all hash strings
         GENERATED_HASH_CODES = set()
 
         # storing all relative hashcode file path like hashcode/filename
-        ALL_MANIFEST_FILES = set()
-
-        input_pages = INPUT_STRUCTURE_JSON_DATA.get('pages', [])
+        input_pages = INPUT_STRUCTURE_JSON_DATA['topic']['module_1'].get('page', [])
         input_pages = set_question_number(input_pages)
-
-        MLO_TEMPLATES_OUTPUT_LIST = []
-
-        STATUS = []
         screen_number = 0
+        ALL_MANIFEST_FILES = set()
+        STATUS = []
         for item in input_pages:
             print("*"*10)
             screen_number = screen_number + 1
             print(f"Screen Number: --> {screen_number}")
 
-            template_id = item['pageData']['templateID']
             item['screen_number'] = screen_number
-            # if template_id == "TextwithImage_002":
-            #     continue
-            #
-            # if screen_number != 5:
-            #     continue
-            if template_id == "DragAndDrop_002":
-                print("Found DragAndDrop_002 --> Considering it as DragAndDrop_003")
-                template_id = "DragAndDrop_003"
-
+            if item.get('templateConfig'):
+                template_id = item['templateConfig'][0].get("id")
+            else:
+                if item["page_type"] == "video":
+                    template_id = "Video_001"
             response = call_package(
                 template_id=template_id,
                 page_data=item,
                 other_json_data=OTHER_JSON_DATA,
                 exiting_hashcode=GENERATED_HASH_CODES
             )
+
             if response:
                 section = response.get('XML_STRING')
                 hash_codes = response.get('GENERATED_HASH_CODES')
@@ -313,12 +227,11 @@ def iterative_process_data(all_dir_objs):
             all_manifest_files=ALL_MANIFEST_FILES,
             exiting_hashcode=GENERATED_HASH_CODES,
             input_other_jsons_data=OTHER_JSON_DATA,
+            courseID = course_obj_dir_dict['COURSE_ID']
         )
 
         print("Zipping output and moving it to output dir")
-
         sanitizeXML(settings.OUTPUT_DIR)
-
         zip_folder_contents(
             folder_path=str(settings.OUTPUT_DIR),
             zip_filename=str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'],
@@ -332,7 +245,7 @@ def iterative_process_data(all_dir_objs):
         if STATUS:
             STATUS = list(set(STATUS))
             status_msg = "\n\n".join(STATUS)
-            log_file_path = str(os.path.join(course_obj_dir_dict['OUTPUT_DIR'], f"{course_obj_dir_dict['COURSE_ID']}.txt"))
+            log_file_path = str(os.path.join(settings.OUTPUT_DIR, f"{settings.OUTPUT_DIR}.txt"))
             write_to_file(file_path=log_file_path, content=status_msg)
             status = "Warning: please check the log"
         else:
