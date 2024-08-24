@@ -172,8 +172,12 @@ def iterative_process_data(all_dir_objs, input_dir):
             print(f"Screen Number: --> {screen_number}")
 
             item['screen_number'] = screen_number
+            template_id = None
             if item.get('templateConfig'):
-                template_id = item['templateConfig'][0].get("id")
+                if item['page_type'] == 'video' and item['templateConfig'][0].get("id") =='CustomTextBox':
+                    template_id = 'VideoWithInputBox_CustomTextBox'
+                if item['page_type'] == 'audio' and item['templateConfig'][0].get("id") =='CustomTextBox':
+                    template_id = 'Image_CustomTextBox'
             else:
                 if item["page_type"] == "video":
                     template_id = "Video_001"

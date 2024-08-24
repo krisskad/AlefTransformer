@@ -427,7 +427,7 @@ def write_html_mlo(text, exiting_hashcode, align="center"):
 
     path_to_html = os.path.join(str(path_to_hashcode), "emptyHtmlModel.html")
 
-    with open(path_to_html, "w") as file:
+    with open(path_to_html, "w", encoding="utf-8") as file:
         file.write(template.strip())
 
     relative_path = os.path.join(hashcode, "emptyHtmlModel.html")
