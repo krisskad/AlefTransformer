@@ -180,6 +180,8 @@ def iterative_process_data(all_dir_objs, input_dir):
                     template_id = 'Image_CustomTextBox'
                 if item['templateConfig'][0]['id'] == 'CustomSelection':
                     template_id = 'CustomSelection'
+                if item['templateConfig'][0]['id'] == 'MCSSwithImage':
+                    template_id = 'MCSSwithImage'
             else:
                 if item["page_type"] == "video":
                     template_id = "Video_001"

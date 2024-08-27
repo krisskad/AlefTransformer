@@ -1260,7 +1260,10 @@ def get_xml_hint(hint: dict, input_other_jsons_data: dict,
 
     try:
         if hint:
-            hinttext = hint
+            if hint.get("text", None):
+                hinttext = hint.get("text")
+            else:
+                hinttext = hint
 
             try:
                 hinttext = html.unescape(hinttext)
