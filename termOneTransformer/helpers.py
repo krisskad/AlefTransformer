@@ -1172,7 +1172,7 @@ def get_xml_feedback(feedback: dict, input_other_jsons_data: dict,
         main_key = key.split("_")[0]
 
         try:
-            text = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][val]
+            text = val
         except:
             print("Error: text not found inside feedback")
             continue
@@ -1260,7 +1260,7 @@ def get_xml_hint(hint: dict, input_other_jsons_data: dict,
 
     try:
         if hint:
-            hinttext = input_other_jsons_data['INPUT_EN_TEXT_JSON_DATA'][hint['text']]
+            hinttext = hint
 
             try:
                 hinttext = html.unescape(hinttext)
