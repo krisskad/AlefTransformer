@@ -1,6 +1,5 @@
 import importlib
 import glob
-
 import pandas as pd
 from django.conf import settings
 from .helpers import read_json, zip_folder_contents, is_valid_xml, write_to_file, remove_char_from_keys, set_question_number
@@ -174,6 +173,9 @@ def iterative_process_data(all_dir_objs, input_dir):
             item['screen_number'] = screen_number
             template_id = None
             if item.get('templateConfig'):
+                template_id =item['templateConfig'][0].get("id")
+                if template_id=='TextWithSideImages':
+                    template_id='TextWithImages'
                 if item['page_type'] == 'video' and item['templateConfig'][0].get("id") =='CustomTextBox':
                     template_id = 'VideoWithInputBox_CustomTextBox'
                 if item['page_type'] == 'audio' and item['templateConfig'][0].get("id") =='CustomTextBox':
@@ -185,6 +187,7 @@ def iterative_process_data(all_dir_objs, input_dir):
             else:
                 if item["page_type"] == "video":
                     template_id = "Video_001"
+
             response = call_package(
                 template_id=template_id,
                 page_data=item,
