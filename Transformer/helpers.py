@@ -1123,7 +1123,7 @@ def assing_class_for_color(html_string):
     pattern = re.compile(r'(?<![.:])\s*<br>')
 
     # Substitute the <br> tags with an empty string
-    html_string = pattern.sub('', html_string)
+    html_string = pattern.sub(' ', html_string)
 
     html_string = remove_font_position_properties(html_string)
 
