@@ -185,7 +185,7 @@ def iterative_process_data(all_dir_objs, input_dir):
                 if item['templateConfig'][0]['id'] == 'MCSSwithImage':
                     template_id = 'MCSSwithImage'
             else:
-                if item["page_type"] == "video":
+                if item["page_type"] == "video" or item["page_type"] == "movie":
                     template_id = "Video_001"
 
             response = call_package(
