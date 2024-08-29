@@ -181,7 +181,7 @@ def iterative_process_data(all_dir_objs, input_dir):
                 if item['page_type'] == 'audio' and item['templateConfig'][0].get("id") =='CustomTextBox':
                     template_id = 'Image_CustomTextBox'
             else:
-                if item["page_type"] == "video":
+                if item["page_type"] == "video" or item["page_type"] == "movie":
                     template_id = "Video_001"
 
             response = call_package(

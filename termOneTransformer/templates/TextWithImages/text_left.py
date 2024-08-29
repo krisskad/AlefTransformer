@@ -96,7 +96,7 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
     all_files = set()
     all_tags = [
         """
-        <!-- TextwithImage_001 class_id Text- Left-->
+        <!-- TextwithSideImages class_id Text- Left-->
 
         """
     ]
@@ -105,12 +105,14 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
     try:
         src_audio_path = input_json_data["graphics_path"] + "/audio/audio.mp3"
         template_data = input_json_data["templateConfig"]
-        # print(template_data[0].get("title"))
+        #print(template_data[0].get("title"))
         title = template_data[0].get("title")
-        description = template_data[0].get("description")
+        description = template_data[0].get("paraGraph")
         imageContent_list = input_json_data["templateConfig"][0].get("images")
+        #print(title)
+        #print(description)
     except Exception as e:
-        print(f"Error: TextwithImage_001 --> {e}")
+        print(f"Error: TextWithSideImages --> {e}")
 
 
     if "<math" in title:
@@ -132,7 +134,7 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
         all_files.add(resp['relative_path'])
         exiting_hashcode.add(resp['hashcode'])
     except:
-        raise Exception(f"Error: TextwithImage_001 --> {text} question not exist in en_text")
+        raise Exception(f"Error: TextWithSideImage --> {text} question not exist in en_text")
 
     teachers_note_xml = ""
     temp = []
@@ -185,9 +187,8 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
         exiting_hashcode.add(hashcode)
         try:
             src_image_path = each_img.get("src")
-            print(src_image_path)
         except Exception as e:
-            print(f"Warning: TextwithImage_001 --> image {e}")
+            print(f"Warning: TextWithSideImage --> image {e}")
             continue
 
         resp = copy_to_hashcode_dir(
@@ -205,7 +206,7 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
                 src_en_text = remove_html_tags(src_en_text)
 
         except Exception as e:
-            print(f"Warning: TextwithImage_001 --> label not found {e}")
+            print(f"Warning: TextWithSideImage --> label not found {e}")
             src_en_text = ""
 
         hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
