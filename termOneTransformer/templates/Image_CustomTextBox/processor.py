@@ -102,6 +102,41 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     ]
     # Extracting variables
     # poster = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["poster"]]
+    
+    try:
+        title = input_json_data['templateConfig'][0]['templateConfigData']['headTxt']
+        #print(HtmlText)
+        content = f"<strong>{title}</strong><br><br>"
+        resp = write_html(
+            text=content,
+            exiting_hashcode=exiting_hashcode,
+            align='center'
+        )
+        all_files.add(resp['relative_path'])
+        exiting_hashcode.add(resp['hashcode'])
+    except Exception as e:
+        title = None
+        msg = f"Error: AudiowithInputBox_001 --> textFieldData not found in input structure"
+        print(msg)
+
+    temp=[]
+    if title:
+        for _ in range(11):
+            hashcode_temp = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+            exiting_hashcode.add(hashcode_temp)
+            temp.append(hashcode_temp)
+        all_tags.append(
+            f"""
+                        <alef_section xlink:label="{temp[0]}" xp:name="alef_section" xp:description=""
+                                        xp:fieldtype="folder" customclass="Normal">
+                                <alef_column xlink:label="{temp[1]}" xp:name="alef_column" xp:description=""
+                                            xp:fieldtype="folder" width="auto" cellspan="1">
+                                    <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
+                                            xp:description="" xp:fieldtype="html"
+                                            src="../../../{resp['relative_path']}"/>
+                                    
+                    """
+        )
     try:
         textFieldData = input_json_data['templateConfig'][0]['templateConfigData']['quesTxt']
     except:
