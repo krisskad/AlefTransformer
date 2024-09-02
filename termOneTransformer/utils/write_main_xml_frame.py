@@ -3,10 +3,11 @@ import glob
 import htmlentities
 import os
 from termOneTransformer.helpers import generate_unique_folder_name, write_xml, write_html, copy_to_hashcode_dir, remove_html_tags, mathml2latex_yarosh, write_html_mlo
-# import shutil
+import shutil
 from django.conf import settings
 import random
 import string
+from bs4 import BeautifulSoup, Tag
 
 
 MLO_HTML_TEMPLATE = """
@@ -47,6 +48,36 @@ MLO_HTML_TEMPLATE = """
   </body>
 </html>
 """
+
+def copy_bg_image(src_path: str, exiting_hashcode: set):
+    """
+    :param src_path: example images/01.png
+    :param exiting_hashcode: example
+    :return:
+    """
+
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+
+    path_to_hashcode = os.path.join(settings.OUTPUT_DIR, hashcode)
+    os.makedirs(path_to_hashcode, exist_ok=True)
+
+    if "templates" in src_path:
+        asset_abs_path = os.path.join(settings.INPUT_COMMON_DIR, src_path)
+    else:
+        asset_abs_path = os.path.join(settings.INPUT_APP_DIR, src_path)
+
+    destination_src_path = os.path.join(str(path_to_hashcode), str(os.path.basename(src_path)))
+    shutil.copy2(str(asset_abs_path), str(destination_src_path))
+
+    relative_path = os.path.join(hashcode, str(os.path.basename(src_path)))
+
+    response = {
+        "relative_path": relative_path,
+        "hashcode": hashcode,
+    }
+
+    return response
 
 
 def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
@@ -114,21 +145,46 @@ def write_mlo(lo_id, sections, input_other_jsons_data, exiting_hashcode):
     #                 </alef_image>
     #                 """
     #         break
+    
     try:
         if not launchPage_img:
             COMMON_DIR = os.path.join(settings.INPUT_APP_DIR, "common")
-            all_images = glob.glob(os.path.join(COMMON_DIR, "images", "*"))
-            for each_img in all_images:
-                if os.path.basename(each_img) in ["homePageBg.png", "coverPage.png"]:
-                    resp = copy_to_hashcode_dir(src_path=os.path.join("common","images", os.path.basename(each_img)), exiting_hashcode=exiting_hashcode)
-                    all_files.add(resp['relative_path'])
-                    exiting_hashcode.add(resp['hashcode'])
-                    launchPage_img = f"""
+            html_file_path = os.path.join(settings.INPUT_APP_DIR, "index.html")
+            with open(html_file_path, 'r', encoding='utf-8') as html_file:
+                html_content = html_file.read()
+            soup = BeautifulSoup(html_content, 'html.parser')
+            style_tag = soup.find('style')
+            if style_tag:
+                css_content = style_tag.get_text()
+            start_page_rule = None
+            for rule in css_content.split('}'):
+                        if '#startPage' in rule:
+                            start_page_rule = rule.strip()
+                            break
+            if start_page_rule:
+                background_url = None
+                for prop in start_page_rule.split(';'):
+                    if 'background:' in prop:
+                        background_url = prop.split('url(')[-1].strip(');').strip("'\"")
+                        break
+                if background_url:
+                    background_url = background_url.replace("./common",'')
+                    background_url = os.path.join(COMMON_DIR+background_url)
+                    if os.path.exists(background_url):
+                        resp = copy_bg_image(src_path=os.path.join("common","images", os.path.basename(background_url)), exiting_hashcode=exiting_hashcode)
+
+                    else:
+                        print(f"File does not exist at: {background_url}")
+                else:
+                    print("No background URL found.")
+                    
+                all_files.add(resp['relative_path'])
+                exiting_hashcode.add(resp['hashcode'])
+                launchPage_img = f"""
                             <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image" xp:description="" xp:fieldtype="image" alt="">
                                 <xp:img href="../../../{resp['relative_path']}" width="1920" height="1080" />
                             </alef_image>
                             """
-                    break
     except Exception as e:
         raise Exception(f"Error: launchPage image --> {e}")
 
