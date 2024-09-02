@@ -102,7 +102,6 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     ]
     # Extracting variables
     # poster = input_other_jsons_data['INPUT_IMAGES_JSON_DATA'][input_json_data["pageData"]["args"]["poster"]]
-    
     try:
         textFieldData = input_json_data['templateConfig'][0]['templateConfigData']['quesTxt']
     except:
