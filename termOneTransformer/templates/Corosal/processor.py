@@ -1,8 +1,8 @@
-from termOneTransformer.helpers import generate_unique_folder_name, convert_html_to_strong
+#from termOneTransformer.helpers import generate_unique_folder_name, convert_html_to_strong
 from django.conf import settings
 import os, shutil
 import htmlentities
-from Transformer.helpers import (generate_unique_folder_name,
+from termOneTransformer.helpers import (generate_unique_folder_name,
                                  mathml2latex_yarosh,
                                  text_en_html_to_html_text,
                                  get_popup_mlo_from_text, get_teacher_note,
@@ -10,10 +10,11 @@ from Transformer.helpers import (generate_unique_folder_name,
                                  remove_html_tags)
 def write_html(text, exiting_hashcode, align=None):
     try:
-        from Transformer.helpers import assing_class_for_color
+        from termOneTransformer.helpers import assing_class_for_color
         text = assing_class_for_color(text)
     except:
         pass
+    #print(f"in write_html {text}")
     text = convert_html_to_strong(html_str=text)
 
     if align:
@@ -97,7 +98,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
 
     # Assigning values to variables
     try:
-        print(input_json_data["graphics_path"] + "/audio/audio.mp3")
+        #print(input_json_data["graphics_path"] + "/audio/audio.mp3")
         src_path = input_json_data["graphics_path"] + "/audio/audio.mp3"
     except:
         raise Exception("Error: Audio --> src audio not found")
@@ -112,20 +113,43 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     try:
         title=template_data[0].get("templateConfigData").get("title")
         description=template_data[0].get("templateConfigData").get("description")
+        if "<math" in title:
+            title = mathml2latex_yarosh(html_string=title)
+
+        if "<math" in description:
+            description = mathml2latex_yarosh(html_string=description)
         #print(description)
         #print(title)
+        try:
+            teachers_note_xml = ""
+            teacher_resp = get_teacher_note(
+                text=description, all_files=all_files,
+                exiting_hashcode=exiting_hashcode,
+                input_other_jsons_data=input_other_jsons_data
+            )
+
+            if teacher_resp:
+                description = teacher_resp["remaining_text"]
+                teachers_note_xml = teacher_resp["teachers_note_xml"]
+                exiting_hashcode.update(teacher_resp["exiting_hashcode"])
+                all_files.update(teacher_resp["all_files"])
+
+        except Exception as e:
+            teachers_note_xml = ""
+            print(f"Error: Corosal --> While creating teachers note --> {e}")
     except:
         raise Exception("Error:Description not found")
 
     HtmlText = text_en_html_to_html_text(html_string=description)
     #print(HtmlText)
     content = f"<strong>{title}</strong><br><br>{HtmlText}"
+    #print(content)
     resp = write_html(
         text=content,
         exiting_hashcode=exiting_hashcode,
         align='center'
     )
-    print(resp)
+    #print(resp)
     all_files.add(resp['relative_path'])
     exiting_hashcode.add(resp['hashcode'])
     temp=[]
@@ -142,7 +166,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
                                 <alef_html xlink:label="{resp['hashcode']}" xp:name="alef_html"
                                            xp:description="" xp:fieldtype="html"
                                            src="../../../{resp['relative_path']}"/>
-                                
+                                 {teachers_note_xml}
                 """
     )
     all_tags.append(
@@ -157,12 +181,15 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         image_url=slide.get("cssObj").get("background-image").split("(")
         image_split=image_url[1].split(")")
         image_path=image_split[0]
-        #print(image_path)
+        if "<math" in text:
+            text = mathml2latex_yarosh(html_string=text)
+            text=text.replace("(","").replace(")","")
+            #print(text)
         resp = copy_to_hashcode_dir(
             src_path=image_path,
             exiting_hashcode=exiting_hashcode
         )
-        print(f"resp {resp}")
+        #print(f"resp {resp}")
         all_files.add(resp['relative_path'])
         exiting_hashcode.add(resp['hashcode'])
 
@@ -171,6 +198,14 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             hashcode_temp2 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
             exiting_hashcode.add(hashcode_temp2)
             temp2.append(hashcode_temp2)
+
+        if "<math" in text:
+            text = mathml2latex_yarosh(html_string=text)
+
+        else:
+            text = remove_html_tags(text)
+
+
         all_tags.append(
             f"""
                         <alef_section xlink:label="{temp2[0]}" xp:name="alef_section"
@@ -195,6 +230,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
             </alef_section>
             """
         )
+
     response = {
             "XML_STRING": "".join(all_tags),
             "GENERATED_HASH_CODES": exiting_hashcode,
