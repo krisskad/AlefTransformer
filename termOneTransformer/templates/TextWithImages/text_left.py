@@ -59,6 +59,15 @@ def write_html(text, exiting_hashcode, align=None):
 
     return response
 
+'''def generate_image_xml(src_image_path:str,text:str,exiting_hashcode):
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+    resp = copy_to_hashcode_dir(
+        src_path=src_image_path,
+        exiting_hashcode=exiting_hashcode
+    )
+    all_files.add(resp['relative_path'])
+    exiting_hashcode.add(resp['hashcode'])'''
 
 def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
     """
@@ -105,12 +114,22 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
     try:
         src_audio_path = input_json_data["graphics_path"] + "/audio/audio.mp3"
         template_data = input_json_data["templateConfig"]
-        #print(template_data[0].get("title"))
         title = template_data[0].get("title")
         description = template_data[0].get("paraGraph")
-        imageContent_list = input_json_data["templateConfig"][0].get("images")
-        #print(title)
-        #print(description)
+        bgImage = template_data[0].get("bgImage").split("(")
+        print(bgImage)
+        bgImage = bgImage[1].split(")")
+        print(bgImage)
+        bgImage = bgImage[0]
+        print(bgImage)
+        try:
+            imageContent_list = input_json_data["templateConfig"][0].get("images")
+        except Exception as e:
+            imageContent_list=[]
+            print("fError: TextWithSideImages --> {e}")
+
+        print(description)
+        print(title)
     except Exception as e:
         print(f"Error: TextWithSideImages --> {e}")
 
@@ -181,48 +200,49 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
         </alef_column>
         """
     )
-    for each_img in imageContent_list:
-        # print(each_img)
-        hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-        exiting_hashcode.add(hashcode)
-        try:
-            src_image_path = each_img.get("src")
-        except Exception as e:
-            print(f"Warning: TextWithSideImage --> image {e}")
-            continue
 
-        resp = copy_to_hashcode_dir(
+    hashcode = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode)
+    try:
+        src_image_path = imageContent_list[0].get("src")
+
+    except Exception as e:
+        src_image_path = bgImage
+        print(f"Warning: TextWithSideImage --> image {e}")
+
+
+    resp = copy_to_hashcode_dir(
             src_path=src_image_path,
             exiting_hashcode=exiting_hashcode
-        )
-        all_files.add(resp['relative_path'])
-        exiting_hashcode.add(resp['hashcode'])
+            )
+    all_files.add(resp['relative_path'])
+    exiting_hashcode.add(resp['hashcode'])
 
-        try:
-            src_en_text =each_img.get("imgText")
+    try:
+            src_en_text =imageContent_list[0].get("imgText")
             if "<math" in src_en_text:
                 src_en_text = mathml2latex_yarosh(html_string=src_en_text)
             else:
                 src_en_text = remove_html_tags(src_en_text)
 
-        except Exception as e:
+    except Exception as e:
             print(f"Warning: TextWithSideImage --> label not found {e}")
             src_en_text = ""
 
-        hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
-        exiting_hashcode.add(hashcode1)
-        all_tags.append(
-            f"""
-                        <alef_column xlink:label="{hashcode1}" xp:name="alef_column"
-                                                         xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
-                            <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
-                                                            xp:description="" xp:fieldtype="image" alt="{htmlentities.encode(src_en_text)}">
-                                <xp:img href="../../../{resp['relative_path']}" width="688"
-                                                            height="890"/>
-                            </alef_image>
-                        </alef_column>
-                    """
-        )
+    hashcode1 = generate_unique_folder_name(existing_hashcode=exiting_hashcode, prefix="L", k=27)
+    exiting_hashcode.add(hashcode1)
+    all_tags.append(
+                f"""
+                            <alef_column xlink:label="{hashcode1}" xp:name="alef_column"
+                                                             xp:description="" xp:fieldtype="folder" width="auto" cellspan="1">
+                                <alef_image xlink:label="{resp['hashcode']}" xp:name="alef_image"
+                                                                xp:description="" xp:fieldtype="image" alt="{htmlentities.encode(src_en_text)}">
+                                    <xp:img href="../../../{resp['relative_path']}" width="688"
+                                                                height="890"/>
+                                </alef_image>
+                            </alef_column>
+                        """
+    )
 
     all_tags.append(
         """
