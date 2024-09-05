@@ -117,19 +117,14 @@ def get_text_left_xml(input_json_data, input_other_jsons_data, exiting_hashcode)
         title = template_data[0].get("title")
         description = template_data[0].get("paraGraph")
         bgImage = template_data[0].get("bgImage").split("(")
-        print(bgImage)
         bgImage = bgImage[1].split(")")
-        print(bgImage)
         bgImage = bgImage[0]
-        print(bgImage)
         try:
             imageContent_list = input_json_data["templateConfig"][0].get("images")
         except Exception as e:
             imageContent_list=[]
             print("fError: TextWithSideImages --> {e}")
 
-        print(description)
-        print(title)
     except Exception as e:
         print(f"Error: TextWithSideImages --> {e}")
 
