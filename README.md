@@ -1,5 +1,5 @@
 # AlefTransformer
-Transforming JSON structure to Alef XML Sructure
+Transforming React HML Project JSON structure to Alef Educational Platform Suitable XML Structure
 
 ---
 
