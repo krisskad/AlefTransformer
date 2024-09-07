@@ -87,7 +87,7 @@ def copy_to_hashcode_dir(src_path: str, exiting_hashcode: set):
 
 def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     # store all file paths like hashcode/filename
-    print("in Corosal")
+    print("in Corosal 01")
     all_files = set()
     all_tags = [
         """<!-- Carousel 001--> """
@@ -96,7 +96,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
     try:
         template_data = input_json_data["templateConfig"]
         slides = template_data[0].get("templateConfigData").get("elements")
-        print(slides)
+        #print(slides)
 
     except Exception as e:
         msg = f'Error: {template_data[0].get("templateConfigData").get("elements")} --> {e}'
@@ -126,22 +126,32 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         title=slide.get("title")
         title=remove_html_tags(title)
         descriptionText=slide.get("descriptionText")
+
         audio=slide.get("audio")
         image_url = slide.get("cssObj").get("background-image").split("(")
         image_split = image_url[1].split(")")
         image_path = image_split[0]
-        if "<math" in text:
-            text = mathml2latex_yarosh(html_string=text)
+        if "<math" in title:
+            title = mathml2latex_yarosh(html_string=text)
+        else:
+            title = remove_html_tags(title)
 
         if "<math" in descriptionText:
-            description = mathml2latex_yarosh(html_string=description)
+            descriptionText = mathml2latex_yarosh(html_string=descriptionText)
+
+        if "<math" in text:
+            text=mathml2latex_yarosh(html_string=text)
+            text = text.replace("(", "").replace(")", "")
+            text = text.replace("\\", "")
 
         HtmlText = text_en_html_to_html_text(html_string=descriptionText)
+
         resp_desc = write_html(
             text=HtmlText,
             exiting_hashcode=exiting_hashcode,
             align='center'
         )
+
         all_files.add(resp_desc['relative_path'])
         exiting_hashcode.add(resp_desc['hashcode'])
         resp_image = copy_to_hashcode_dir(
