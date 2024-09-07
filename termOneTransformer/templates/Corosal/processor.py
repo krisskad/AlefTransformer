@@ -184,7 +184,7 @@ def create_mlo(input_json_data, input_other_jsons_data, exiting_hashcode):
         if "<math" in text:
             text = mathml2latex_yarosh(html_string=text)
             text=text.replace("(","").replace(")","")
-            #print(text)
+            text=text.replace("\\","")
         resp = copy_to_hashcode_dir(
             src_path=image_path,
             exiting_hashcode=exiting_hashcode
